@@ -1,5 +1,6 @@
 CREATE TABLE user(
    uid  INT NOT NULL  AUTO_INCREMENT,
+   username VARCHAR(20) NOT NULL UNIQUE,
    password VARCHAR(255)  NOT NULL,
    salt   VARCHAR(255) NOT NULL,
    firstname  VARCHAR (20)  NOT NULL,
@@ -18,7 +19,7 @@ CREATE TABLE user(
    zipcode3 INT,
    qualify INT NOT NULL,
    bloodtype VARCHAR(2) NOT NULL,
-   nfcid VARCHAR(255)
+   nfcid VARCHAR(255),
    PRIMARY KEY (uid)
 );
 
@@ -29,7 +30,7 @@ CREATE TABLE treatment(
    therapist_id INT NOT NULL,
    PRIMARY KEY(treatment_id),
    FOREIGN KEY (patient_id) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE,
-   FOREIGN KEY (therapist_id) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE,
+   FOREIGN KEY (therapist_id) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 
@@ -43,7 +44,7 @@ CREATE TABLE data(
    modifieddate TIMESTAMP NOT NULL,
    location VARCHAR(100) NOT NULL,
    PRIMARY KEY(rid),
-   FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE,
+   FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE inclusion(
@@ -64,10 +65,10 @@ CREATE TABLE consent(
    FOREIGN KEY (rid) REFERENCES data(rid) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE condition(
+CREATE TABLE `condition`(
    condition_id INT NOT NULL,
    condition_name VARCHAR(255) NOT NULL,
-   PRIMARY KEY(condition_id)
+   PRIMARY KEY (condition_id)
 );
 
 CREATE TABLE diagnosis(
@@ -78,7 +79,7 @@ CREATE TABLE diagnosis(
    date_treated TIMESTAMP,
    PRIMARY KEY(diagnosis_id),
    FOREIGN KEY (patient_id) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE,
-   FOREIGN KEY (condition_id) REFERENCES condition(condition_id) ON UPDATE CASCADE ON DELETE CASCADE
+   FOREIGN KEY (condition_id) REFERENCES `condition`(condition_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE admin(
@@ -86,7 +87,7 @@ CREATE TABLE admin(
    username VARCHAR(20) NOT NULL,
    password VARCHAR(255) NOT NULL,
    salt VARCHAR(255) NOT NULL,
-   PRIMARY KEY(admin_id),
+   PRIMARY KEY(admin_id)
 );
 
 CREATE TABLE researcher(
@@ -120,10 +121,10 @@ CREATE TABLE researcher_category(
    approval_id INT NOT NULL AUTO_INCREMENT,
    researcher_id INT NOT NULL,
    category_id VARCHAR(255) NOT NULL,
-   approval_status ENUM('Approved', 'Pending', 'Not Approved') NOT NULL
+   approval_status ENUM('Approved', 'Pending', 'Not Approved') NOT NULL,
    PRIMARY KEY (approval_id),
    FOREIGN KEY (researcher_id) REFERENCES researcher(uid) ON UPDATE CASCADE ON DELETE CASCADE,
-   FOREIGN KEY (condition_id) REFERENCES condition(condition_id) ON UPDATE CASCADE ON DELETE CASCADE
+   FOREIGN KEY (condition_id) REFERENCES `condition`(condition_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE condition_category(
@@ -131,6 +132,6 @@ CREATE TABLE condition_category(
    condition_id INT NOT NULL,
    category_id VARCHAR(255) NOT NULL,
    PRIMARY KEY (approval_id),
-   FOREIGN KEY (condition_id) REFERENCES condition(condition_id) ON UPDATE CASCADE ON DELETE CASCADE,
+   FOREIGN KEY (condition_id) REFERENCES `condition`(condition_id) ON UPDATE CASCADE ON DELETE CASCADE,
    FOREIGN KEY (category_id) REFERENCES category(category_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
