@@ -6,7 +6,7 @@ CREATE TABLE user(
    firstname  VARCHAR (20)  NOT NULL,
    lastname  VARCHAR (20)  NOT NULL,
    nric  CHAR (10)  NOT NULL,
-   dob  TIMESTAMP  NOT NULL,
+   dob  DATE  NOT NULL,
    gender  ENUM('M', 'F')  NOT NULL,
    phone1  VARCHAR (20)  NOT NULL,
    phone2  VARCHAR (20),
