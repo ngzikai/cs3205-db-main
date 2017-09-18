@@ -18,7 +18,7 @@ CREATE TABLE user(
    zipcode2 INT,
    zipcode3 INT,
    qualify INT NOT NULL,
-   bloodtype VARCHAR(2) NOT NULL,
+   bloodtype VARCHAR(3) NOT NULL,
    nfcid VARCHAR(255),
    PRIMARY KEY (uid)
 );
@@ -28,6 +28,7 @@ CREATE TABLE treatment(
    treatment_id INT NOT NULL AUTO_INCREMENT,
    patient_id INT NOT NULL,
    therapist_id INT NOT NULL,
+   status TINYINT(1),
    PRIMARY KEY(treatment_id),
    FOREIGN KEY (patient_id) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE,
    FOREIGN KEY (therapist_id) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE
@@ -60,6 +61,7 @@ CREATE TABLE consent(
    consent_id INT NOT NULL AUTO_INCREMENT,
    uid INT NOT NULL,
    rid INT NOT NULL,
+   status TINYINT(1),
    PRIMARY KEY(consent_id),
    FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE,
    FOREIGN KEY (rid) REFERENCES data(rid) ON UPDATE CASCADE ON DELETE CASCADE
