@@ -1,3 +1,5 @@
+package cs3205.db.restAPI;
+
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.IOException;

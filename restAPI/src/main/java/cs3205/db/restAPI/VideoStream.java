@@ -1,3 +1,5 @@
+package cs3205.db.restAPI;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;

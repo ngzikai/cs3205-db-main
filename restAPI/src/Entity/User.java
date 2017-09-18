@@ -1,30 +1,35 @@
-package Entity;
+package entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 //@Entity
 public class User {
 	//Attributes of User Class
 	private int uid;
+	private String username;
 	private String password;
 	private String salt;
 	private String firstName;
 	private String lastName;
 	private String nric;
-	private Date dob;
+	private LocalDate dob;
 	private char gender;
 	private String[] phone; //= new String[3];
 	private String[] address; //= new String[3];
-	private int[] zipcode; //= new String[3];
+	private int[] zipcode; //= new int[3];
 	private int qualify;
 	private String bloodtype;
 	private String nfcid;
 	
 	//Constructors for User Class
-	public User(int uid, String password, String salt, String firstName, String lastName, String nric, Date dob,
-			char gender, String[] phone, String[] address, int[] zipcode, int qualify, String bloodtype, String nfcid) {
+	
+	public User(int uid, String username, String password, String salt, String firstName, String lastName, String nric,
+			LocalDate dob, char gender, String[] phone, String[] address, int[] zipcode, int qualify, String bloodtype,
+			String nfcid) {
 		super();
 		this.uid = uid;
+		this.username = username;
 		this.password = password;
 		this.salt = salt;
 		this.firstName = firstName;
@@ -39,11 +44,12 @@ public class User {
 		this.bloodtype = bloodtype;
 		this.nfcid = nfcid;
 	}
-	
-	public User(int uid, String password, String salt, String firstName, String lastName, String nric, Date dob,
-			char gender, String[] phone, String[] address, int[] zipcode, int qualify, String bloodtype) {
+
+	//Constructor without UID. Most likely used for creating a new user entry.
+	public User(String username, String password, String salt, String firstName, String lastName, String nric, LocalDate dob,
+			char gender, String[] phone, String[] address, int[] zipcode, int qualify, String bloodtype, String nfcid) {
 		super();
-		this.uid = uid;
+		this.username = username;
 		this.password = password;
 		this.salt = salt;
 		this.firstName = firstName;
@@ -56,7 +62,39 @@ public class User {
 		this.zipcode = zipcode;
 		this.qualify = qualify;
 		this.bloodtype = bloodtype;
+		this.nfcid = nfcid;
 	}
+
+	public User(String username, String password, String salt, String firstName, String lastName, String nric,
+			LocalDate dob, char gender, String phone1, String phone2, String phone3, String address1, String address2,
+			String address3, int zipcode1, int zipcode2, int zipcode3, int qualify, String bloodtype,
+			String nfcid) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.salt = salt;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.nric = nric;
+		this.dob = dob;
+		this.gender = gender;
+		this.phone = new String[3];
+		phone[0] = phone1;
+		phone[1] = phone2;
+		phone[2] = phone3;
+		this.address = new String[3];
+		address[0] = address1;
+		address[1] = address2;
+		address[2] = address3;
+		this.zipcode = new int[3];
+		zipcode[0] = zipcode1;
+		zipcode[1] = zipcode2;
+		zipcode[2] = zipcode3;
+		this.qualify = qualify;
+		this.bloodtype = bloodtype;
+		this.nfcid = nfcid;
+	}
+	
 
 	public int getUid() {
 		return uid;
@@ -106,11 +144,11 @@ public class User {
 		this.nric = nric;
 	}
 
-	public Date getDob() {
+	public LocalDate getDob() {
 		return dob;
 	}
 
-	public void setDob(Date dob) {
+	public void setDob(LocalDate dob) {
 		this.dob = dob;
 	}
 
@@ -169,6 +207,41 @@ public class User {
 	public void setNfcid(String nfcid) {
 		this.nfcid = nfcid;
 	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
 	
+	public void print() {
+		System.out.println("User id: " + uid);
+		System.out.println("User: " + username);
+		System.out.println("Password: " + password);
+		System.out.println("FirstName: " + firstName);
+		System.out.println("LastName: " + lastName);
+		System.out.println("NRIC: " + nric);
+		System.out.println("DOB: " + dob);
+		System.out.println("Gender: " + gender);
+		System.out.println("Phone: " + allPhoneToString());
+		System.out.println("Address: " + allAddressToString());
+		System.out.println("Zipcode: " + allZipcodeToString());
+		System.out.println("Qualify: " + qualify);
+		System.out.println("Blood Type: " + bloodtype);
+		System.out.println("NFCID: " + nfcid);
+	}
 	
+	public String allPhoneToString() {
+		return phone[0] + ", " + phone[1] + ", " + phone[2];
+	}
+	
+	public String allAddressToString() {
+		return address[0] + ", " + address[1] + ", " + address[2];
+	}
+	
+	public String allZipcodeToString() {
+		return zipcode[0] + ", " + zipcode[1] + ", " + zipcode[2];
+	}
 }
