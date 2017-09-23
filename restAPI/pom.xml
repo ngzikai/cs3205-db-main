@@ -8,7 +8,6 @@
 	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>restAPI</name>
-
 	<build>
 		<finalName>restAPI</finalName>
 		<plugins>
@@ -22,7 +21,17 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>tomcat-maven-plugin</artifactId>
+				<configuration>
+					<url>http://127.0.0.1:8080/manager</url>
+					<server>mytomcat</server>
+					<path>/cs3205-db-main</path>
+				</configuration>
+			</plugin>
 		</plugins>
+		<directory>target</directory>
 	</build>
 
 	<dependencyManagement>
@@ -48,7 +57,7 @@
 			<groupId>org.glassfish.jersey.inject</groupId>
 			<artifactId>jersey-hk2</artifactId>
 		</dependency>
-		<!-- uncomment this to get JSON support <dependency> <groupId>org.glassfish.jersey.media</groupId> 
+		<!-- uncomment this to get JSON support <dependency> <groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-json-binding</artifactId> </dependency> -->
 		<dependency>
 			<groupId>asm</groupId>
