@@ -1,0 +1,5 @@
+**/*.war
+**/*.jar
+**/*.class
+restAPI/target/*
+restAPI/target/**/*
