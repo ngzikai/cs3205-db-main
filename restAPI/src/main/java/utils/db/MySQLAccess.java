@@ -17,7 +17,7 @@ public class MySQLAccess {
 	private static String pass = "root";
 
 	//This method will load MySQL driver and set up connection to the DB
-	public static Connection connectDatabase() throws Exception {
+	public static Connection connectDatabase() {
 		if(connect != null) {
 			return connect;
 		}
@@ -29,7 +29,7 @@ public class MySQLAccess {
 					.getConnection("jdbc:mysql://"+ hostname +"/cs3205?"
 							+ "user=" + user +"&password=" + pass);
 		} catch (Exception e) {
-			throw e;
+			e.printStackTrace();
 		}
 		return connect;
 	}

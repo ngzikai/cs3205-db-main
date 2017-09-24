@@ -20,34 +20,34 @@ import cs3205.db.restapi.team2.services.ResearcherService;
 @Consumes(MediaType.APPLICATION_JSON)
 public class ResearcherResource {
 	public ResearcherService rs;
-	
+
 	@GET
 	@Path("/{uid}")
 	public Researcher getResearcher(@PathParam("uid") int uid) {
 		return null;
 	}
-	
+
 	@POST
 	public Researcher addResearcher(Researcher newResearcher) {
 		return null;
 	}
-	
+
 	@PUT
 	@Path("/{uid}")
 	public Researcher updateResearcher(@PathParam("uid") int uid, Researcher researcher) {
 		return null;
 	}
-	
+
 	@DELETE
 	@Path("/{uid}")
 	public Researcher deleteResearcher(@PathParam("uid") int uid, Researcher researcher) {
 		return null;
 	}
-	
-	@GET
-	@Path("/{uid}/search")
-	public SearchResults search(@PathParam("uid") int uid, SearchQuery query) {
-		return null;
-	}
+
+	// @GET
+	// @Path("/{uid}/search")
+	// public SearchResults search(@PathParam("uid") int uid, SearchQuery query) {
+	// 	return null;
+	// }
 
 }
