@@ -5,9 +5,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 
-import com.sun.jersey.api.NotFoundException;
-import com.sun.jersey.api.client.ClientResponse.Status;
-
 import java.io.*;
 import java.net.URL;
 import java.nio.channels.Channels;
@@ -21,7 +18,7 @@ public class VideoStream {
 	final String path = "C:/data/";
 	final String contentName = "mhworld";
 	final String videoType = ".mp4";
-	
+
 	/*
 	 ** Basic video transfer
 	@Path("{s}")
@@ -40,12 +37,12 @@ public class VideoStream {
 	public Response streamAudio(@PathParam("s") String s,@HeaderParam("Range") String range) throws Exception{
 		if(!validateString(s)) {
 			System.out.println("Validate string failed on : " + s);
-			throw new NotFoundException("Invalid File Name : " + s);
+			throw new RuntimeException("Invalid File Name : " + s);
 		}
 		File video = new File(path + contentName + s + videoType);
 		if(!video.isFile()) {
 			System.out.println("Not a valid file : " + s);
-			throw new NotFoundException("Invalid File Name : " + s);
+			throw new RuntimeException("Invalid File Name : " + s);
 		}
 		Response response =  buildStream(video, range);
 		return response;
@@ -91,19 +88,20 @@ public class VideoStream {
 
         final int length = to - from + 1;
         final MediaStreamer streamer = new MediaStreamer(length, raf);
-        Response.ResponseBuilder res = Response.status(Status.PARTIAL_CONTENT).entity(streamer)
+				//206 is for partial content
+        Response.ResponseBuilder res = Response.status(206).entity(streamer)
                 .header("Accept-Ranges", "bytes")
                 .header("Content-Range", responseRange)
                 .header(HttpHeaders.CONTENT_LENGTH, streamer.getLenth())
                 .header(HttpHeaders.LAST_MODIFIED, new Date(asset.lastModified()));
         return res.build();
     }
-    
+
     private boolean validateString(String content) {
     	if(content.length() > 10) {
     		return false;
     	}
-    	
+
     	boolean isAllLetters = content.chars().allMatch(Character::isLetter);
     	return isAllLetters;
     }
