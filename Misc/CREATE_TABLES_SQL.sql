@@ -6,7 +6,7 @@ CREATE TABLE user(
    firstname  VARCHAR (20)  NOT NULL,
    lastname  VARCHAR (20)  NOT NULL,
    nric  CHAR (10)  NOT NULL,
-   dob  DATE  NOT NULL,
+   dob  DATETIME  NOT NULL,
    gender  ENUM('M', 'F')  NOT NULL,
    phone1  VARCHAR (20)  NOT NULL,
    phone2  VARCHAR (20),
@@ -41,8 +41,8 @@ CREATE TABLE data(
    type ENUM('Heart Rate', 'Images', 'Time Series', 'File') NOT NULL,
    subtype VARCHAR(20),
    title VARCHAR(200) NOT NULL,
-   creationdate TIMESTAMP NOT NULL,
-   modifieddate TIMESTAMP NOT NULL,
+   creationdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+   modifieddate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
    location VARCHAR(100) NOT NULL,
    PRIMARY KEY(rid),
    FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE
@@ -77,8 +77,8 @@ CREATE TABLE diagnosis(
    diagnosis_id INT NOT NULL AUTO_INCREMENT,
    patient_id INT NOT NULL,
    condition_id INT NOT NULL,
-   date_diagnosed TIMESTAMP NOT NULL,
-   date_treated TIMESTAMP,
+   date_diagnosed TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+   date_treated TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
    PRIMARY KEY(diagnosis_id),
    FOREIGN KEY (patient_id) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE,
    FOREIGN KEY (condition_id) REFERENCES `condition`(condition_id) ON UPDATE CASCADE ON DELETE CASCADE
@@ -122,6 +122,7 @@ CREATE TABLE category(
 CREATE TABLE researcher_category(
    approval_id INT NOT NULL AUTO_INCREMENT,
    researcher_id INT NOT NULL,
+   condition_id INT NOT NULL,
    category_id VARCHAR(255) NOT NULL,
    approval_status ENUM('Approved', 'Pending', 'Not Approved') NOT NULL,
    PRIMARY KEY (approval_id),
