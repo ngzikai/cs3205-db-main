@@ -16,14 +16,10 @@ public class MySQLAccess {
 	private static Connection connect = null;
 	private static Statement statement = null;
 	private static ResultSet resultSet = null;
-	private static String hostname = "localhost";
-	private static String user = "root";
-	private static String pass = "root";
 
 	private static DataSource datasource = null;
   private static Context initContext = null;
-  private static Connection conn = null;
-  private static String connectURL = "java:comp/env/jdbc/javatest";
+  private static String connectURL = "java:comp/env/jdbc/TestDB";
 
 	public static void setConfiguration(String connectionURL){
     connectURL = connectionURL;
@@ -51,34 +47,16 @@ public class MySQLAccess {
 
 	// Get the connection from tomcat and return the connection to the caller
   public static Connection connectDatabase(){
-    if (conn != null){
-      return conn;
+    if (connect != null){
+      return connect;
     }
 		try{
-			conn = datasource().getConnection();
+			connect = datasource().getConnection();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-    return conn;
+    return connect;
   }
-
-	// //This method will load MySQL driver and set up connection to the DB
-	// public static Connection connectDatabase() {
-	// 	if(connect != null) {
-	// 		return connect;
-	// 	}
-	// 	try {
-	// 		//Load MySQL driver
-	// 		Class.forName("com.mysql.jdbc.Driver");
-	// 		// Setting up the connection with the DB
-	// 		connect = DriverManager
-	// 				.getConnection("jdbc:mysql://"+ hostname +"/cs3205?"
-	// 						+ "user=" + user +"&password=" + pass);
-	// 	} catch (Exception e) {
-	// 		e.printStackTrace();
-	// 	}
-	// 	return connect;
-	// }
 
 	//This method will perform a SQL statement on the database and return an result set.
 	public ResultSet readDataBase(String sqlSelect)  throws Exception{
