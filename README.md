@@ -11,6 +11,6 @@ Ensure that the username and password in `restAPI/conf/settings.xml` is inside t
 ### Deployment
 After editing sources, to auto deploy to tomcat server, run the command
 ```
-mvn tomcat7:redeploy -s conf/settings.xml
+mvn tomcat7:redeploy
 ```
 ***
