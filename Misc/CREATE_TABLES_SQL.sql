@@ -18,7 +18,7 @@ CREATE TABLE user(
    zipcode2 INT,
    zipcode3 INT,
    qualify INT NOT NULL,
-   bloodtype VARCHAR(2) NOT NULL,
+   bloodtype VARCHAR(3) NOT NULL,
    nfcid VARCHAR(255),
    PRIMARY KEY (uid)
 );
@@ -40,8 +40,8 @@ CREATE TABLE data(
    type ENUM('Heart Rate', 'Images', 'Time Series', 'File') NOT NULL,
    subtype VARCHAR(20),
    title VARCHAR(200) NOT NULL,
-   creationdate TIMESTAMP NOT NULL,
-   modifieddate TIMESTAMP NOT NULL,
+   creationdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+   modifieddate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
    location VARCHAR(100) NOT NULL,
    PRIMARY KEY(rid),
    FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE
@@ -75,7 +75,7 @@ CREATE TABLE diagnosis(
    diagnosis_id INT NOT NULL AUTO_INCREMENT,
    patient_id INT NOT NULL,
    condition_id INT NOT NULL,
-   date_diagnosed TIMESTAMP NOT NULL,
+   date_diagnosed TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
    date_treated TIMESTAMP,
    PRIMARY KEY(diagnosis_id),
    FOREIGN KEY (patient_id) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE,
