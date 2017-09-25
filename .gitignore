@@ -7,3 +7,6 @@ restAPI/target/**/*
 # For now, ignore sys.properties and settings.xml
 sys.properties
 settings.xml
+
+# MISC folder ignore
+Misc/*
