@@ -3,3 +3,7 @@
 **/*.class
 restAPI/target/*
 restAPI/target/**/*
+**/*.bkup
+# For now, ignore sys.properties and settings.xml
+sys.properties
+settings.xml

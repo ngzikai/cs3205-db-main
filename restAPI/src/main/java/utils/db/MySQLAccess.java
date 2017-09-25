@@ -8,6 +8,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
 
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.sql.DataSource;
+
 public class MySQLAccess {
 	private static Connection connect = null;
 	private static Statement statement = null;
@@ -16,23 +20,65 @@ public class MySQLAccess {
 	private static String user = "root";
 	private static String pass = "root";
 
-	//This method will load MySQL driver and set up connection to the DB
-	public static Connection connectDatabase() {
-		if(connect != null) {
-			return connect;
-		}
-		try {
-			//Load MySQL driver
-			Class.forName("com.mysql.jdbc.Driver");
-			// Setting up the connection with the DB
-			connect = DriverManager
-					.getConnection("jdbc:mysql://"+ hostname +"/cs3205?"
-							+ "user=" + user +"&password=" + pass);
-		} catch (Exception e) {
+	private static DataSource datasource = null;
+  private static Context initContext = null;
+  private static Connection conn = null;
+  private static String connectURL = "java:comp/env/jdbc/javatest";
+
+	public static void setConfiguration(String connectionURL){
+    connectURL = connectionURL;
+  }
+
+  public static DataSource datasource(){
+    if (datasource != null) {
+      return datasource;
+    }
+    establishConnection();
+    return datasource;
+  }
+
+  public static void establishConnection(){
+    if (datasource == null){
+      try{
+        initContext = new InitialContext();
+        // connection = "java:comp/env/jdbc/TestDB"
+        datasource = (DataSource) initContext.lookup(connectURL);
+      }catch(Exception e){
+        e.printStackTrace();
+      }
+    }
+  }
+
+	// Get the connection from tomcat and return the connection to the caller
+  public static Connection connectDatabase(){
+    if (conn != null){
+      return conn;
+    }
+		try{
+			conn = datasource().getConnection();
+		}catch(Exception e){
 			e.printStackTrace();
 		}
-		return connect;
-	}
+    return conn;
+  }
+
+	// //This method will load MySQL driver and set up connection to the DB
+	// public static Connection connectDatabase() {
+	// 	if(connect != null) {
+	// 		return connect;
+	// 	}
+	// 	try {
+	// 		//Load MySQL driver
+	// 		Class.forName("com.mysql.jdbc.Driver");
+	// 		// Setting up the connection with the DB
+	// 		connect = DriverManager
+	// 				.getConnection("jdbc:mysql://"+ hostname +"/cs3205?"
+	// 						+ "user=" + user +"&password=" + pass);
+	// 	} catch (Exception e) {
+	// 		e.printStackTrace();
+	// 	}
+	// 	return connect;
+	// }
 
 	//This method will perform a SQL statement on the database and return an result set.
 	public ResultSet readDataBase(String sqlSelect)  throws Exception{
