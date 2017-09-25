@@ -25,8 +25,8 @@ public class SessionService{
   public String get(@PathParam("type") String type){
     sc = new SessionController(type);
 		ArrayList<Admin> adminList = null;
-    List<DataObject> list = sc.getAllObjects();
-		String sql = "SELECT * FROM javatest.testdata";
+    // List<DataObject> list = sc.getAllObjects();
+		String sql = "SELECT * FROM CS3205.users";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
@@ -35,18 +35,22 @@ public class SessionService{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    for (Admin a : adminList)
+    String result = "TESTING: ";
+    for (Admin a : adminList){
       a.print();
-    return "test";
+      result += a.getUsername()+ " "+a.getAdminId()+" "+a.getPassword()+" ";
+    }
+
+    return result;
   }
 
 	private ArrayList<Admin> resultSetToAdminList(ResultSet resultSet) throws SQLException {
 		// ResultSet is initially before the first data set
 		ArrayList<Admin> adminList = new ArrayList<Admin>();
 		while (resultSet.next()) {
-			int id = resultSet.getInt("id");
-			String username = resultSet.getString("foo");
-			String password = resultSet.getString("bar");
+			int id = resultSet.getInt("uid");
+			String username = resultSet.getString("firstname");
+			String password = resultSet.getString("lastname");
 			String salt = "hello";
 
 			Admin admin = new Admin(id, username, password, salt);
