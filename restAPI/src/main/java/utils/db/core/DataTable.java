@@ -16,16 +16,20 @@ public class DataTable{
   List<String> columns = null;
   public DataTable(String tableName){
     this.tableName = tableName;
+    // Initial Setup
     getAllObjects();
     getColumns();
+    // Close DB connection
+    MySQLAccess.close();
   }
 
-  public DataObject getDataObject(String oid){
+  public DataObject getDataObject(String uid){
+    // Sanity Check
     if(table == null){
       getAllObjects();
     }
 
-    return table.get(oid);
+    return table.get(uid);
   }
 
   public List<DataObject> getAllObjects(){
@@ -36,47 +40,6 @@ public class DataTable{
     table = new HashMap<String, DataObject>();
     return queryAll();
   }
-
-  private List<DataObject> queryAll(){
-    List<DataObject> rows = new ArrayList<>();
-    String sql = "SELECT * FROM CS3205."+tableName;
-
-    try{
-      PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
-      rs = rs = MySQLAccess.readDataBasePS(ps);
-      while(rs.next()){
-        DataObject row = new DataObject(this);
-        for (String column : getColumns()) {
-          row.put(column, rs.getObject(column));
-        }
-        table.put(rs.getString("uid"), row);
-        rows.add(row);
-      }
-    } catch(Exception s){
-      s.printStackTrace();
-    }
-    return rows;
-    // return query(null, null, null);
-  }
-
-  // public List<DataObject> query(String[] columns, String[] conditions, Object[] variables){
-  //   List<DataObject> rows = new ArrayList<>();
-  //   table = new HashMap<>();
-  //   try{
-  //     rs = DBQueryParser.query(tableName, columns, conditions, variables);
-  //     while(rs.next()){
-  //       DataObject row = new DataObject(this);
-  //       for (String column : getColumns()) {
-  //         row.put(column, rs.getObject(column));
-  //       }
-  //       table.put(rs.getString("oid"), row);
-  //       rows.add(row);
-  //     }
-  //   } catch(Exception s){
-  //     s.printStackTrace();
-  //   }
-  //   return rows;
-  // }
 
   public List<String> getColumns(){
     if(columns != null){
@@ -137,6 +100,7 @@ public class DataTable{
             updateVariableOrder.add(dataObject.get(key));
           }
         }
+        // remove the last ,
         sql = (new StringBuilder(sql).replace(sql.lastIndexOf(","), sql.lastIndexOf(",") + 1, "").toString());
         sql += " WHERE uid = ?";
         updateVariableOrder.add(dataObject.get("uid"));
@@ -148,11 +112,38 @@ public class DataTable{
         pt++;
       }
       result = MySQLAccess.updateDataBasePS(preparedStatement);
+      MySQLAccess.close();
     } catch(Exception e) {
       e.printStackTrace();
-      return result;
     }
     return result;
+  }
+
+  ////////////////////////////////////////////////////////////////////////
+  //
+  // Private Methods
+  //
+  ////////////////////////////////////////////////////////////////////////
+
+  private List<DataObject> queryAll(){
+    List<DataObject> rows = new ArrayList<>();
+    String sql = "SELECT * FROM CS3205."+tableName;
+
+    try{
+      PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
+      rs = rs = MySQLAccess.readDataBasePS(ps);
+      while(rs.next()){
+        DataObject row = new DataObject(this);
+        for (String column : getColumns()) {
+          row.put(column, rs.getObject(column));
+        }
+        table.put(rs.getString("uid"), row);
+        rows.add(row);
+      }
+    } catch(Exception s){
+      s.printStackTrace();
+    }
+    return rows;
   }
 
   private static PreparedStatement updateVariables(PreparedStatement ps, Object argObj, int pt) throws SQLException, Exception{

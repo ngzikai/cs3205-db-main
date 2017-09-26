@@ -12,7 +12,6 @@ public class DataObject extends HashMap<String, Object>{
 
   public int save(){
     int result = table.update(this);
-    MySQLAccess.close();
     return result;
   }
 

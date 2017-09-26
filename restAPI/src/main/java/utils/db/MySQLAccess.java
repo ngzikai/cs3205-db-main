@@ -20,11 +20,16 @@ public class MySQLAccess {
   private static Context initContext = null;
   private static String connectURL = "java:comp/env/jdbc/TestDB";
 
+	////////////////////////////////////////////////////////////////////////
+  //
+  // Database Connection Set up
+  //
+  ////////////////////////////////////////////////////////////////////////
 	public static void setConfiguration(String connectionURL){
     connectURL = connectionURL;
   }
 
-  public static DataSource datasource(){
+  private static DataSource datasource(){
     if (datasource != null) {
       return datasource;
     }
@@ -32,7 +37,7 @@ public class MySQLAccess {
     return datasource;
   }
 
-  public static void establishConnection(){
+  private static void establishConnection(){
     if (datasource == null){
       try{
         initContext = new InitialContext();
@@ -43,6 +48,12 @@ public class MySQLAccess {
       }
     }
   }
+
+	////////////////////////////////////////////////////////////////////////
+	//
+	// Database Connection and Execution
+	//
+	////////////////////////////////////////////////////////////////////////
 
 	// Get the connection from tomcat and return the connection to the caller
   public static Connection connectDatabase(){
@@ -86,6 +97,12 @@ public class MySQLAccess {
 		resultSet = preparedStatement.executeQuery();
 		return resultSet;
 	}*/
+
+	////////////////////////////////////////////////////////////////////////
+	//
+	// Private Methods
+	//
+	////////////////////////////////////////////////////////////////////////
 
 	private void writeMetaData(ResultSet resultSet) throws SQLException {
 		//  Now get some metadata from the database
