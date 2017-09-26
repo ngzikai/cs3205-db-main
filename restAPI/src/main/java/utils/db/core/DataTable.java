@@ -3,6 +3,7 @@ package utils.db.core;
 import java.util.*;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 
@@ -16,11 +17,6 @@ public class DataTable{
   List<String> columns = null;
   public DataTable(String tableName){
     this.tableName = tableName;
-    // Initial Setup
-    getAllObjects();
-    getColumns();
-    // Close DB connection
-    MySQLAccess.close();
   }
 
   public DataObject getDataObject(String uid){
@@ -47,11 +43,14 @@ public class DataTable{
     }
     columns = new ArrayList<>();
     try{
+      DatabaseMetaData meta = MySQLAccess.connectDatabase().getMetaData();
+      rs = meta.getColumns("CS3205", null, tableName,  "%");
       ResultSetMetaData rsmd = rs.getMetaData();
       for(int i = 1; i <= rsmd.getColumnCount(); i++){
         System.out.println(rsmd.getColumnCount() +" " +i);
         columns.add(rsmd.getColumnName(i));
       }
+      MySQLAccess.close();
     }catch(Exception s){
       s.printStackTrace();
     }
