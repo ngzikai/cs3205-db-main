@@ -11,8 +11,11 @@ public class DataObject extends HashMap<String, Object>{
   }
 
   public int save(){
-    int result = table.update(this);
-    return result;
+    return table.update(this);
+  }
+
+  public int delete(){
+    return table.remove(this);
   }
 
 }

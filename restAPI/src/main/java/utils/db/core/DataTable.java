@@ -119,6 +119,23 @@ public class DataTable{
     return result;
   }
 
+  public int remove(DataObject dataObject){
+    PreparedStatement ps = null;
+    String sql = "DELETE FROM CS3205."+tableName +" WHERE uid = ?";
+    int result = -1;
+    try{
+      if(dataObject.get("uid") != null){
+        ps = MySQLAccess.connectDatabase().prepareStatement(sql);
+        ps = updateVariables(ps, dataObject.get("uid"), 0);
+        result = MySQLAccess.updateDataBasePS(ps);
+        MySQLAccess.close();
+      }
+    }catch(Exception e){
+      e.printStackTrace();
+    }
+    return result;
+  }
+
   ////////////////////////////////////////////////////////////////////////
   //
   // Private Methods
