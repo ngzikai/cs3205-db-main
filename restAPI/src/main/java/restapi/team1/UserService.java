@@ -22,8 +22,8 @@ public class UserService {
 
 		JSONObject jsonObject = uc.getAllUser();
 
-		String result = "@Produces(\"application/json\") List of Users \n\n" + jsonObject;
-		return Response.status(200).entity(result).build();
+		//String result = "@Produces(\"application/json\") List of Users \n\n" + jsonObject;
+		return createResponse(jsonObject);
 	}
 
 	@Path("{s}")
@@ -33,8 +33,8 @@ public class UserService {
 		JSONObject jsonObject = new JSONObject();
 		if(!validateString(user)) {
 			jsonObject.put("result", false); 
-			String result = "@Produces(\"application/json\") Incorrect username";
-			return Response.status(200).entity(result).build();
+			//String result = "@Produces(\"application/json\") Incorrect username";
+			return createResponse(jsonObject);
 		}
 
 		
@@ -43,12 +43,12 @@ public class UserService {
 		if(jsonObject == null) {
 			jsonObject = new JSONObject();
 			jsonObject.put("result", false); 
-			String result = "@Produces(\"application/json\") Incorrect username";
-			return Response.status(200).entity(result).build();
+			//String result = "@Produces(\"application/json\") Incorrect username";
+			return createResponse(jsonObject);
 		}
 		
-		String result = "@Produces(\"application/json\") User details\n\n" + jsonObject;
-		return Response.status(200).entity(result).build();
+		//String result = "@Produces(\"application/json\") User details\n\n" + jsonObject;
+		return createResponse(jsonObject);
 	}
 	
 	@Path("/create/{user}/{password}/{salt}/{fname}/{lname}/{nric}/"
@@ -68,8 +68,8 @@ public class UserService {
 		JSONObject jsonObject = uc.createUser(user, password, salt, fname, lname, nric, dob, gender.charAt(0), phone1, phone2, phone3, 
 				addr1, addr2, addr3, zip1, zip2, zip3, qualify, bloodType, nfcid);
 
-		String result = "@Produces(\"application/json\") Creating user .... \n\n" + jsonObject;
-		return Response.status(200).entity(result).build();
+		//String result = "@Produces(\"application/json\") Creating user .... \n\n" + jsonObject;
+		return createResponse(jsonObject);
 	}
 	
 	@Path("/delete/{uid}")
@@ -79,8 +79,15 @@ public class UserService {
 
 		JSONObject jsonObject = uc.deleteUser(uid);
 
-		String result = "@Produces(\"application/json\") Delete user "+ uid +"\n\n" + jsonObject;
-		return Response.status(200).entity(result).build();
+		//String result = "@Produces(\"application/json\") Delete user "+ uid +"\n\n" + jsonObject;
+		return createResponse(jsonObject);
+	}
+	
+	public Response createResponse(JSONObject jsonObject) {
+		return Response.status(200).entity(jsonObject.toString())
+				.header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
+				.build();
 	}
 
 	private boolean validateString(String username) {

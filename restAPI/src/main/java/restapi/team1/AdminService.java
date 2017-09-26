@@ -23,8 +23,8 @@ public class AdminService {
 
 		JSONObject jsonObject = ac.getAllAdmin();
 
-		String result = "@Produces(\"application/json\") List of Admins \n\n" + jsonObject;
-		return Response.status(200).entity(result).build();
+		//String result = "@Produces(\"application/json\") List of Admins \n\n" + jsonObject;
+		return createResponse(jsonObject);
 	}
 
 	@Path("{s}")
@@ -34,8 +34,8 @@ public class AdminService {
 		JSONObject jsonObject = new JSONObject();
 		if(!validateString(adminuser)) {
 			jsonObject.put("result", false);
-			String result = "@Produces(\"application/json\") Incorrect username";
-			return Response.status(200).entity(result).build();
+			//String result = "@Produces(\"application/json\") Incorrect username";
+			return createResponse(jsonObject);
 		}
 
 		System.out.println("Retrieving details of admin account: " + adminuser);
@@ -45,13 +45,20 @@ public class AdminService {
 			jsonObject = new JSONObject();
 			jsonObject.put("result", false);
 			String result = "@Produces(\"application/json\") Incorrect username";
-			return Response.status(200).entity(result).build();
+			return createResponse(jsonObject);
 		}
 
-		String result = "@Produces(\"application/json\") Admin details\n\n" + jsonObject;
-		return Response.status(200).entity(result).build();
+		//String result = "@Produces(\"application/json\") Admin details\n\n" + jsonObject;
+		return createResponse(jsonObject);
 	}
 
+	public Response createResponse(JSONObject jsonObject) {
+		return Response.status(200).entity(jsonObject.toString())
+				.header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
+				.build();
+	}
+	
 	private boolean validateString(String username) {
 		return StringUtils.isAlphanumeric(username);
 	}
