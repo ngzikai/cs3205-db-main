@@ -2,6 +2,8 @@ package utils.db.core;
 
 import java.util.*;
 
+import utils.db.*;
+
 public class DataObject extends HashMap<String, Object>{
   private DataTable table = null;
   public DataObject(DataTable table){
@@ -9,7 +11,9 @@ public class DataObject extends HashMap<String, Object>{
   }
 
   public int save(){
-    return table.update(this);
+    int result = table.update(this);
+    MySQLAccess.close();
+    return result;
   }
 
 }
