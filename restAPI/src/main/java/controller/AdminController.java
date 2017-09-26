@@ -19,7 +19,7 @@ public class AdminController {
 	public JSONObject getAllAdmin() {
 		JSONObject jsonObjectFinal = new JSONObject();
 		ArrayList<Admin> adminList = null;
-		String sql = "SELECT * FROM cs3205.admin";
+		String sql = "SELECT * FROM CS3205.admin";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
@@ -44,7 +44,7 @@ public class AdminController {
 	public JSONObject getAdmin(String username) {
 		JSONObject jsonObject = new JSONObject();
 		ArrayList<Admin> adminList = null;
-		String sql = "SELECT * FROM cs3205.admin WHERE username = ? ";
+		String sql = "SELECT * FROM CS3205.admin WHERE username = ? ";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);

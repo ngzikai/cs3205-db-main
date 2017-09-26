@@ -21,7 +21,7 @@ public class UserController {
 	public JSONObject getAllUser() {
 		JSONObject jsonObjectFinal = new JSONObject();
 		ArrayList<User> userList = null;
-		String sql = "SELECT * FROM cs3205.user";
+		String sql = "SELECT * FROM CS3205.user";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
@@ -44,7 +44,7 @@ public class UserController {
 	public JSONObject getUser(String username) {
 		JSONObject jsonObject = new JSONObject();
 		ArrayList<User> userList = null;
-		String sql = "SELECT * FROM cs3205.user WHERE username = ? ";
+		String sql = "SELECT * FROM CS3205.user WHERE username = ? ";
 		System.out.println("Retrieving details of User account: " + username);
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
@@ -71,7 +71,7 @@ public class UserController {
 		JSONObject jsonObject = new JSONObject();
 		ArrayList<User> userList = null;
 
-		String sql = "SELECT * FROM cs3205.user WHERE uid = ? ";
+		String sql = "SELECT * FROM CS3205.user WHERE uid = ? ";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
@@ -100,7 +100,7 @@ public class UserController {
 				phone2, phone3,  address1, address2, address3, zipcode1, zipcode2, zipcode3, qualify, bloodtype, nfcid);
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
-		String sql = "INSERT INTO cs3205.user VALUES (default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO CS3205.user VALUES (default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
@@ -139,7 +139,7 @@ public class UserController {
 	public JSONObject deleteUser(int uid) {
 		int result = 0;
 		JSONObject jsonObject = new JSONObject();
-		String sql = "DELETE FROM cs3205.user where uid = ?";
+		String sql = "DELETE FROM CS3205.user where uid = ?";
 		
 		System.out.println("Deleting user: " + uid);
 		try {

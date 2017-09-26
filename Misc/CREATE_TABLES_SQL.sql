@@ -6,7 +6,7 @@ CREATE TABLE user(
    firstname  VARCHAR (20)  NOT NULL,
    lastname  VARCHAR (20)  NOT NULL,
    nric  CHAR (10)  NOT NULL,
-   dob  DATETIME  NOT NULL,
+   dob  DATE  NOT NULL,
    gender  ENUM('M', 'F')  NOT NULL,
    phone1  VARCHAR (20)  NOT NULL,
    phone2  VARCHAR (20),
@@ -126,14 +126,14 @@ CREATE TABLE researcher_category(
    category_id VARCHAR(255) NOT NULL,
    approval_status ENUM('Approved', 'Pending', 'Not Approved') NOT NULL,
    PRIMARY KEY (approval_id),
-   FOREIGN KEY (researcher_id) REFERENCES researcher(uid) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY (researcher_id) REFERENCES researcher(researcher_id) ON UPDATE CASCADE ON DELETE CASCADE,
    FOREIGN KEY (condition_id) REFERENCES `condition`(condition_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE condition_category(
    approval_id INT NOT NULL AUTO_INCREMENT,
    condition_id INT NOT NULL,
-   category_id VARCHAR(255) NOT NULL,
+   category_id INT NOT NULL,
    PRIMARY KEY (approval_id),
    FOREIGN KEY (condition_id) REFERENCES `condition`(condition_id) ON UPDATE CASCADE ON DELETE CASCADE,
    FOREIGN KEY (category_id) REFERENCES category(category_id) ON UPDATE CASCADE ON DELETE CASCADE
