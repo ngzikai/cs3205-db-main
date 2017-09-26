@@ -2,7 +2,6 @@ package utils.db.core;
 
 import java.util.*;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
@@ -11,10 +10,9 @@ import utils.db.*;
 
 
 public class DataTable{
-  String tableName = "";
-  Map<String, DataObject> table = null;
-  ResultSet rs = null;
-  List<String> columns = null;
+  protected String tableName = "";
+  protected Map<String, DataObject> table = null;
+  protected List<String> columns = null;
   public DataTable(String tableName){
     this.tableName = tableName;
   }
@@ -44,13 +42,10 @@ public class DataTable{
     columns = new ArrayList<>();
     try{
       DatabaseMetaData meta = MySQLAccess.connectDatabase().getMetaData();
-      rs = meta.getColumns("CS3205", null, tableName,  "%");
-      ResultSetMetaData rsmd = rs.getMetaData();
-      for(int i = 1; i <= rsmd.getColumnCount(); i++){
-        System.out.println(rsmd.getColumnCount() +" " +i);
-        columns.add(rsmd.getColumnName(i));
+      ResultSet rs = meta.getColumns("CS3205", null, tableName,  "%");
+      while(rs.next()){
+        columns.add(rs.getString(4));
       }
-      MySQLAccess.close();
     }catch(Exception s){
       s.printStackTrace();
     }
@@ -111,7 +106,6 @@ public class DataTable{
         pt++;
       }
       result = MySQLAccess.updateDataBasePS(preparedStatement);
-      MySQLAccess.close();
     } catch(Exception e) {
       e.printStackTrace();
     }
@@ -127,7 +121,6 @@ public class DataTable{
         ps = MySQLAccess.connectDatabase().prepareStatement(sql);
         ps = updateVariables(ps, dataObject.get("uid"), 0);
         result = MySQLAccess.updateDataBasePS(ps);
-        MySQLAccess.close();
       }
     }catch(Exception e){
       e.printStackTrace();
@@ -147,7 +140,7 @@ public class DataTable{
 
     try{
       PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
-      rs = rs = MySQLAccess.readDataBasePS(ps);
+      ResultSet rs = MySQLAccess.readDataBasePS(ps);
       while(rs.next()){
         DataObject row = new DataObject(this);
         for (String column : getColumns()) {
