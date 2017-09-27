@@ -18,19 +18,20 @@ public class DataTable{
   }
 
   public DataObject getDataObject(String uid){
-    // Sanity Check
-    if(table == null){
-      getAllObjects();
-    }
+    // // Sanity Check
+    // if(table == null){
+    //   getAllObjects();
+    // }
+    getAllObjects();
 
     return table.get(uid);
   }
 
   public List<DataObject> getAllObjects(){
-    if(table != null){
-      List<DataObject> list = new ArrayList<DataObject>(table.values());
-      return list;
-    }
+    // if(table != null){
+    //   List<DataObject> list = new ArrayList<DataObject>(table.values());
+    //   return list;
+    // }
     table = new HashMap<String, DataObject>();
     return queryAll();
   }
@@ -60,52 +61,62 @@ public class DataTable{
     int result = -1;
     try{
       // dataObject does not exists in table
-      if(dataObject.get("uid") == null) {
         String columnOrder = "(";
         String variables = "(";
         for(String key : getColumns()){
+          columnOrder += key+",";
           if (key.equalsIgnoreCase("uid")){
-            continue;
           } else if(dataObject.get(key)==null){
             System.out.println("Ensure that all the keys are filled. "+key+" is missing.");
             return -1;
-          } else {
-            columnOrder += key+",";
-            variables += "?, ";
-            updateVariableOrder.add(dataObject.get(key));
           }
+          variables += "?, ";
+          updateVariableOrder.add(dataObject.get(key));
         }
         // remove the last ,
         columnOrder = (new StringBuilder(columnOrder).replace(columnOrder.lastIndexOf(","), columnOrder.lastIndexOf(",") + 1, "").toString())+")";
         variables = (new StringBuilder(variables).replace(variables.lastIndexOf(","), variables.lastIndexOf(",") + 1, "").toString())+")";
         sql += columnOrder+" VALUES "+variables;
         System.out.println(sql);
-      } else {
-        int uid = (int) dataObject.get("uid");
-        sql = "UPDATE CS3205."+tableName+" SET ";
+        // ON DUPLICATE, UPDATE
+        sql += " ON DUPLICATE KEY UPDATE ";
+
         for(String key : getColumns()){
           if (key.equalsIgnoreCase("uid")){
-            continue;
           } else if(dataObject.get(key)==null){
             System.out.println("Ensure that all the keys are filled. "+key+" is missing.");
             return -1;
-          } else {
-            sql += key+" = ?, ";
-            updateVariableOrder.add(dataObject.get(key));
           }
+          sql += key+" = ?, ";
+          updateVariableOrder.add(dataObject.get(key));
         }
         // remove the last ,
         sql = (new StringBuilder(sql).replace(sql.lastIndexOf(","), sql.lastIndexOf(",") + 1, "").toString());
-        sql += " WHERE uid = ?";
-        updateVariableOrder.add(dataObject.get("uid"));
-      }
-      preparedStatement = MySQLAccess.connectDatabase().prepareStatement(sql);
-      int pt = 0;
-      for(Object obj : updateVariableOrder){
-        preparedStatement = updateVariables(preparedStatement, obj, pt);
-        pt++;
-      }
-      result = MySQLAccess.updateDataBasePS(preparedStatement);
+        preparedStatement = MySQLAccess.connectDatabase().prepareStatement(sql);
+        int pt = 0;
+        for(Object obj : updateVariableOrder){
+          preparedStatement = updateVariables(preparedStatement, obj, pt);
+          pt++;
+        }
+        result = MySQLAccess.updateDataBasePS(preparedStatement);
+      //}else {
+      //   Object uid = dataObject.get("uid");
+      //   sql = "UPDATE CS3205."+tableName+" SET ";
+      //   for(String key : getColumns()){
+      //     if (key.equalsIgnoreCase("uid")){
+      //       continue;
+      //     } else if(dataObject.get(key)==null){
+      //       System.out.println("Ensure that all the keys are filled. "+key+" is missing.");
+      //       return -1;
+      //     } else {
+      //       sql += key+" = ?, ";
+      //       updateVariableOrder.add(dataObject.get(key));
+      //     }
+      //   }
+
+      //   sql += " WHERE uid = ?";
+      //   updateVariableOrder.add(dataObject.get("uid"));
+      // }
     } catch(Exception e) {
       e.printStackTrace();
     }
