@@ -45,7 +45,7 @@ public class SessionController {
     session.put("ownerID", 1);
     int result = session.save();
     if (result > 0) {
-      writeToFile(inputstream, baseDir + sessionTable.getTableName() + "/" + session.get("location").toString());
+      writeToFile(inputstream, baseDir, "user1", sessionTable.getTableName(), session.get("location").toString());
       return true;
     } else {
       return false;
@@ -73,12 +73,14 @@ public class SessionController {
   }
 
   // save uploaded file to new location
-  private void writeToFile(InputStream uploadedInputStream,
+  private void writeToFile(InputStream uploadedInputStream, String baseDir, String user, String typeFolder,
   	String uploadedFileLocation) {
 
   	try {
-  		OutputStream out = new FileOutputStream(new File(
-  				uploadedFileLocation));
+      uploadedFileLocation = baseDir + user + "/" + typeFolder + "/" + uploadedFileLocation;
+      File file = new File(uploadedFileLocation);
+      file.getParentFile().mkdirs();
+  		OutputStream out = new FileOutputStream(file);
   		int read = 0;
   		byte[] bytes = new byte[1024];
 
