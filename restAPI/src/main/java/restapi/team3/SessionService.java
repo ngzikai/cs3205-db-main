@@ -53,7 +53,7 @@ public class SessionService{
 			String password = resultSet.getString("lastname");
 			String salt = "hello";
 
-			Admin admin = new Admin(id, username, password, salt);
+			Admin admin = new Admin(id, username, password);
 			adminList.add(admin);
 		}
 		MySQLAccess.close();

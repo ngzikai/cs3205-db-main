@@ -2,7 +2,6 @@ CREATE TABLE user(
    uid  INT NOT NULL  AUTO_INCREMENT,
    username VARCHAR(20) NOT NULL UNIQUE,
    password VARCHAR(255)  NOT NULL,
-   salt   VARCHAR(255) NOT NULL,
    firstname  VARCHAR (20)  NOT NULL,
    lastname  VARCHAR (20)  NOT NULL,
    nric  CHAR (10)  NOT NULL,
@@ -88,7 +87,6 @@ CREATE TABLE admin(
    admin_id INT NOT NULL AUTO_INCREMENT,
    username VARCHAR(20) NOT NULL,
    password VARCHAR(255) NOT NULL,
-   salt VARCHAR(255) NOT NULL,
    PRIMARY KEY(admin_id)
 );
 

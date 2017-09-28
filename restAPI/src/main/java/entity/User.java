@@ -9,7 +9,6 @@ public class User {
 	private int uid;
 	private String username;
 	private String password;
-	private String salt;
 	private String firstName;
 	private String lastName;
 	private String nric;
@@ -24,14 +23,13 @@ public class User {
 	
 	//Constructors for User Class
 	
-	public User(int uid, String username, String password, String salt, String firstName, String lastName, String nric,
+	public User(int uid, String username, String password, String firstName, String lastName, String nric,
 			LocalDate dob, char gender, String[] phone, String[] address, int[] zipcode, int qualify, String bloodtype,
 			String nfcid) {
 		super();
 		this.uid = uid;
 		this.username = username;
 		this.password = password;
-		this.salt = salt;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.nric = nric;
@@ -46,12 +44,11 @@ public class User {
 	}
 
 	//Constructor without UID. Most likely used for creating a new user entry.
-	public User(String username, String password, String salt, String firstName, String lastName, String nric, LocalDate dob,
+	public User(String username, String password, String firstName, String lastName, String nric, LocalDate dob,
 			char gender, String[] phone, String[] address, int[] zipcode, int qualify, String bloodtype, String nfcid) {
 		super();
 		this.username = username;
 		this.password = password;
-		this.salt = salt;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.nric = nric;
@@ -65,14 +62,13 @@ public class User {
 		this.nfcid = nfcid;
 	}
 
-	public User(String username, String password, String salt, String firstName, String lastName, String nric,
+	public User(String username, String password, String firstName, String lastName, String nric,
 			LocalDate dob, char gender, String phone1, String phone2, String phone3, String address1, String address2,
 			String address3, int zipcode1, int zipcode2, int zipcode3, int qualify, String bloodtype,
 			String nfcid) {
 		super();
 		this.username = username;
 		this.password = password;
-		this.salt = salt;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.nric = nric;
@@ -110,14 +106,6 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getSalt() {
-		return salt;
-	}
-
-	public void setSalt(String salt) {
-		this.salt = salt;
 	}
 
 	public String getFirstName() {

@@ -92,11 +92,11 @@ public class UserController {
 		return jsonObject;
 	}
 
-	public JSONObject createUser(String username, String password, String salt, String firstName, String lastName,
+	public JSONObject createUser(String username, String password, String firstName, String lastName,
 			String nric, String dob, char gender, String phone1, String phone2, String phone3, String address1, 
 			String address2, String address3, int zipcode1, int zipcode2, int zipcode3, int qualify, String bloodtype,
 			String nfcid) {
-		User user = new User(username, password, salt, firstName, lastName, nric, LocalDate.parse(dob), gender, phone1,
+		User user = new User(username, password, firstName, lastName, nric, LocalDate.parse(dob), gender, phone1,
 				phone2, phone3,  address1, address2, address3, zipcode1, zipcode2, zipcode3, qualify, bloodtype, nfcid);
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
@@ -106,7 +106,6 @@ public class UserController {
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setString(1, user.getUsername());
 			preparedStatement.setString(2, user.getPassword());
-			preparedStatement.setString(3, user.getSalt());
 			preparedStatement.setString(4, user.getFirstName());
 			preparedStatement.setString(5, user.getLastName());
 			preparedStatement.setString(6, user.getNric());
@@ -163,7 +162,6 @@ public class UserController {
 			int id = resultSet.getInt("uid");
 			String username = resultSet.getString("username");
 			String password = resultSet.getString("password");
-			String salt = resultSet.getString("salt");
 			String firstName = resultSet.getString("firstname");
 			String lastName = resultSet.getString("lastname");
 			String nric = resultSet.getString("nric");
@@ -175,7 +173,7 @@ public class UserController {
 			int qualify = resultSet.getInt("qualify");
 			String bloodType = resultSet.getString("bloodtype");
 			String nfcid = resultSet.getString("nfcid");
-			User user = new User(id, username, password, salt, firstName, lastName, nric
+			User user = new User(id, username, password, firstName, lastName, nric
 					, dob, gender, phone, address, zipcode, qualify, bloodType, nfcid);
 			userList.add(user);
 		}
@@ -188,7 +186,6 @@ public class UserController {
 		jsonObjectUser.put("uid", user.getUid()); 
 		jsonObjectUser.put("username", user.getUsername());
 		jsonObjectUser.put("password", user.getPassword());
-		jsonObjectUser.put("salt", user.getSalt());
 		jsonObjectUser.put("firstname", user.getFirstName());
 		jsonObjectUser.put("lastname", user.getLastName());
 		jsonObjectUser.put("dob", user.getDob().toString());
