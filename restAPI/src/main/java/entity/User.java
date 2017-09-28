@@ -122,6 +122,14 @@ public class User {
 	}
 	
 
+	public User(int uid, String firstName, String lastName, char gender) {
+		super();
+		this.uid = uid;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.gender = gender;
+	}
+
 	public int getUid() {
 		return uid;
 	}

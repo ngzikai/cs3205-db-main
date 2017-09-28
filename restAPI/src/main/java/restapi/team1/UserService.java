@@ -26,10 +26,10 @@ public class UserService {
 		return createResponse(jsonObject);
 	}
 
-	@Path("{s}")
+	@Path("/username/{s}")
 	@GET
 	@Produces("application/json")
-	public Response getUserFromUsername(@PathParam("s") String user) throws JSONException {
+	public Response getUserWithUsername(@PathParam("s") String user) throws JSONException {
 		JSONObject jsonObject = new JSONObject();
 		if(!validateString(user)) {
 			jsonObject.put("result", false); 
@@ -39,6 +39,31 @@ public class UserService {
 
 		
 		jsonObject = uc.getUser(user); 
+
+		if(jsonObject == null) {
+			jsonObject = new JSONObject();
+			jsonObject.put("result", false); 
+			//String result = "@Produces(\"application/json\") Incorrect username";
+			return createResponse(jsonObject);
+		}
+		
+		//String result = "@Produces(\"application/json\") User details\n\n" + jsonObject;
+		return createResponse(jsonObject);
+	}
+	
+	@Path("/uid/{s}")
+	@GET
+	@Produces("application/json")
+	public Response getUserWithUID(@PathParam("s") String user) throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+		if(!validateString(user)) {
+			jsonObject.put("result", false); 
+			//String result = "@Produces(\"application/json\") Incorrect username";
+			return createResponse(jsonObject);
+		}
+
+		
+		jsonObject = uc.getUserWithUID(user); 
 
 		if(jsonObject == null) {
 			jsonObject = new JSONObject();
@@ -101,6 +126,26 @@ public class UserService {
 		JSONObject jsonObject = uc.deleteUser(uid);
 
 		//String result = "@Produces(\"application/json\") Delete user "+ uid +"\n\n" + jsonObject;
+		return createResponse(jsonObject);
+	}
+	
+	@Path("/therapists")
+	@GET
+	@Produces("application/json")
+	public Response getAllTherapists() throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+
+		
+		jsonObject = uc.getTherapists(); 
+
+		if(jsonObject == null) {
+			jsonObject = new JSONObject();
+			jsonObject.put("result", false); 
+			//String result = "@Produces(\"application/json\") Incorrect username";
+			return createResponse(jsonObject);
+		}
+		
+		//String result = "@Produces(\"application/json\") User details\n\n" + jsonObject;
 		return createResponse(jsonObject);
 	}
 	

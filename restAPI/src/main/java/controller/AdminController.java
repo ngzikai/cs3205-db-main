@@ -27,6 +27,7 @@ public class AdminController {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
 		JSONArray adminArray = new JSONArray();
 		for(Admin admin : adminList) {
@@ -52,6 +53,7 @@ public class AdminController {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
 		if(adminList.size() < 1) {
 			return null;

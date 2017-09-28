@@ -29,6 +29,7 @@ public class UserController {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
 		JSONArray userArray = new JSONArray();
 		for(User user : userList) {
@@ -54,6 +55,7 @@ public class UserController {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
 		
 		if(userList.size() < 1) {
@@ -67,7 +69,7 @@ public class UserController {
 	}
 	
 	// This method will take in a user name and return the user object from the database;
-	public JSONObject getUser(int uid) {
+	public JSONObject getUserWithUID(String uid) {
 		JSONObject jsonObject = new JSONObject();
 		ArrayList<User> userList = null;
 
@@ -75,11 +77,12 @@ public class UserController {
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
-			preparedStatement.setInt(1, uid);
+			preparedStatement.setInt(1, Integer.parseInt(uid));
 			userList = resultSetToUserList(MySQLAccess.readDataBasePS(preparedStatement));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
 		
 		if(userList.size() < 1) {
@@ -128,6 +131,7 @@ public class UserController {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
 		MySQLAccess.close();
 		System.out.println("Created user: " + username);
@@ -174,6 +178,7 @@ public class UserController {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
 		MySQLAccess.close();
 		System.out.println("Updated user: " + username);
@@ -195,10 +200,34 @@ public class UserController {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
 		MySQLAccess.close();
 		jsonObject.put("result", result);
 		return jsonObject;
+	}
+	
+	public JSONObject getTherapists() {
+		JSONObject jsonObjectFinal = new JSONObject();
+		ArrayList<User> userList = null;
+		String sql = "SELECT uid, firstname, lastname, gender FROM CS3205.user where qualify = 1";
+		try {
+			Connection connect = MySQLAccess.connectDatabase();
+			PreparedStatement preparedStatement = connect.prepareStatement(sql);
+			userList = resultSetToTherapistsList(MySQLAccess.readDataBasePS(preparedStatement));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		JSONArray userArray = new JSONArray();
+		for(User user : userList) {
+			JSONObject jsonObjectUser = buildTherapistsObject(user);
+			userArray.put(jsonObjectUser);
+		}
+		MySQLAccess.close();
+		jsonObjectFinal.put("users", userArray);
+		return jsonObjectFinal;
 	}
 
 	private ArrayList<User> resultSetToUserList(ResultSet resultSet) throws SQLException {
@@ -227,6 +256,21 @@ public class UserController {
 		return userList;
 	}
 	
+	private ArrayList<User> resultSetToTherapistsList(ResultSet resultSet) throws SQLException {
+		// ResultSet is initially before the first data set
+		ArrayList<User> userList = new ArrayList<User>();
+		while (resultSet.next()) {
+			int id = resultSet.getInt("uid");
+			String firstName = resultSet.getString("firstname");
+			String lastName = resultSet.getString("lastname");
+			char gender = resultSet.getString("gender").charAt(0);
+			User user = new User(id, firstName, lastName, gender);
+			userList.add(user);
+		}
+		MySQLAccess.close();
+		return userList;
+	}
+	
 	private JSONObject buildUserObject(User user) {
 		JSONObject jsonObjectUser = new JSONObject();
 		jsonObjectUser.put("uid", user.getUid()); 
@@ -235,7 +279,7 @@ public class UserController {
 		jsonObjectUser.put("firstname", user.getFirstName());
 		jsonObjectUser.put("lastname", user.getLastName());
 		jsonObjectUser.put("dob", user.getDob().toString());
-		jsonObjectUser.put("gender", user.getGender());
+		jsonObjectUser.put("gender", user.getGender()+"");
 		String[] phone = user.getPhone();
 		JSONArray phoneArr = new JSONArray();
 		phoneArr.put(phone[0]);
@@ -258,6 +302,14 @@ public class UserController {
 		jsonObjectUser.put("bloodtype", user.getBloodtype());
 		jsonObjectUser.put("nfcid", user.getNfcid());
 		user.print();
+		return jsonObjectUser;
+	}
+	private JSONObject buildTherapistsObject(User user) {
+		JSONObject jsonObjectUser = new JSONObject();
+		jsonObjectUser.put("uid", user.getUid()); 
+		jsonObjectUser.put("firstname", user.getFirstName());
+		jsonObjectUser.put("lastname", user.getLastName());
+		jsonObjectUser.put("gender", user.getGender()+"");
 		return jsonObjectUser;
 	}
 }
