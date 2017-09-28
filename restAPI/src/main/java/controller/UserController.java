@@ -100,29 +100,29 @@ public class UserController {
 				phone2, phone3,  address1, address2, address3, zipcode1, zipcode2, zipcode3, qualify, bloodtype, nfcid);
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
-		String sql = "INSERT INTO CS3205.user VALUES (default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO CS3205.user VALUES (default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setString(1, user.getUsername());
 			preparedStatement.setString(2, user.getPassword());
-			preparedStatement.setString(4, user.getFirstName());
-			preparedStatement.setString(5, user.getLastName());
-			preparedStatement.setString(6, user.getNric());
-			preparedStatement.setObject(7, user.getDob());
-			preparedStatement.setString(8, user.getGender() +"");
-			preparedStatement.setString(9, user.getPhone()[0]);
-			preparedStatement.setString(10, user.getPhone()[1]);
-			preparedStatement.setString(11, user.getPhone()[2]);
-			preparedStatement.setString(12, user.getAddress()[0]);
-			preparedStatement.setString(13, user.getAddress()[1]);
-			preparedStatement.setString(14, user.getAddress()[2]);
-			preparedStatement.setInt(15, user.getZipcode()[0]);
-			preparedStatement.setInt(16, user.getZipcode()[1]);
-			preparedStatement.setInt(17, user.getZipcode()[2]);
-			preparedStatement.setInt(18, user.getQualify());
-			preparedStatement.setString(19, user.getBloodtype());
-			preparedStatement.setString(20, user.getNfcid());
+			preparedStatement.setString(3, user.getFirstName());
+			preparedStatement.setString(4, user.getLastName());
+			preparedStatement.setString(5, user.getNric());
+			preparedStatement.setObject(6, user.getDob());
+			preparedStatement.setString(7, user.getGender() +"");
+			preparedStatement.setString(8, user.getPhone()[0]);
+			preparedStatement.setString(9, user.getPhone()[1]);
+			preparedStatement.setString(10, user.getPhone()[2]);
+			preparedStatement.setString(11, user.getAddress()[0]);
+			preparedStatement.setString(12, user.getAddress()[1]);
+			preparedStatement.setString(13, user.getAddress()[2]);
+			preparedStatement.setInt(14, user.getZipcode()[0]);
+			preparedStatement.setInt(15, user.getZipcode()[1]);
+			preparedStatement.setInt(16, user.getZipcode()[2]);
+			preparedStatement.setInt(17, user.getQualify());
+			preparedStatement.setString(18, user.getBloodtype());
+			preparedStatement.setString(19, user.getNfcid());
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
 
 		} catch (Exception e) {
@@ -131,6 +131,52 @@ public class UserController {
 		}
 		MySQLAccess.close();
 		System.out.println("Created user: " + username);
+		jsonObject.put("result", result);
+		return jsonObject;
+	}
+	
+	public JSONObject updateUser(String uid, String username, String password, String firstName, String lastName,
+			String nric, String dob, char gender, String phone1, String phone2, String phone3, String address1, 
+			String address2, String address3, int zipcode1, int zipcode2, int zipcode3, int qualify, String bloodtype,
+			String nfcid) {
+		
+		User user = new User(Integer.parseInt(uid), username, password, firstName, lastName, nric, LocalDate.parse(dob), gender, phone1,
+				phone2, phone3,  address1, address2, address3, zipcode1, zipcode2, zipcode3, qualify, bloodtype, nfcid);
+		JSONObject jsonObject = new JSONObject();
+		int result = 0;
+		String sql = "UPDATE CS3205.user SET username = ?, password = ?, firstname = ?, lastname = ?, "
+				+ "nric = ?, dob = ?, gender = ?, phone1 = ?, phone2 = ?, phone3 = ?, address1 = ?, address2 = ?, "
+				+ "address3 = ?, zipcode1 = ?, zipcode2 = ?, zipcode3 = ?, qualify = ?, bloodtype = ?, nfcid = ? WHERE uid = ?";
+		try {
+			Connection connect = MySQLAccess.connectDatabase();
+			PreparedStatement preparedStatement = connect.prepareStatement(sql);
+			preparedStatement.setString(1, user.getUsername());
+			preparedStatement.setString(2, user.getPassword());
+			preparedStatement.setString(3, user.getFirstName());
+			preparedStatement.setString(4, user.getLastName());
+			preparedStatement.setString(5, user.getNric());
+			preparedStatement.setObject(6, user.getDob());
+			preparedStatement.setString(7, user.getGender() +"");
+			preparedStatement.setString(8, user.getPhone()[0]);
+			preparedStatement.setString(9, user.getPhone()[1]);
+			preparedStatement.setString(10, user.getPhone()[2]);
+			preparedStatement.setString(11, user.getAddress()[0]);
+			preparedStatement.setString(12, user.getAddress()[1]);
+			preparedStatement.setString(13, user.getAddress()[2]);
+			preparedStatement.setInt(14, user.getZipcode()[0]);
+			preparedStatement.setInt(15, user.getZipcode()[1]);
+			preparedStatement.setInt(16, user.getZipcode()[2]);
+			preparedStatement.setInt(17, user.getQualify());
+			preparedStatement.setString(18, user.getBloodtype());
+			preparedStatement.setString(19, user.getNfcid());
+			preparedStatement.setInt(20, user.getUid());
+			result = MySQLAccess.updateDataBasePS(preparedStatement);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		MySQLAccess.close();
+		System.out.println("Updated user: " + username);
 		jsonObject.put("result", result);
 		return jsonObject;
 	}

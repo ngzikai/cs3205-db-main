@@ -72,6 +72,27 @@ public class UserService {
 		return createResponse(jsonObject);
 	}
 	
+	@Path("/update/{uid}/{user}/{password}/{fname}/{lname}/{nric}/"
+			+ "{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}"
+			+ "/{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}")
+	@GET
+	@Produces("application/json")
+	public Response updateUser(@PathParam("uid") String uid, @PathParam("user") String user, @PathParam("password") String password,
+			@PathParam("fname") String fname, @PathParam("lname") String lname, @PathParam("nric") String nric, 
+			@PathParam("dob") String dob, @PathParam("gender") String gender,
+			@PathParam("phone1") String phone1, @PathParam("phone2") String phone2, @PathParam("phone3") String phone3,
+			@PathParam("addr1") String addr1, @PathParam("addr2") String addr2, @PathParam("addr3") String addr3,
+			@PathParam("zip1") int zip1, @PathParam("zip2") int zip2, @PathParam("zip3") int zip3,
+			@PathParam("qualify") int qualify, @PathParam("bloodtype") String bloodType, @PathParam("nfcid") String nfcid
+			) throws JSONException {
+
+		JSONObject jsonObject = uc.updateUser(uid, user, password, fname, lname, nric, dob, gender.charAt(0), phone1, phone2, phone3, 
+				addr1, addr2, addr3, zip1, zip2, zip3, qualify, bloodType, nfcid);
+
+		//String result = "@Produces(\"application/json\") Creating user .... \n\n" + jsonObject;
+		return createResponse(jsonObject);
+	}
+	
 	@Path("/delete/{uid}")
 	@GET
 	@Produces("application/json")

@@ -91,6 +91,36 @@ public class User {
 		this.nfcid = nfcid;
 	}
 	
+	public User(int uid, String username, String password, String firstName, String lastName, String nric,
+			LocalDate dob, char gender, String phone1, String phone2, String phone3, String address1, String address2,
+			String address3, int zipcode1, int zipcode2, int zipcode3, int qualify, String bloodtype,
+			String nfcid) {
+		super();
+		this.uid = uid;
+		this.username = username;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.nric = nric;
+		this.dob = dob;
+		this.gender = gender;
+		this.phone = new String[3];
+		phone[0] = phone1;
+		phone[1] = phone2;
+		phone[2] = phone3;
+		this.address = new String[3];
+		address[0] = address1;
+		address[1] = address2;
+		address[2] = address3;
+		this.zipcode = new int[3];
+		zipcode[0] = zipcode1;
+		zipcode[1] = zipcode2;
+		zipcode[2] = zipcode3;
+		this.qualify = qualify;
+		this.bloodtype = bloodtype;
+		this.nfcid = nfcid;
+	}
+	
 
 	public int getUid() {
 		return uid;
