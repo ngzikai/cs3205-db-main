@@ -18,24 +18,24 @@ import controller.SessionController;
 // import java.sql.Connection;
 // import entity.Admin;
 
-@Path("/steps")
+@Path("/team3/steps")
 public class StepService extends SessionService{
 
   public StepService(){
     super("step");
   }
 
-  @Override
-  @Path("/get/{uid}")
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response get(@PathParam("uid") String uid){
-    JSONObject jsonObject = super.sc.getSessionObject(uid);
-		return Response.status(200).entity(jsonObject)
-				.header("Access-Control-Allow-Origin", "*")
-				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
-				.build();
-  }
+  // @Override
+  // @Path("/get/{objectID}")
+  // @GET
+  // @Produces(MediaType.APPLICATION_JSON)
+  // public Response get(@PathParam("objectID") String objectID){
+  //   JSONObject jsonObject = super.sc.getSessionObject(objectID);
+	// 	return Response.status(200).entity(jsonObject)
+	// 			.header("Access-Control-Allow-Origin", "*")
+	// 			.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
+	// 			.build();
+  // }
 
   // @Override
   // @Path("/upload/{userID}")
@@ -48,15 +48,15 @@ public class StepService extends SessionService{
 	// 			.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
 	// 			.build();
   // }
-  
-  @Override
-  @Path("/delete/{uid}")
-  @DELETE
-  @Produces(MediaType.TEXT_PLAIN)
-  public Response delete(@PathParam("uid") String uid){
-		return Response.status(200).entity(uid)
-				.header("Access-Control-Allow-Origin", "*")
-				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
-				.build();
-  }
+
+  // @Override
+  // @Path("/delete/{uid}")
+  // @DELETE
+  // @Produces(MediaType.TEXT_PLAIN)
+  // public Response delete(@PathParam("uid") String uid){
+	// 	return Response.status(200).entity(uid)
+	// 			.header("Access-Control-Allow-Origin", "*")
+	// 			.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
+	// 			.build();
+  // }
 }

@@ -24,12 +24,17 @@ public class SessionController {
   public JSONObject getSessionObject(String id){
     Session s = sessionTable.getDataObject(id);
     String jsonData = readFile(baseDir+s.getFileLocation());
+    System.out.println(jsonData);
     JSONObject jsonObject = new JSONObject(jsonData);
     return jsonObject;
   }
 
   public List<DataObject> getAllObjects(){
     return sessionTable.getAllObjects();
+  }
+
+  public List<DataObject> getAllUserObjects(String userID){
+    return sessionTable.getAllUserObjects(userID);
   }
 
   public Session newObject(){

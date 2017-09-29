@@ -1,14 +1,13 @@
 package restapi.team3;
 
-// import utils.db.core.*;
+import utils.db.core.*;
 // import utils.db.*;
-// import java.util.*;
+import java.util.*;
 import java.io.*;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Context;
-import javax.servlet.ServletContext;
+// import javax.ws.rs.core.Context;
 
 // Rest Client
 import javax.ws.rs.client.Client;
@@ -18,6 +17,7 @@ import javax.ws.rs.client.Invocation;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.json.JSONObject;
 
 import controller.SessionController;
 
@@ -32,8 +32,8 @@ import controller.SessionController;
 public class SessionService{
   protected SessionController sc = null;
 
-  @Context
-  ServletContext servletContext;
+  // @Context
+  // ServletContext servletContext;
 
   public SessionService(String tableName){
     sc = new SessionController(tableName);
@@ -60,19 +60,50 @@ public class SessionService{
 				.build();
   }
 
-  @Path("/get")
+  @Path("/get/all/{user}")
   @GET
-  @Produces(MediaType.APPLICATION_OCTET_STREAM)
-  public Response get(@PathParam("type") String uid){
-    // Authentication to be done
-    // Obtain the file
-    File f = null;
-    // send it over
-		return Response.ok(f, MediaType.APPLICATION_OCTET_STREAM)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getAll(@PathParam("user") String userID){
+    return Response.ok(sc.getAllUserObjects(userID), MediaType.APPLICATION_JSON)
 				.header("Access-Control-Allow-Origin", "*")
 				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
-        .header("Content-Disposition", "attachment; filename=\"" + f.getName() + "\"" )
 				.build();
+  }
+
+
+  @Path("/get/all/")
+  @GET
+  @Produces(MediaType.TEXT_PLAIN)
+  public Response getAll(){
+    List<DataObject> list = sc.getAllObjects();
+    String uids = "";
+    for (DataObject dObj : list){
+      String uid = (String) dObj.get("uid");
+      uids += uid + "   ";
+    }
+
+    return Response.status(200).entity(uids).build();
+    // return Response.ok(, MediaType.APPLICATION_JSON)
+		// 		.header("Access-Control-Allow-Origin", "*")
+		// 		.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
+		// 		.build();
+  }
+
+  @Path("/get/{objectID}")
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response get(@PathParam("objectID") String uid){
+    // Authentication to be done
+    // Obtain the file
+    JSONObject jsonObj = sc.getSessionObject(uid);
+    // File f = null;
+    // send it over
+    // return jsonObj;
+		return Response.status(200).entity(jsonObj.toString()).build();
+		// 		.header("Access-Control-Allow-Origin", "*")
+		// 		.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
+    //     // .header("Content-Disposition", "attachment; filename=\"" + f.getName() + "\"" )
+		// 		.build();
   }
 
   @POST
@@ -86,10 +117,10 @@ public class SessionService{
     return Response.status(200).entity(result).build();
   }
 
-  @Path("/delete")
+  @Path("/delete/{objectID}")
   @DELETE
   @Produces(MediaType.TEXT_PLAIN)
-  public Response delete(@PathParam("type") String uid){
+  public Response delete(@PathParam("objectID") String uid){
     // Authentication to be done
     // Obtain the uid of the file to be deleted
 		return Response.status(200).entity(uid)
