@@ -4,6 +4,7 @@ import entity.Step;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.*;
+import java.io.*;
 import utils.db.*;
 
 public class StepController extends SessionController<Step> {
@@ -12,7 +13,25 @@ public class StepController extends SessionController<Step> {
 
   public StepController(String tableName, String fileDirectory){
     super(tableName);
-    this.fileDirectory = fileDirectory + "/" + tableName;
+    this.fileDirectory = fileDirectory;
+  }
+
+  public int insertStep(InputStream is, long createdDate, int userID){
+    Step s = new Step();
+    s.setTimestamp(createdDate);
+    s.setOwnerID(userID);
+    s.setFileLocation(createdDate + "_" + s.getUid() + ".json");
+    int result = insert(s);
+    if (result == 1){
+      super.writeToFile(is, fileDirectory + "/" + s.getOwnerID() + "/" + this.tableName +"/" + s.getFileLocation());
+    }
+    return result;
+  }
+
+  public File getFile(String uid, int userID){
+    Step s = get(uid, userID);
+    File file = new File(fileDirectory + "/" + s.getOwnerID() + "/" + this.tableName + "/" + s.getFileLocation());
+    return file;
   }
 
   @Override
@@ -79,9 +98,25 @@ public class StepController extends SessionController<Step> {
   }
 
   @Override
-  public List<Step> getAll(String userID){
-    super.getAll(userID);
-    return null;
+  public List<Step> getAll(int userID){
+    String sql = "SELECT * FROM CS3205." + super.tableName + " WHERE ownerID = ?";
+    List<Step> list = new ArrayList<>();
+    try{
+      PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
+      ps.setInt(1, userID);
+      ResultSet rs = ps.executeQuery();
+      while(rs.next()){
+        Step s = new Step();
+        s.setUid(rs.getString("uid"));
+        s.setTimestamp(rs.getLong("createdDate"));
+        s.setFileLocation(rs.getString("location"));
+        s.setOwnerID(rs.getInt("ownerID"));
+        list.add(s);
+      }
+    }catch(Exception e){
+      e.printStackTrace();
+    }
+    return list;
   }
 
 

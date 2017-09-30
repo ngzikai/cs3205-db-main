@@ -91,7 +91,7 @@ public class SessionController<T extends Session> {
   //   }
   // }
 
-  private String readFile(String fileLocation){
+  protected String readFile(String fileLocation){
     String result = "";
     File file = new File(fileLocation);
     String currentDirectory = file.getAbsolutePath();
@@ -112,7 +112,7 @@ public class SessionController<T extends Session> {
   }
 
   // save uploaded file to new location
-  private void writeToFile(InputStream uploadedInputStream, String uploadedFileLocation) {
+  protected void writeToFile(InputStream uploadedInputStream, String uploadedFileLocation) {
 
   	try {
       // uploadedFileLocation = baseDir + user + "/" + typeFolder + "/" + uploadedFileLocation;
