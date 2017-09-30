@@ -1,6 +1,8 @@
 package entity;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -13,14 +15,14 @@ public class Researcher {
 	private String firstname;
 	private String lastname;
 	private String nric;
-	private String dob;
+	private Date dob;
 	private String gender;
 	private String phone1;
 	private String phone2;
 	private String address1;
 	private String address2;
-	private String zipcode1;
-	private String zipcode2;
+	private int zipcode1;
+	private int zipcode2;
 	private String qualifcation;
 	private String qualification_name;
 	private ArrayList<Integer> research_category;
@@ -36,8 +38,8 @@ public class Researcher {
 	}
 	
 	public Researcher(int researcher_id, String researcher_username, String password, String salt, String firstname,
-			String lastname, String nric, String dob, String gender, String phone1, String phone2, String address1,
-			String address2, String zipcode1, String zipcode2, String qualifcation, String qualification_name,
+			String lastname, String nric, Date dob, String gender, String phone1, String phone2, String address1,
+			String address2, int zipcode1, int zipcode2, String qualifcation, String qualification_name,
 			ArrayList<Integer> research_category) {
 		super();
 		this.researcher_id = researcher_id;
@@ -102,10 +104,10 @@ public class Researcher {
 	public void setNric(String nric) {
 		this.nric = nric;
 	}
-	public String getDob() {
+	public Date getDob() {
 		return dob;
 	}
-	public void setDob(String dob) {
+	public void setDob(Date dob) {
 		this.dob = dob;
 	}
 	public String getGender() {
@@ -138,16 +140,16 @@ public class Researcher {
 	public void setAddress2(String address2) {
 		this.address2 = address2;
 	}
-	public String getZipcode1() {
+	public int getZipcode1() {
 		return zipcode1;
 	}
-	public void setZipcode1(String zipcode1) {
+	public void setZipcode1(int zipcode1) {
 		this.zipcode1 = zipcode1;
 	}
-	public String getZipcode2() {
+	public int getZipcode2() {
 		return zipcode2;
 	}
-	public void setZipcode2(String zipcode2) {
+	public void setZipcode2(int zipcode2) {
 		this.zipcode2 = zipcode2;
 	}
 	public String getQualifcation() {
