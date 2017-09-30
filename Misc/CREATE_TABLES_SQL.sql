@@ -122,12 +122,11 @@ CREATE TABLE category(
 CREATE TABLE researcher_category(
    approval_id INT NOT NULL AUTO_INCREMENT,
    researcher_id INT NOT NULL,
-   condition_id INT NOT NULL,
-   category_id VARCHAR(255) NOT NULL,
+   category_id INT NOT NULL,
    approval_status ENUM('Approved', 'Pending', 'Not Approved') NOT NULL,
    PRIMARY KEY (approval_id),
 	FOREIGN KEY (researcher_id) REFERENCES researcher(researcher_id) ON UPDATE CASCADE ON DELETE CASCADE,
-   FOREIGN KEY (condition_id) REFERENCES `condition`(condition_id) ON UPDATE CASCADE ON DELETE CASCADE
+   FOREIGN KEY (category_id) REFERENCES category(category_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE condition_category(
