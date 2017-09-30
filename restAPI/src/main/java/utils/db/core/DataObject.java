@@ -5,7 +5,7 @@ import java.util.*;
 import utils.db.*;
 
 public class DataObject extends HashMap<String, Object>{
-  private DataTable table = null;
+  protected DataTable table = null;
   public DataObject(DataTable table){
     this.table = table;
   }

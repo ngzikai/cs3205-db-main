@@ -2,7 +2,7 @@ package utils.db.core;
 
 import java.util.*;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
+import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 
@@ -10,33 +10,28 @@ import utils.db.*;
 
 
 public class DataTable{
-  String tableName = "";
-  Map<String, DataObject> table = null;
-  ResultSet rs = null;
-  List<String> columns = null;
+  protected String tableName = "";
+  protected Map<String, DataObject> table = null;
+  protected List<String> columns = null;
   public DataTable(String tableName){
     this.tableName = tableName;
-    // Initial Setup
-    getAllObjects();
-    getColumns();
-    // Close DB connection
-    MySQLAccess.close();
   }
 
   public DataObject getDataObject(String uid){
-    // Sanity Check
-    if(table == null){
-      getAllObjects();
-    }
+    // // Sanity Check
+    // if(table == null){
+    //   getAllObjects();
+    // }
+    getAllObjects();
 
     return table.get(uid);
   }
 
   public List<DataObject> getAllObjects(){
-    if(table != null){
-      List<DataObject> list = new ArrayList<DataObject>(table.values());
-      return list;
-    }
+    // if(table != null){
+    //   List<DataObject> list = new ArrayList<DataObject>(table.values());
+    //   return list;
+    // }
     table = new HashMap<String, DataObject>();
     return queryAll();
   }
@@ -47,10 +42,10 @@ public class DataTable{
     }
     columns = new ArrayList<>();
     try{
-      ResultSetMetaData rsmd = rs.getMetaData();
-      for(int i = 1; i <= rsmd.getColumnCount(); i++){
-        System.out.println(rsmd.getColumnCount() +" " +i);
-        columns.add(rsmd.getColumnName(i));
+      DatabaseMetaData meta = MySQLAccess.connectDatabase().getMetaData();
+      ResultSet rs = meta.getColumns("CS3205", null, tableName,  "%");
+      while(rs.next()){
+        columns.add(rs.getString(4));
       }
     }catch(Exception s){
       s.printStackTrace();
@@ -66,53 +61,62 @@ public class DataTable{
     int result = -1;
     try{
       // dataObject does not exists in table
-      if(dataObject.get("uid") == null) {
         String columnOrder = "(";
         String variables = "(";
         for(String key : getColumns()){
+          columnOrder += key+",";
           if (key.equalsIgnoreCase("uid")){
-            continue;
           } else if(dataObject.get(key)==null){
             System.out.println("Ensure that all the keys are filled. "+key+" is missing.");
             return -1;
-          } else {
-            columnOrder += key+",";
-            variables += "?, ";
-            updateVariableOrder.add(dataObject.get(key));
           }
+          variables += "?, ";
+          updateVariableOrder.add(dataObject.get(key));
         }
         // remove the last ,
         columnOrder = (new StringBuilder(columnOrder).replace(columnOrder.lastIndexOf(","), columnOrder.lastIndexOf(",") + 1, "").toString())+")";
         variables = (new StringBuilder(variables).replace(variables.lastIndexOf(","), variables.lastIndexOf(",") + 1, "").toString())+")";
         sql += columnOrder+" VALUES "+variables;
         System.out.println(sql);
-      } else {
-        int uid = (int) dataObject.get("uid");
-        sql = "UPDATE CS3205."+tableName+" SET ";
+        // ON DUPLICATE, UPDATE
+        sql += " ON DUPLICATE KEY UPDATE ";
+
         for(String key : getColumns()){
           if (key.equalsIgnoreCase("uid")){
-            continue;
           } else if(dataObject.get(key)==null){
             System.out.println("Ensure that all the keys are filled. "+key+" is missing.");
             return -1;
-          } else {
-            sql += key+" = ?, ";
-            updateVariableOrder.add(dataObject.get(key));
           }
+          sql += key+" = ?, ";
+          updateVariableOrder.add(dataObject.get(key));
         }
         // remove the last ,
         sql = (new StringBuilder(sql).replace(sql.lastIndexOf(","), sql.lastIndexOf(",") + 1, "").toString());
-        sql += " WHERE uid = ?";
-        updateVariableOrder.add(dataObject.get("uid"));
-      }
-      preparedStatement = MySQLAccess.connectDatabase().prepareStatement(sql);
-      int pt = 0;
-      for(Object obj : updateVariableOrder){
-        preparedStatement = updateVariables(preparedStatement, obj, pt);
-        pt++;
-      }
-      result = MySQLAccess.updateDataBasePS(preparedStatement);
-      MySQLAccess.close();
+        preparedStatement = MySQLAccess.connectDatabase().prepareStatement(sql);
+        int pt = 0;
+        for(Object obj : updateVariableOrder){
+          preparedStatement = updateVariables(preparedStatement, obj, pt);
+          pt++;
+        }
+        result = MySQLAccess.updateDataBasePS(preparedStatement);
+      //}else {
+      //   Object uid = dataObject.get("uid");
+      //   sql = "UPDATE CS3205."+tableName+" SET ";
+      //   for(String key : getColumns()){
+      //     if (key.equalsIgnoreCase("uid")){
+      //       continue;
+      //     } else if(dataObject.get(key)==null){
+      //       System.out.println("Ensure that all the keys are filled. "+key+" is missing.");
+      //       return -1;
+      //     } else {
+      //       sql += key+" = ?, ";
+      //       updateVariableOrder.add(dataObject.get(key));
+      //     }
+      //   }
+
+      //   sql += " WHERE uid = ?";
+      //   updateVariableOrder.add(dataObject.get("uid"));
+      // }
     } catch(Exception e) {
       e.printStackTrace();
     }
@@ -128,7 +132,6 @@ public class DataTable{
         ps = MySQLAccess.connectDatabase().prepareStatement(sql);
         ps = updateVariables(ps, dataObject.get("uid"), 0);
         result = MySQLAccess.updateDataBasePS(ps);
-        MySQLAccess.close();
       }
     }catch(Exception e){
       e.printStackTrace();
@@ -148,7 +151,7 @@ public class DataTable{
 
     try{
       PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
-      rs = rs = MySQLAccess.readDataBasePS(ps);
+      ResultSet rs = MySQLAccess.readDataBasePS(ps);
       while(rs.next()){
         DataObject row = new DataObject(this);
         for (String column : getColumns()) {

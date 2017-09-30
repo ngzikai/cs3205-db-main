@@ -55,6 +55,19 @@
 			<artifactId>jersey-hk2</artifactId>
 			<version>${jersey2.version}</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.glassfish.jersey.media/jersey-media-multipart -->
+		<dependency>
+		  <groupId>org.glassfish.jersey.media</groupId>
+		  <artifactId>jersey-media-multipart</artifactId>
+		  <version>${jersey2.version}</version>
+		</dependency>
+		<!-- NOT NECESSARY, FOR MY OWN TESTING-->
+		<dependency>
+	    <groupId>org.glassfish.jersey.core</groupId>
+	    <artifactId>jersey-client</artifactId>
+	    <version>${jersey2.version}</version>
+		</dependency>
+		<!-- END OF MY OWN TESTING-->
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
