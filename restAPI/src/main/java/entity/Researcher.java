@@ -23,16 +23,22 @@ public class Researcher {
 	private String zipcode2;
 	private String qualifcation;
 	private String qualification_name;
-	private ArrayList<String> research_category;
+	private ArrayList<Integer> research_category;
 	
 	public Researcher() {
 		
 	}
 	
+	public Researcher(String researcher_username, String password) {
+		super();
+		this.researcher_username = researcher_username;
+		this.password = password;
+	}
+	
 	public Researcher(int researcher_id, String researcher_username, String password, String salt, String firstname,
 			String lastname, String nric, String dob, String gender, String phone1, String phone2, String address1,
 			String address2, String zipcode1, String zipcode2, String qualifcation, String qualification_name,
-			ArrayList<String> research_category) {
+			ArrayList<Integer> research_category) {
 		super();
 		this.researcher_id = researcher_id;
 		this.researcher_username = researcher_username;
@@ -155,6 +161,12 @@ public class Researcher {
 	}
 	public void setQualification_name(String qualification_name) {
 		this.qualification_name = qualification_name;
+	}
+	public ArrayList<Integer> getResearchCategory(){
+		return this.research_category;
+	}
+	public void setResearchCategory(ArrayList<Integer> research_category) {
+		this.research_category = research_category;
 	}
 
 }
