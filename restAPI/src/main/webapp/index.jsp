@@ -20,7 +20,7 @@
     - /api/team1/admin/<br>
     - /api/team1/admin/{username}<br>
     - /api/team1/treatment<br>
-    - /api/team1/treatment/{uid}<br>
+    - /api/team1/treatment/{treatment_id}<br>
     - /api/team1/treatment/create/{patient}/{therapist}<br>
     - /api/team1/treatment/update/{id}<br>
     - /api/team1/treatment/delete/{id}<br>
