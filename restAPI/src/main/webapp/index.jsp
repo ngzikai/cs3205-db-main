@@ -6,15 +6,13 @@
     for more information on Jersey!<br>
     <br>
     Team 3 API:<br>
-    - /api/team3/steps<br>
-    - /api/team3/heartrate<br>
-    - /api/team3/image<br>
-    - /api/team3/video<br>
+    - /api/team3/step/{userID}<br>
+    - /api/team3/heartrate/{userID}<br>
+    - /api/team3/image/{userID}<br>
+    - /api/team3/video/{userID}<br>
     - prefix + /get/{objectID}<br>
-    - prefix + /get/all<br>
-    - prefix + /get/all/{user}<br>
-    - prefix + /upload<br>
-    - prefix + /upload/test<br>
-    - prefix + /delete/{objectID}<br>
+    - prefix + /all<br>
+    - prefix + /upload/{timestamp}<br>
+
 </body>
 </html>

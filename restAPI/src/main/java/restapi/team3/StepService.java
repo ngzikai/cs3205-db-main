@@ -1,53 +1,55 @@
 package restapi.team3;
 
-// import utils.db.core.*;
-// import utils.db.*;
-// import java.util.*;
+import java.util.*;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.*;
 import org.json.JSONObject;
 
-import controller.SessionController;
+import entity.Step;
+import controller.StepController;
 
-// import java.sql.PreparedStatement;
-// import java.sql.ResultSet;
-// import java.sql.SQLException;
-// import java.util.ArrayList;
-//
-// import java.sql.Connection;
-// import entity.Admin;
+@Path("/team3/steps/{userID}")
+public class StepService{
+  StepController sc = new StepController("step", "/home/jim/temp");
 
-@Path("/team3/steps")
-public class StepService extends SessionService{
+  @PathParam("userID")
+  int userID = 0;
 
-  public StepService(){
-    super("step");
+  @Path("/get/{stepID}")
+  @GET
+  public File get(@PathParam("stepID") String objectID){
+    File s = sc.getFile(objectID, userID);
+    return s;
   }
 
-  // @Override
-  // @Path("/get/{objectID}")
-  // @GET
-  // @Produces(MediaType.APPLICATION_JSON)
-  // public Response get(@PathParam("objectID") String objectID){
-  //   JSONObject jsonObject = super.sc.getSessionObject(objectID);
-	// 	return Response.status(200).entity(jsonObject)
-	// 			.header("Access-Control-Allow-Origin", "*")
-	// 			.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
-	// 			.build();
-  // }
+  @Path("/upload/{timestamp}")
+  @POST
+  @Produces(MediaType.TEXT_PLAIN)
+  public Response upload(@PathParam("timestamp") long createdDate, final InputStream is){
+    int result = sc.insertStep(is, createdDate, userID);
+    result = (result == 1) ? 200 : 400;
+    String res = (result == 200) ? "successfully added" : "bad request";
+		return Response.status(200).entity(res)
+				.header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
+				.build();
+  }
 
-  // @Override
-  // @Path("/upload/{userID}")
-  // @POST
-  // @Produces(MediaType.TEXT_PLAIN)
-  // public Response upload(@PathParam("userID") String userID){
-  //
-	// 	return Response.status(200).entity()
-	// 			.header("Access-Control-Allow-Origin", "*")
-	// 			.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
-	// 			.build();
-  // }
+  @Path("/all")
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getAll(){
+    // Authentication
+    List<Step> list = sc.getAll(userID);
+    JSONObject jObj = new JSONObject();
+    jObj.put("list", list);
+    return Response.status(200).entity(jObj.toString())
+    				.header("Access-Control-Allow-Origin", "*")
+    				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
+            .build();
+  }
 
   // @Override
   // @Path("/delete/{uid}")
