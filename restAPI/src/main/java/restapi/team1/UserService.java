@@ -141,11 +141,35 @@ public class UserService {
 		if(jsonObject == null) {
 			jsonObject = new JSONObject();
 			jsonObject.put("result", false); 
-			//String result = "@Produces(\"application/json\") Incorrect username";
 			return createResponse(jsonObject);
 		}
 		
 		//String result = "@Produces(\"application/json\") User details\n\n" + jsonObject;
+		return createResponse(jsonObject);
+	}
+	
+	@Path("/secret/set/{uid}/{secret}")
+	@GET
+	@Produces("application/json")
+	public Response setSecret(@PathParam("uid") int uid, @PathParam("secret") String secret) throws JSONException {
+
+		JSONObject jsonObject = uc.userSetSecret(uid, secret);
+
+		return createResponse(jsonObject);
+	}
+	
+	@Path("/secret/{uid}/")
+	@GET
+	@Produces("application/json")
+	public Response getSecret(@PathParam("uid") int uid) throws JSONException {
+
+		JSONObject jsonObject = uc.userGetSecret(uid);
+		
+		if(jsonObject == null) {
+			jsonObject = new JSONObject();
+			jsonObject.put("result", false); 
+			return createResponse(jsonObject);
+		}
 		return createResponse(jsonObject);
 	}
 	

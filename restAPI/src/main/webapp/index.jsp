@@ -17,6 +17,8 @@
     	{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}/
     	{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}<br>
     - /api/team1/user/delete/{uid}<br>
+    - /api/team1/user/secret/set/{uid}/{secret}<br>
+    - /api/team1/user/secret/{uid}<br>
     - /api/team1/admin/<br>
     - /api/team1/admin/{username}<br>
     - /api/team1/treatment<br>

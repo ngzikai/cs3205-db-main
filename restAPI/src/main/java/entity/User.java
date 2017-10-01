@@ -20,6 +20,7 @@ public class User {
 	private int qualify;
 	private String bloodtype;
 	private String nfcid;
+	private String secret;
 	
 	//Constructors for User Class
 	
@@ -128,6 +129,35 @@ public class User {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.gender = gender;
+	}
+
+	public User(int uid, String username, String password, String firstName, String lastName, String nric,
+			LocalDate dob, char gender, String[] phone, String[] address, int[] zipcode, int qualify, String bloodtype,
+			String nfcid, String secret) {
+		super();
+		this.uid = uid;
+		this.username = username;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.nric = nric;
+		this.dob = dob;
+		this.gender = gender;
+		this.phone = phone;
+		this.address = address;
+		this.zipcode = zipcode;
+		this.qualify = qualify;
+		this.bloodtype = bloodtype;
+		this.nfcid = nfcid;
+		this.secret = secret;
+	}
+
+	public String getSecret() {
+		return secret;
+	}
+
+	public void setSecret(String secret) {
+		this.secret = secret;
 	}
 
 	public int getUid() {

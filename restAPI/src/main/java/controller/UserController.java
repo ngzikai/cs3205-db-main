@@ -103,7 +103,7 @@ public class UserController {
 				phone2, phone3,  address1, address2, address3, zipcode1, zipcode2, zipcode3, qualify, bloodtype, nfcid);
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
-		String sql = "INSERT INTO CS3205.user VALUES (default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO CS3205.user VALUES (default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, null)";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
@@ -229,6 +229,50 @@ public class UserController {
 		jsonObjectFinal.put("users", userArray);
 		return jsonObjectFinal;
 	}
+	
+	public JSONObject userSetSecret(int uid, String secret) {
+		int result = 0;
+		JSONObject jsonObject = new JSONObject();
+		String sql = "UPDATE CS3205.user SET secret = ? where uid = ?";
+		
+		System.out.println("Setting secret for user: " + uid);
+		try {
+			Connection connect = MySQLAccess.connectDatabase();
+			PreparedStatement preparedStatement = connect.prepareStatement(sql);
+			preparedStatement.setString(1, secret);
+		    preparedStatement.setInt(2, uid);
+			result = MySQLAccess.updateDataBasePS(preparedStatement);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		MySQLAccess.close();
+		jsonObject.put("result", result);
+		return jsonObject;
+	}
+	
+	public JSONObject userGetSecret(int uid) {
+		JSONObject jsonObject = new JSONObject();
+		String sql = "SELECT secret FROM CS3205.user where uid = ?";
+		
+		System.out.println("Getting secret from user: " + uid);
+		try {
+			Connection connect = MySQLAccess.connectDatabase();
+			PreparedStatement preparedStatement = connect.prepareStatement(sql);
+			preparedStatement.setInt(1, uid);
+			ResultSet resultSet = MySQLAccess.readDataBasePS(preparedStatement);
+			while (resultSet.next()) {
+				jsonObject.put("secret", resultSet.getString("secret")); 
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		MySQLAccess.close();
+		return jsonObject;
+	}
 
 	private ArrayList<User> resultSetToUserList(ResultSet resultSet) throws SQLException {
 		// ResultSet is initially before the first data set
@@ -248,8 +292,9 @@ public class UserController {
 			int qualify = resultSet.getInt("qualify");
 			String bloodType = resultSet.getString("bloodtype");
 			String nfcid = resultSet.getString("nfcid");
+			String secret = resultSet.getString("secret");
 			User user = new User(id, username, password, firstName, lastName, nric
-					, dob, gender, phone, address, zipcode, qualify, bloodType, nfcid);
+					, dob, gender, phone, address, zipcode, qualify, bloodType, nfcid, secret);
 			userList.add(user);
 		}
 		MySQLAccess.close();
@@ -301,6 +346,7 @@ public class UserController {
 		jsonObjectUser.put("qualify", user.getQualify());
 		jsonObjectUser.put("bloodtype", user.getBloodtype());
 		jsonObjectUser.put("nfcid", user.getNfcid());
+		jsonObjectUser.put("secret", user.getSecret());
 		user.print();
 		return jsonObjectUser;
 	}
