@@ -6,39 +6,56 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class Search {
-	private Date startDob;
-	private Date endDob;
+	private String startDob;
+	private String endDob;
+	private String gender;
 	private String bloodType;
-	private int zipcode;
-	private int conditionID;
+	private String zipcode;
+	private String cid;
 	
 	public Search() {
 		
 	}
 	
-	public Search(Date startDob, Date endDob, String bloodType, int zipcode, int conditionID)  {
+	public Search(String startDob, String endDob, String gender, String bloodType, String zipcode, String cid)  {
 		super();
 		this.startDob = startDob;
 		this.endDob = endDob;
+		this.gender = gender;
 		this.bloodType = bloodType;
 		this.zipcode = zipcode;
-		this.conditionID = conditionID; 
+		this.cid = cid; 
+		
+		System.out.println("Start Date: " + startDob);
+		System.out.println("End Date: " + endDob);
+		System.out.println("Gender: " + gender);
+		System.out.println("Bloodtype: " + bloodType);
+		System.out.println("Zipcode: " + zipcode);
+		System.out.println("Condition ID: " + cid);
 	}
 
-	public Date getStartDob() {
+	public String getStartDob() {
 		return startDob;
 	}
 
-	public void setStartDob(Date startDob) {
+	public void setStartDob(String startDob) {
 		this.startDob = startDob;
 	}
 
-	public Date getEndDob() {
+	public String getEndDob() {
 		return endDob;
 	}
 
-	public void setEndDob(Date endDob) {
+	public void setEndDob(String endDob) {
 		this.endDob = endDob;
+	}
+	
+	public String getGender() {
+		return this.gender;
+	}
+	
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
 	public String getBloodType() {
@@ -49,19 +66,36 @@ public class Search {
 		this.bloodType = bloodType;
 	}
 
-	public int getZipcode() {
+	public String getZipcode() {
+		if (zipcode == null) {
+			return null;
+		}
+		
 		return zipcode;
 	}
 
-	public void setZipcode(int zipcode) {
+	public void setZipcode(String zipcode) {
 		this.zipcode = zipcode;
 	}
 	
-	public int getConditionId() {
-		return this.conditionID;
-	}
 	
-	public void setConditionId(int conditionID) {
-		this.conditionID = conditionID;
+	public String getCid() {
+		return cid;
+	}
+
+	public void setCid(String cid) {
+		this.cid = cid;
+	}
+
+	public String toString() {
+		String s = "";
+		s += "Start dob:" + getStartDob() + "\n";
+		s += "End dob: " + getEndDob() + "\n";
+		s += "Gender: " + getGender() + "\n";
+		s += "Blood Type: " + getBloodType() + "\n";
+		s += "Zip Code: " + getZipcode() + "\n";
+		s += "Condition ID: " + getCid() + "\n";
+		
+		return s;
 	}
 }

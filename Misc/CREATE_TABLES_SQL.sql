@@ -94,7 +94,7 @@ CREATE TABLE admin(
 
 CREATE TABLE researcher(
    researcher_id  INT NOT NULL  AUTO_INCREMENT,
-   researcher_username VARCHAR(255) NOT NULL,
+   researcher_username VARCHAR(255) NOT NULL UNIQUE,
    password VARCHAR(255)  NOT NULL,
    salt   VARCHAR(255) NOT NULL,
    firstname  VARCHAR (20)  NOT NULL,

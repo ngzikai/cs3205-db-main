@@ -12,7 +12,7 @@ import utils.db.MySQLAccess;
 
 public class ResearcherController {
 	
-	public Researcher login(Researcher loginResearcher) {
+	public Researcher login(Researcher login) {
 		String sql = "SELECT * FROM researcher WHERE researcher_username = ? AND password = ?";
 		Researcher researcher = new Researcher();
 		Connection connect = MySQLAccess.connectDatabase();
@@ -20,9 +20,11 @@ public class ResearcherController {
 		//GET RESEARCHER ENTITY BASED ON USERNAME
 		try {
 			PreparedStatement ps = connect.prepareStatement(sql);
-			ps.setString(1, loginResearcher.getResearcher_username());
-			ps.setString(2, loginResearcher.getPassword());
+			ps.setString(1, login.getResearcher_username());
+			ps.setString(2, login.getPassword());
 			ResultSet rs = MySQLAccess.readDataBasePS(ps);
+			
+			System.out.println("Sucessfully retrieved user!");
 			
 			while (rs.next()) {
 				researcher.setResearcher_id(rs.getInt(1));
@@ -43,6 +45,9 @@ public class ResearcherController {
 				researcher.setQualifcation(rs.getString(16));
 				researcher.setQualification_name(rs.getString(17));
 			}
+			
+			//System.out.println(researcher.getNric() + researcher.getQualifcation() + researcher.getAddress2());
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -56,8 +61,6 @@ public class ResearcherController {
 				ps.setInt(1, researcher.getResearcher_id());
 				ResultSet rs = MySQLAccess.readDataBasePS(ps);
 				
-				
-				
 				while(rs.next()) {
 					researchCategory.add(rs.getInt(1));
 				}
@@ -66,6 +69,13 @@ public class ResearcherController {
 			}
 			researcher.setResearchCategory(researchCategory);
 		}
+		
+		ArrayList<Integer> categories = researcher.getResearchCategory();
+		
+		for(int i : categories) {
+			System.out.println("Category ID: " + i);
+		}
+		
 		return researcher;
 	}
 	
