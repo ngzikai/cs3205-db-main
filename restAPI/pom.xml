@@ -75,6 +75,11 @@
   		<artifactId>mysql-connector-java</artifactId>
   		<version>6.0.6</version>
   	</dependency>
+  	<dependency>
+  		<groupId>org.glassfish.jersey.media</groupId>
+  		<artifactId>jersey-media-moxy</artifactId>
+  		<version>2.26</version>
+  	</dependency>
 	</dependencies>
 	<properties>
 		<jersey2.version>2.26</jersey2.version>
