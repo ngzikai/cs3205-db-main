@@ -5,7 +5,7 @@
     <p>Visit <a href="http://jersey.java.net">Project Jersey website</a>
     for more information on Jersey!<br>
     <br>
-    Team 1 API:<br>
+    <h3>Team 1 API:</h3>
     - /api/team1/user/<br>
     - /api/team1/user/username/{username}<br>
     - /api/team1/user/uid/{uid}<br>
@@ -16,15 +16,21 @@
     - /api/team1/user/secret/set/{uid}/{secret}<br>
     - /api/team1/user/secret/{uid}<br>
     - /api/team1/admin/<br>
-    - /api/team1/admin/{username}<br>
+    - /api/team1/admin/{username}<br><br>
     - /api/team1/treatment<br>
     - /api/team1/treatment/{treatment_id}<br>
     - /api/team1/treatment/create/{patient}/{therapist}<br>
     - /api/team1/treatment/update/{id}<br>
-    - /api/team1/treatment/delete/{id}<br>
+    - /api/team1/treatment/delete/{id}<br><br>
+    - /api/team1/otl<br>
+	- /api/team1/otl/{token}<br>
+	- /api/team1/otl/create/{token}/{uid}/{filepath}/{csrf}<br>
+	- /api/team1/otl/update/{token}/{csrf}<br>
+	- /api/team1/otl/delete/{token}<br>
+    
     
     <br>
-    Team 3 API:<br>
+    <h3>Team 3 API:</h3>
     - /api/team3/step/{userID}<br>
     - /api/team3/heartrate/{userID}<br>
     - /api/team3/image/{userID}<br>
