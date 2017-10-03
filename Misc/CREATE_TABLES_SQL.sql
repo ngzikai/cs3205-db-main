@@ -19,7 +19,7 @@ CREATE TABLE user(
    qualify INT NOT NULL,
    bloodtype VARCHAR(3) NOT NULL,
    nfcid VARCHAR(255),
-   secret VARCHAR(255)
+   secret VARCHAR(255),
    PRIMARY KEY (uid)
 );
 
