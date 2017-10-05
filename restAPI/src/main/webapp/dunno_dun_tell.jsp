@@ -12,6 +12,7 @@
     - /api/team1/user/therapists<br>
     - /api/team1/user/create/{username}/{password}/{fname}/{lname}/{nric}/{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}/{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}<br>
     - /api/team1/user/update/{uid}/{user}/{password}/{fname}/{lname}/{nric}/{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}/{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}<br>
+    - /api/team1/user/update/{username}/{password}<br>
     - /api/team1/user/delete/{uid}<br>
     - /api/team1/user/secret/set/{uid}/{secret}<br>
     - /api/team1/user/secret/{uid}<br>
