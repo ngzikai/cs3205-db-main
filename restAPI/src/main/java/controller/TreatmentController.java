@@ -38,7 +38,7 @@ public class TreatmentController {
 	}
 	
 	
-	// This method will take in a treatment name and return the treatment object from the database;
+	// This method will take in a treatment id and return the treatment object from the database;
 	public JSONObject getTreatmentWithId(int id) {
 		JSONObject jsonObject = new JSONObject();
 		ArrayList<Treatment> treatmentList = null;
@@ -61,7 +61,70 @@ public class TreatmentController {
 		MySQLAccess.close();
 		Treatment treatment = treatmentList.get(0);
 		jsonObject = buildTreatmentObject(treatment);
-		System.out.println("Retrieving details of Treatment: " + id);
+		return jsonObject;
+	}
+	
+	// This method will take in a patient id and a status, and return the treatment object from the database;
+	public JSONObject getTreatmentWithPatientId(int patientid, boolean status) {
+		JSONObject jsonObject = new JSONObject();
+		ArrayList<Treatment> treatmentList = null;
+
+		String sql = "SELECT * FROM CS3205.treatment WHERE patient_id = ? AND status = ? ";
+		try {
+			Connection connect = MySQLAccess.connectDatabase();
+			PreparedStatement preparedStatement = connect.prepareStatement(sql);
+			preparedStatement.setInt(1, patientid);
+			preparedStatement.setInt(2, status ? 1 : 0);
+			treatmentList = resultSetToTreatmentList(MySQLAccess.readDataBasePS(preparedStatement));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
+		if(treatmentList.size() < 1) {
+			return null;
+		}
+		JSONArray treatmentArray = new JSONArray();
+		for(Treatment treatment : treatmentList) {
+			JSONObject jsonObjectTreatment = buildTreatmentObject(treatment);
+			treatmentArray.put(jsonObjectTreatment);
+		}
+		MySQLAccess.close();
+		jsonObject.put("treatments", treatmentArray);
+		//System.out.println("Retrieving details of Treatment: " + id);
+		return jsonObject;
+	}
+	
+	// This method will take in a therapist id and a status, and return the treatment object from the database;
+	public JSONObject getTreatmentWithTherapistId(int therapistid, boolean status) {
+		JSONObject jsonObject = new JSONObject();
+		ArrayList<Treatment> treatmentList = null;
+
+		String sql = "SELECT * FROM CS3205.treatment WHERE therapist_id = ? AND status = ? ";
+		try {
+			Connection connect = MySQLAccess.connectDatabase();
+			PreparedStatement preparedStatement = connect.prepareStatement(sql);
+			preparedStatement.setInt(1, therapistid);
+			preparedStatement.setInt(2, status ? 1 : 0);
+			treatmentList = resultSetToTreatmentList(MySQLAccess.readDataBasePS(preparedStatement));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
+		if(treatmentList.size() < 1) {
+			return null;
+		}
+		JSONArray treatmentArray = new JSONArray();
+		for(Treatment treatment : treatmentList) {
+			JSONObject jsonObjectTreatment = buildTreatmentObject(treatment);
+			treatmentArray.put(jsonObjectTreatment);
+		}
+		MySQLAccess.close();
+		jsonObject.put("treatments", treatmentArray);
+		//System.out.println("Retrieving details of Treatment: " + id);
 		return jsonObject;
 	}
 

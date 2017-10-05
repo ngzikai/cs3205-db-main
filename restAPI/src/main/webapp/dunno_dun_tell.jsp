@@ -19,6 +19,8 @@
     - /api/team1/admin/{username}<br><br>
     - /api/team1/treatment<br>
     - /api/team1/treatment/{treatment_id}<br>
+    - /api/team1/treatment/patient/{patientid}/{status}<br>
+    - /api/team1/treatment/therapist/{therapistid}/{status}<br>
     - /api/team1/treatment/create/{patient}/{therapist}<br>
     - /api/team1/treatment/update/{id}<br>
     - /api/team1/treatment/delete/{id}<br><br>
