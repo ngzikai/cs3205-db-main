@@ -75,7 +75,6 @@ public class OTLService {
 			@PathParam("csrf") String csrf) throws JSONException {
 
 		JSONObject jsonObject = oc.updateCSRF(token, csrf);
-		
 		if(jsonObject == null) {
 			jsonObject = new JSONObject();
 			jsonObject.put("result", false); 

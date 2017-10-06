@@ -79,7 +79,7 @@ public class UserService {
 		return createResponse(jsonObject);
 	}
 	
-	@Path("/create/{user}/{password}/{fname}/{lname}/{nric}/"
+	@Path("/create/{user}/{password : .+}/{fname}/{lname}/{nric}/"
 			+ "{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}"
 			+ "/{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}")
 	@GET
@@ -106,7 +106,7 @@ public class UserService {
 		return createResponse(jsonObject);
 	}
 	
-	@Path("/update/{uid}/{user}/{password}/{fname}/{lname}/{nric}/"
+	@Path("/update/{uid}/{user}/{password : .+}/{fname}/{lname}/{nric}/"
 			+ "{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}"
 			+ "/{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}")
 	@GET
@@ -186,7 +186,7 @@ public class UserService {
 		return createResponse(jsonObject);
 	}
 	
-	@Path("/secret/set/{uid}/{secret}")
+	@Path("/secret/set/{uid}/{secret : .+}")
 	@GET
 	@Produces("application/json")
 	public Response setSecret(@PathParam("uid") int uid, @PathParam("secret") String secret) throws JSONException {
