@@ -145,3 +145,11 @@ CREATE TABLE one_time_link(
    PRIMARY KEY (token),
    FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+CREATE TABLE csrf(
+   csrf_token VARCHAR(255) NOT NULL,
+   uid INT NOT NULL,
+   expiry int NOT NULL,
+   PRIMARY KEY (csrf_token),
+   FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE
+);
