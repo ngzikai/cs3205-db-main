@@ -29,8 +29,11 @@
 	- /api/team1/otl/{token}<br>
 	- /api/team1/otl/create/{token}/{uid}/{filepath}/{csrf}<br>
 	- /api/team1/otl/update/{token}/{csrf}<br>
-	- /api/team1/otl/delete/{token}<br>
-    
+	- /api/team1/otl/delete/{token}<br><br>
+    - /api/team1/csrf<br>
+	- /api/team1/csrf/{csrfToken}<br>
+	- /api/team1/csrf/create/{csrfToken}/{uid}/{expiry}<br>
+	- /api/team1/csrf/delete/{csrfToken}<br>
     
     <br>
     <h3>Team 3 API:</h3>
