@@ -20,13 +20,7 @@ public class OTLService {
 	public Response getAllOTL() throws JSONException {
 
 		JSONObject jsonObject = oc.getAllOTL();
-		if(jsonObject == null) {
-			jsonObject = new JSONObject();
-			jsonObject.put("result", false); 
-			return createResponse(jsonObject);
-		}
 
-		//String result = "@Produces(\"application/json\") List of Admins \n\n" + jsonObject;
 		return createResponse(jsonObject);
 	}
 
@@ -38,11 +32,6 @@ public class OTLService {
 
 		jsonObject = oc.getOTLWithToken(token);
 
-		if(jsonObject == null) {
-			jsonObject = new JSONObject();
-			jsonObject.put("result", false);
-			return createResponse(jsonObject);
-		}
 		return createResponse(jsonObject);
 	}
 	
@@ -53,15 +42,17 @@ public class OTLService {
 			@PathParam("uid") int uid, @PathParam("filepath") String filepath, 
 			@PathParam("csrf") String csrf) throws JSONException {
 		JSONObject jsonObject = oc.createOTL(token, uid, filepath, csrf);
-		if(jsonObject == null) {
-			jsonObject = new JSONObject();
-			jsonObject.put("result", false); 
-			return createResponse(jsonObject);
-		}
+
 		return createResponse(jsonObject);
 	}
 
 	public Response createResponse(JSONObject jsonObject) {
+		if(jsonObject == null) {
+			jsonObject = new JSONObject();
+			jsonObject.put("result", false); 
+			jsonObject.put("msg", "Null object");
+		}
+		
 		return Response.status(200).entity(jsonObject.toString())
 				.header("Access-Control-Allow-Origin", "*")
 				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
@@ -75,11 +66,6 @@ public class OTLService {
 			@PathParam("csrf") String csrf) throws JSONException {
 
 		JSONObject jsonObject = oc.updateCSRF(token, csrf);
-		if(jsonObject == null) {
-			jsonObject = new JSONObject();
-			jsonObject.put("result", false); 
-			return createResponse(jsonObject);
-		}
 
 		return createResponse(jsonObject);
 	}
@@ -90,13 +76,7 @@ public class OTLService {
 	public Response deleteTreatment(@PathParam("token") String token) throws JSONException {
 
 		JSONObject jsonObject = oc.deleteOTL(token);
-		if(jsonObject == null) {
-			jsonObject = new JSONObject();
-			jsonObject.put("result", false); 
-			return createResponse(jsonObject);
-		}
 
-		//String result = "@Produces(\"application/json\") Delete user "+ uid +"\n\n" + jsonObject;
 		return createResponse(jsonObject);
 	}
 }
