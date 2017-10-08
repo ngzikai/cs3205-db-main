@@ -25,7 +25,6 @@ public class UserService {
 
 		JSONObject jsonObject = uc.getAllUser();
 
-		//String result = "@Produces(\"application/json\") List of Users \n\n" + jsonObject;
 		return createResponse(jsonObject);
 	}
 
@@ -36,21 +35,13 @@ public class UserService {
 		JSONObject jsonObject = new JSONObject();
 		if(!validateString(user)) {
 			jsonObject.put("result", false); 
-			//String result = "@Produces(\"application/json\") Incorrect username";
+			jsonObject.put("msg", "Bad string");
 			return createResponse(jsonObject);
 		}
 
 		
 		jsonObject = uc.getUser(user); 
-
-		if(jsonObject == null) {
-			jsonObject = new JSONObject();
-			jsonObject.put("result", false); 
-			//String result = "@Produces(\"application/json\") Incorrect username";
-			return createResponse(jsonObject);
-		}
 		
-		//String result = "@Produces(\"application/json\") User details\n\n" + jsonObject;
 		return createResponse(jsonObject);
 	}
 	
@@ -60,22 +51,13 @@ public class UserService {
 	public Response getUserWithUID(@PathParam("s") String user) throws JSONException {
 		JSONObject jsonObject = new JSONObject();
 		if(!validateString(user)) {
-			jsonObject.put("result", false); 
-			//String result = "@Produces(\"application/json\") Incorrect username";
+			jsonObject.put("result", false);
+			jsonObject.put("msg", "Bad string");
 			return createResponse(jsonObject);
 		}
-
 		
 		jsonObject = uc.getUserWithUID(user); 
 
-		if(jsonObject == null) {
-			jsonObject = new JSONObject();
-			jsonObject.put("result", false); 
-			//String result = "@Produces(\"application/json\") Incorrect username";
-			return createResponse(jsonObject);
-		}
-		
-		//String result = "@Produces(\"application/json\") User details\n\n" + jsonObject;
 		return createResponse(jsonObject);
 	}
 	
@@ -96,13 +78,6 @@ public class UserService {
 		JSONObject jsonObject = uc.createUser(user, password, fname, lname, nric, dob, gender.charAt(0), phone1, phone2, phone3, 
 				addr1, addr2, addr3, zip1, zip2, zip3, qualify, bloodType, nfcid);
 
-		if(jsonObject == null) {
-			jsonObject = new JSONObject();
-			jsonObject.put("result", false); 
-			return createResponse(jsonObject);
-		}
-		
-		//String result = "@Produces(\"application/json\") Creating user .... \n\n" + jsonObject;
 		return createResponse(jsonObject);
 	}
 	
@@ -123,13 +98,6 @@ public class UserService {
 		JSONObject jsonObject = uc.updateUser(uid, user, password, fname, lname, nric, dob, gender.charAt(0), phone1, phone2, phone3, 
 				addr1, addr2, addr3, zip1, zip2, zip3, qualify, bloodType, nfcid);
 
-		if(jsonObject == null) {
-			jsonObject = new JSONObject();
-			jsonObject.put("result", false); 
-			return createResponse(jsonObject);
-		}
-		
-		//String result = "@Produces(\"application/json\") Creating user .... \n\n" + jsonObject;
 		return createResponse(jsonObject);
 	}
 	
@@ -140,13 +108,6 @@ public class UserService {
 
 		JSONObject jsonObject = uc.updateUserPassword(user, password);
 
-		if(jsonObject == null) {
-			jsonObject = new JSONObject();
-			jsonObject.put("result", false); 
-			return createResponse(jsonObject);
-		}
-		
-		//String result = "@Produces(\"application/json\") Creating user .... \n\n" + jsonObject;
 		return createResponse(jsonObject);
 	}
 	
@@ -157,13 +118,6 @@ public class UserService {
 
 		JSONObject jsonObject = uc.deleteUser(uid);
 
-		if(jsonObject == null) {
-			jsonObject = new JSONObject();
-			jsonObject.put("result", false); 
-			return createResponse(jsonObject);
-		}
-		
-		//String result = "@Produces(\"application/json\") Delete user "+ uid +"\n\n" + jsonObject;
 		return createResponse(jsonObject);
 	}
 	
@@ -173,16 +127,8 @@ public class UserService {
 	public Response getAllTherapists() throws JSONException {
 		JSONObject jsonObject = new JSONObject();
 
-		
 		jsonObject = uc.getTherapists(); 
 
-		if(jsonObject == null) {
-			jsonObject = new JSONObject();
-			jsonObject.put("result", false); 
-			return createResponse(jsonObject);
-		}
-		
-		//String result = "@Produces(\"application/json\") User details\n\n" + jsonObject;
 		return createResponse(jsonObject);
 	}
 	
@@ -203,15 +149,16 @@ public class UserService {
 
 		JSONObject jsonObject = uc.userGetSecret(uid);
 		
-		if(jsonObject == null) {
-			jsonObject = new JSONObject();
-			jsonObject.put("result", false); 
-			return createResponse(jsonObject);
-		}
 		return createResponse(jsonObject);
 	}
 	
 	public Response createResponse(JSONObject jsonObject) {
+		if(jsonObject == null) {
+			jsonObject = new JSONObject();
+			jsonObject.put("result", false); 
+			jsonObject.put("msg", "Null object");
+		}
+		
 		return Response.status(200).entity(jsonObject.toString())
 				.header("Access-Control-Allow-Origin", "*")
 				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
@@ -228,7 +175,6 @@ public class UserService {
 		JSONObject jsonObject = new JSONObject(jsonRequest);
 		System.out.print(jsonObject.toString());
 
-		//String result = "@Produces(\"application/json\") Creating user .... \n\n" + jsonObject;
 		return createResponse(jsonObject);
 	}
 	
