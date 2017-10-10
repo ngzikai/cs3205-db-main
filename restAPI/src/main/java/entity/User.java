@@ -45,6 +45,17 @@ public class User {
 		this.nfcid = nfcid;
 	}
 
+	public User(int uid, String firstName, String lastName, char gender, String phone, int qualify) {
+		super();
+		this.uid = uid;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.gender = gender;
+		this.phone = new String[3];
+		this.phone[0] = phone;
+		this.qualify = qualify;
+	}
+
 	//Constructor without UID. Most likely used for creating a new user entry.
 	public User(String username, String password, String firstName, String lastName, String nric, LocalDate dob,
 			char gender, String[] phone, String[] address, int[] zipcode, int qualify, String bloodtype, String nfcid) {

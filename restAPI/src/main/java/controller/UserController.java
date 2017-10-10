@@ -94,6 +94,32 @@ public class UserController {
 		System.out.println("Retrieving details of User account: " + uid);
 		return jsonObject;
 	}
+	
+	// This method will take in a user name and return the user object from the database;
+	public JSONObject getUserPublicInfo(String uid) {
+		JSONObject jsonObject = new JSONObject();
+		User user = null;
+		String sql = "SELECT uid, firstname, lastname, gender, phone1, qualify FROM CS3205.user WHERE uid = ? ";
+		System.out.println("Retrieving details of User account: " + uid);
+		try {
+			Connection connect = MySQLAccess.connectDatabase();
+			PreparedStatement preparedStatement = connect.prepareStatement(sql);
+			preparedStatement.setInt(1, Integer.parseInt(uid));
+			user = resultSetGetPublicInfo(MySQLAccess.readDataBasePS(preparedStatement));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
+		if(user == null) {
+			return null;
+		}
+		MySQLAccess.close();
+		jsonObject = buildPublicInfoObject(user);
+		
+		return jsonObject;
+	}
 
 	public JSONObject createUser(String username, String password, String firstName, String lastName,
 			String nric, String dob, char gender, String phone1, String phone2, String phone3, String address1, 
@@ -372,12 +398,40 @@ public class UserController {
 		user.print();
 		return jsonObjectUser;
 	}
+	
 	private JSONObject buildTherapistsObject(User user) {
 		JSONObject jsonObjectUser = new JSONObject();
 		jsonObjectUser.put("uid", user.getUid()); 
 		jsonObjectUser.put("firstname", user.getFirstName());
 		jsonObjectUser.put("lastname", user.getLastName());
 		jsonObjectUser.put("gender", user.getGender()+"");
+		return jsonObjectUser;
+	}
+	
+	private User resultSetGetPublicInfo(ResultSet resultSet) throws SQLException {
+		// ResultSet is initially before the first data set
+		User user = null;
+		while (resultSet.next()) {
+			int id = resultSet.getInt("uid");
+			String firstName = resultSet.getString("firstname");
+			String lastName = resultSet.getString("lastname");
+			char gender = resultSet.getString("gender").charAt(0);
+			String phone = resultSet.getString("phone1");
+			int qualify = resultSet.getInt("qualify");
+			user = new User(id, firstName, lastName, gender, phone, qualify);
+		}
+		MySQLAccess.close();
+		return user;
+	}
+	
+	private JSONObject buildPublicInfoObject(User user) {
+		JSONObject jsonObjectUser = new JSONObject();
+		jsonObjectUser.put("uid", user.getUid()); 
+		jsonObjectUser.put("firstname", user.getFirstName());
+		jsonObjectUser.put("lastname", user.getLastName());
+		jsonObjectUser.put("gender", user.getGender()+"");
+		jsonObjectUser.put("phone", user.getPhone()[0]);
+		jsonObjectUser.put("qualify", user.getQualify());
 		return jsonObjectUser;
 	}
 }

@@ -61,6 +61,22 @@ public class UserService {
 		return createResponse(jsonObject);
 	}
 	
+	@Path("/uid/public/{s}")
+	@GET
+	@Produces("application/json")
+	public Response getUserPublicInfoWithUID(@PathParam("s") String user) throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+		if(!validateString(user)) {
+			jsonObject.put("result", false);
+			jsonObject.put("msg", "Bad string");
+			return createResponse(jsonObject);
+		}
+		
+		jsonObject = uc.getUserPublicInfo(user); 
+
+		return createResponse(jsonObject);
+	}
+	
 	@Path("/create/{user}/{password : .+}/{fname}/{lname}/{nric}/"
 			+ "{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}"
 			+ "/{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}")
