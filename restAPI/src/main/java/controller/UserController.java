@@ -44,26 +44,25 @@ public class UserController {
 	// This method will take in a user name and return the user object from the database;
 	public JSONObject getUser(String username) {
 		JSONObject jsonObject = new JSONObject();
-		ArrayList<User> userList = null;
-		String sql = "SELECT * FROM CS3205.user WHERE username = ? ";
+		User user = null;
+		String sql = "SELECT uid, password, salt, qualify, secret FROM CS3205.user WHERE username = ? ";
 		System.out.println("Retrieving details of User account: " + username);
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setString(1, username);
-			userList = resultSetToUserList(MySQLAccess.readDataBasePS(preparedStatement));
+			user = resultSetToUserLogin(MySQLAccess.readDataBasePS(preparedStatement));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
 		
-		if(userList.size() < 1) {
+		if(user == null) {
 			return null;
 		}
 		MySQLAccess.close();
-		User user = userList.get(0);
-		jsonObject = buildUserObject(user);
+		jsonObject = buildLoginObject(user);
 		
 		return jsonObject;
 	}
@@ -121,7 +120,7 @@ public class UserController {
 		return jsonObject;
 	}
 
-	public JSONObject createUser(String username, String password, String firstName, String lastName,
+	public JSONObject createUser(String username, String password, String salt, String firstName, String lastName,
 			String nric, String dob, char gender, String phone1, String phone2, String phone3, String address1, 
 			String address2, String address3, int zipcode1, int zipcode2, int zipcode3, int qualify, String bloodtype,
 			String nfcid) {
@@ -129,7 +128,7 @@ public class UserController {
 				phone2, phone3,  address1, address2, address3, zipcode1, zipcode2, zipcode3, qualify, bloodtype, nfcid);
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
-		String sql = "INSERT INTO CS3205.user VALUES (default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, null)";
+		String sql = "INSERT INTO CS3205.user VALUES (default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, null)";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
@@ -165,7 +164,7 @@ public class UserController {
 		return jsonObject;
 	}
 	
-	public JSONObject updateUser(String uid, String username, String password, String firstName, String lastName,
+	public JSONObject updateUser(String uid, String username, String password, String salt, String firstName, String lastName,
 			String nric, String dob, char gender, String phone1, String phone2, String phone3, String address1, 
 			String address2, String address3, int zipcode1, int zipcode2, int zipcode3, int qualify, String bloodtype,
 			String nfcid) {
@@ -212,16 +211,17 @@ public class UserController {
 		return jsonObject;
 	}
 	
-	public JSONObject updateUserPassword(String username, String password) {
+	public JSONObject updateUserPassword(String username, String password, String salt) {
 		
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
-		String sql = "UPDATE CS3205.user SET password = ? WHERE username = ?";
+		String sql = "UPDATE CS3205.user SET password = ?, salt = ? WHERE username = ?";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setString(1, password);
-			preparedStatement.setString(2, username);
+			preparedStatement.setString(2, salt);
+			preparedStatement.setString(3, username);
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -432,6 +432,32 @@ public class UserController {
 		jsonObjectUser.put("gender", user.getGender()+"");
 		jsonObjectUser.put("phone", user.getPhone()[0]);
 		jsonObjectUser.put("qualify", user.getQualify());
+		return jsonObjectUser;
+	}
+	
+	
+	private User resultSetToUserLogin(ResultSet resultSet) throws SQLException {
+		// ResultSet is initially before the first data set
+		User user = null;
+		while (resultSet.next()) {
+			int id = resultSet.getInt("uid");
+			String password = resultSet.getString("password");
+			String salt = resultSet.getString("salt");
+			int qualify = resultSet.getInt("qualify");
+			String secret = resultSet.getString("secret");
+			user = new User(id, password, salt, qualify, secret);
+		}
+		MySQLAccess.close();
+		return user;
+	}
+	
+	private JSONObject buildLoginObject(User user) {
+		JSONObject jsonObjectUser = new JSONObject();
+		jsonObjectUser.put("uid", user.getUid()); 
+		jsonObjectUser.put("password", user.getPassword());
+		jsonObjectUser.put("salt", user.getSalt());
+		jsonObjectUser.put("qualify", user.getQualify());
+		jsonObjectUser.put("secret", user.getSecret());
 		return jsonObjectUser;
 	}
 }

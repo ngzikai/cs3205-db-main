@@ -10,6 +10,7 @@ public class User {
 	private int uid;
 	private String username;
 	private String password;
+	private String salt;
 	private String firstName;
 	private String lastName;
 	private String nric;
@@ -43,6 +44,23 @@ public class User {
 		this.qualify = qualify;
 		this.bloodtype = bloodtype;
 		this.nfcid = nfcid;
+	}
+
+	public User(int uid, String password, String salt, int qualify, String secret) {
+		super();
+		this.uid = uid;
+		this.password = password;
+		this.salt = salt;
+		this.qualify = qualify;
+		this.secret = secret;
+	}
+
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
 	}
 
 	public User(int uid, String firstName, String lastName, char gender, String phone, int qualify) {
