@@ -22,11 +22,11 @@
     - /api/team1/treatment/create/{patient}/{therapist}<br>
     - /api/team1/treatment/update/{id}<br>
     - /api/team1/treatment/delete/{id}<br>
-    
+
     <br>
     Team 3 API:<br>
     - /api/team3/step/{userID}<br>
-    - /api/team3/heartrate/{userID}<br>
+    - /api/team3/heart/{userID}<br>
     - /api/team3/image/{userID}<br>
     - /api/team3/video/{userID}<br>
     - prefix + /get/{objectID}<br>
