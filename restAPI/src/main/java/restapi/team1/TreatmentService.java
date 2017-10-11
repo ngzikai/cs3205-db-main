@@ -22,7 +22,6 @@ public class TreatmentService {
 
 		JSONObject jsonObject = tc.getAllTreatment();
 
-		//String result = "@Produces(\"application/json\") List of Admins \n\n" + jsonObject;
 		return createResponse(jsonObject);
 	}
 
@@ -35,11 +34,6 @@ public class TreatmentService {
 		System.out.println("Retrieving details of Treatment: " + id);
 		jsonObject = tc.getTreatmentWithId(id);
 
-		if(jsonObject == null) {
-			jsonObject = new JSONObject();
-			jsonObject.put("result", false);
-			return createResponse(jsonObject);
-		}
 		return createResponse(jsonObject);
 	}
 	
@@ -49,10 +43,17 @@ public class TreatmentService {
 	public Response createUser(@PathParam("patient") int patientId,
 			@PathParam("therapist") int therapistId) throws JSONException {
 		JSONObject jsonObject = tc.createTreatment(patientId, therapistId);
+		
 		return createResponse(jsonObject);
 	}
 
 	public Response createResponse(JSONObject jsonObject) {
+		if(jsonObject == null) {
+			jsonObject = new JSONObject();
+			jsonObject.put("result", false); 
+			jsonObject.put("msg", "Null object");
+		}
+		
 		return Response.status(200).entity(jsonObject.toString())
 				.header("Access-Control-Allow-Origin", "*")
 				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
@@ -66,6 +67,11 @@ public class TreatmentService {
 
 		JSONObject jsonObject = tc.updateTreatment(id);
 
+		if(jsonObject == null) {
+			jsonObject = new JSONObject();
+			jsonObject.put("result", false);
+			return createResponse(jsonObject);
+		}
 		return createResponse(jsonObject);
 	}
 	
@@ -76,7 +82,30 @@ public class TreatmentService {
 
 		JSONObject jsonObject = tc.deleteTreatment(id);
 
-		//String result = "@Produces(\"application/json\") Delete user "+ uid +"\n\n" + jsonObject;
+		return createResponse(jsonObject);
+	}
+	
+	@Path("/patient/{patientid}/{status}")
+	@GET
+	@Produces("application/json")
+	public Response getTreatmentWithPatientId(@PathParam("patientid") int patientid, @PathParam("status") boolean status) throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+
+		System.out.println("Retrieving all details of Patientid: " + patientid + " with status : " + status);
+		jsonObject = tc.getTreatmentWithPatientId(patientid, status);
+
+		return createResponse(jsonObject);
+	}
+	
+	@Path("/therapist/{therapistid}/{status}")
+	@GET
+	@Produces("application/json")
+	public Response getTreatmentWithTherapistId(@PathParam("therapistid") int therapistid, @PathParam("status") boolean status) throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+
+		System.out.println("Retrieving all details of therapistid: " + therapistid + " with status : " + status);
+		jsonObject = tc.getTreatmentWithTherapistId(therapistid, status);
+
 		return createResponse(jsonObject);
 	}
 	

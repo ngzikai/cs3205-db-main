@@ -1,6 +1,8 @@
 package restapi.team1;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -11,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import controller.UserController;
+import entity.User;
 
 @Path("/team1/user")
 public class UserService {
@@ -22,7 +25,6 @@ public class UserService {
 
 		JSONObject jsonObject = uc.getAllUser();
 
-		//String result = "@Produces(\"application/json\") List of Users \n\n" + jsonObject;
 		return createResponse(jsonObject);
 	}
 
@@ -33,21 +35,13 @@ public class UserService {
 		JSONObject jsonObject = new JSONObject();
 		if(!validateString(user)) {
 			jsonObject.put("result", false); 
-			//String result = "@Produces(\"application/json\") Incorrect username";
+			jsonObject.put("msg", "Bad string");
 			return createResponse(jsonObject);
 		}
 
 		
 		jsonObject = uc.getUser(user); 
-
-		if(jsonObject == null) {
-			jsonObject = new JSONObject();
-			jsonObject.put("result", false); 
-			//String result = "@Produces(\"application/json\") Incorrect username";
-			return createResponse(jsonObject);
-		}
 		
-		//String result = "@Produces(\"application/json\") User details\n\n" + jsonObject;
 		return createResponse(jsonObject);
 	}
 	
@@ -57,26 +51,33 @@ public class UserService {
 	public Response getUserWithUID(@PathParam("s") String user) throws JSONException {
 		JSONObject jsonObject = new JSONObject();
 		if(!validateString(user)) {
-			jsonObject.put("result", false); 
-			//String result = "@Produces(\"application/json\") Incorrect username";
+			jsonObject.put("result", false);
+			jsonObject.put("msg", "Bad string");
 			return createResponse(jsonObject);
 		}
-
 		
 		jsonObject = uc.getUserWithUID(user); 
 
-		if(jsonObject == null) {
-			jsonObject = new JSONObject();
-			jsonObject.put("result", false); 
-			//String result = "@Produces(\"application/json\") Incorrect username";
-			return createResponse(jsonObject);
-		}
-		
-		//String result = "@Produces(\"application/json\") User details\n\n" + jsonObject;
 		return createResponse(jsonObject);
 	}
 	
-	@Path("/create/{user}/{password}/{fname}/{lname}/{nric}/"
+	@Path("/uid/public/{s}")
+	@GET
+	@Produces("application/json")
+	public Response getUserPublicInfoWithUID(@PathParam("s") String user) throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+		if(!validateString(user)) {
+			jsonObject.put("result", false);
+			jsonObject.put("msg", "Bad string");
+			return createResponse(jsonObject);
+		}
+		
+		jsonObject = uc.getUserPublicInfo(user); 
+
+		return createResponse(jsonObject);
+	}
+	
+	@Path("/create/{user}/{password : .+}/{fname}/{lname}/{nric}/"
 			+ "{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}"
 			+ "/{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}")
 	@GET
@@ -93,11 +94,10 @@ public class UserService {
 		JSONObject jsonObject = uc.createUser(user, password, fname, lname, nric, dob, gender.charAt(0), phone1, phone2, phone3, 
 				addr1, addr2, addr3, zip1, zip2, zip3, qualify, bloodType, nfcid);
 
-		//String result = "@Produces(\"application/json\") Creating user .... \n\n" + jsonObject;
 		return createResponse(jsonObject);
 	}
 	
-	@Path("/update/{uid}/{user}/{password}/{fname}/{lname}/{nric}/"
+	@Path("/update/{uid}/{user}/{password : .+}/{fname}/{lname}/{nric}/"
 			+ "{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}"
 			+ "/{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}")
 	@GET
@@ -114,7 +114,16 @@ public class UserService {
 		JSONObject jsonObject = uc.updateUser(uid, user, password, fname, lname, nric, dob, gender.charAt(0), phone1, phone2, phone3, 
 				addr1, addr2, addr3, zip1, zip2, zip3, qualify, bloodType, nfcid);
 
-		//String result = "@Produces(\"application/json\") Creating user .... \n\n" + jsonObject;
+		return createResponse(jsonObject);
+	}
+	
+	@Path("/update/{user}/{password : .+}")
+	@GET
+	@Produces("application/json")
+	public Response updateUserPassword(@PathParam("user") String user, @PathParam("password") String password) throws JSONException {
+
+		JSONObject jsonObject = uc.updateUserPassword(user, password);
+
 		return createResponse(jsonObject);
 	}
 	
@@ -125,7 +134,6 @@ public class UserService {
 
 		JSONObject jsonObject = uc.deleteUser(uid);
 
-		//String result = "@Produces(\"application/json\") Delete user "+ uid +"\n\n" + jsonObject;
 		return createResponse(jsonObject);
 	}
 	
@@ -135,20 +143,12 @@ public class UserService {
 	public Response getAllTherapists() throws JSONException {
 		JSONObject jsonObject = new JSONObject();
 
-		
 		jsonObject = uc.getTherapists(); 
 
-		if(jsonObject == null) {
-			jsonObject = new JSONObject();
-			jsonObject.put("result", false); 
-			return createResponse(jsonObject);
-		}
-		
-		//String result = "@Produces(\"application/json\") User details\n\n" + jsonObject;
 		return createResponse(jsonObject);
 	}
 	
-	@Path("/secret/set/{uid}/{secret}")
+	@Path("/secret/set/{uid}/{secret : .+}")
 	@GET
 	@Produces("application/json")
 	public Response setSecret(@PathParam("uid") int uid, @PathParam("secret") String secret) throws JSONException {
@@ -165,21 +165,35 @@ public class UserService {
 
 		JSONObject jsonObject = uc.userGetSecret(uid);
 		
-		if(jsonObject == null) {
-			jsonObject = new JSONObject();
-			jsonObject.put("result", false); 
-			return createResponse(jsonObject);
-		}
 		return createResponse(jsonObject);
 	}
 	
 	public Response createResponse(JSONObject jsonObject) {
+		if(jsonObject == null) {
+			jsonObject = new JSONObject();
+			jsonObject.put("result", false); 
+			jsonObject.put("msg", "Null object");
+		}
+		
 		return Response.status(200).entity(jsonObject.toString())
 				.header("Access-Control-Allow-Origin", "*")
 				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
 				.build();
 	}
 
+	@Path("/create")
+	@POST
+	@Consumes("application/json")
+	@Produces("application/json")
+	public Response createUserPost(String jsonRequest) throws JSONException {
+
+		//user.print();
+		JSONObject jsonObject = new JSONObject(jsonRequest);
+		System.out.print(jsonObject.toString());
+
+		return createResponse(jsonObject);
+	}
+	
 	private boolean validateString(String username) {
 		return StringUtils.isAlphanumeric(username);
 	}

@@ -8,7 +8,6 @@ public class SystemConfig{
   public static final ResourceBundle resourceBundle = ResourceBundle.getBundle(resourceLocation);
 
   public SystemConfig(){
-    System.out.println(getConfig("database_resource"));
   }
 
   public static String getConfig(String key){

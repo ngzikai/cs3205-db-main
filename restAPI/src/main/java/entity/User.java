@@ -1,9 +1,10 @@
 package entity;
 
 import java.time.LocalDate;
-import java.util.Date;
+import javax.xml.bind.annotation.XmlRootElement;
 
 //@Entity
+@XmlRootElement
 public class User {
 	//Attributes of User Class
 	private int uid;
@@ -44,6 +45,17 @@ public class User {
 		this.nfcid = nfcid;
 	}
 
+	public User(int uid, String firstName, String lastName, char gender, String phone, int qualify) {
+		super();
+		this.uid = uid;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.gender = gender;
+		this.phone = new String[3];
+		this.phone[0] = phone;
+		this.qualify = qualify;
+	}
+
 	//Constructor without UID. Most likely used for creating a new user entry.
 	public User(String username, String password, String firstName, String lastName, String nric, LocalDate dob,
 			char gender, String[] phone, String[] address, int[] zipcode, int qualify, String bloodtype, String nfcid) {
@@ -77,19 +89,19 @@ public class User {
 		this.gender = gender;
 		this.phone = new String[3];
 		phone[0] = phone1;
-		phone[1] = phone2;
-		phone[2] = phone3;
+		phone[1] = validateString(phone2);
+		phone[2] = validateString(phone3);
 		this.address = new String[3];
 		address[0] = address1;
-		address[1] = address2;
-		address[2] = address3;
+		address[1] = validateString(address2);
+		address[2] = validateString(address3);
 		this.zipcode = new int[3];
 		zipcode[0] = zipcode1;
 		zipcode[1] = zipcode2;
 		zipcode[2] = zipcode3;
 		this.qualify = qualify;
 		this.bloodtype = bloodtype;
-		this.nfcid = nfcid;
+		this.nfcid = validateString(nfcid);
 	}
 	
 	public User(int uid, String username, String password, String firstName, String lastName, String nric,
@@ -106,20 +118,20 @@ public class User {
 		this.dob = dob;
 		this.gender = gender;
 		this.phone = new String[3];
-		phone[0] = phone1;
-		phone[1] = phone2;
-		phone[2] = phone3;
+		phone[0] = validateString(phone1);
+		phone[1] = validateString(phone2);
+		phone[2] = validateString(phone3);
 		this.address = new String[3];
 		address[0] = address1;
-		address[1] = address2;
-		address[2] = address3;
+		address[1] = validateString(address2);
+		address[2] = validateString(address3);
 		this.zipcode = new int[3];
 		zipcode[0] = zipcode1;
 		zipcode[1] = zipcode2;
 		zipcode[2] = zipcode3;
 		this.qualify = qualify;
 		this.bloodtype = bloodtype;
-		this.nfcid = nfcid;
+		this.nfcid = validateString(nfcid);
 	}
 	
 
@@ -299,5 +311,12 @@ public class User {
 	
 	public String allZipcodeToString() {
 		return zipcode[0] + ", " + zipcode[1] + ", " + zipcode[2];
+	}
+	
+	public String validateString(String s) {
+		if(s.equals("-")) {
+			return "";
+		}
+		return s;
 	}
 }
