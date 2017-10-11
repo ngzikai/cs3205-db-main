@@ -36,6 +36,14 @@
 			</plugin>
 		</plugins>
 		<directory>target</directory>
+		<resources>
+			<resource>
+				<directory>src/main/java/config</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources>
 	</build>
 
 	<dependencies>

@@ -2,6 +2,8 @@ package restapi.team3;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Context;
 import controller.*;
 import java.util.*;
 import java.io.*;
@@ -11,10 +13,22 @@ import entity.sessions.*;
 
 import org.json.JSONObject;
 
+import utils.SystemConfig;
+
 @Path("/team3/{type}/{userID}")
 public class SessionService{
+  // @Context
+  // UriInfo uri;
 
-  private String fileDirectory = "/home/jim/temp";
+  private String fileDirectory = SystemConfig.getConfig("storage_directory");
+
+  // @GET
+  // public Response getRoot() {
+  //     return Response.ok(new Links(Links.newLink(this.uri, "", "self", "GET"),
+  //             Links.newLink(this.uri, "get/{uid}", "oauth.token", "GET"),
+  //             Links.newLink(this.uri, "all", "all", "GET"),
+  //             Links.newLink(this.uri, "upload", "upload", "POST"))).build();
+  // }
   @Path("/get/{uid}")
   @GET
   @Produces("application/octet-stream")

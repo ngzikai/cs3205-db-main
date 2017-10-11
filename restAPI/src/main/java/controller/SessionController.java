@@ -9,9 +9,10 @@ import java.util.*;
 import org.json.JSONObject;
 import utils.db.*;
 import utils.db.core.*;
+import utils.SystemConfig;
 
 public class SessionController<T extends Session> {
-  private String fileDirectory = "/home/jim/temp";
+  private String fileDirectory = SystemConfig.getConfig("storage_directory");
   protected String tableName = "";
   public SessionController(String tableName){
     this.tableName = tableName;
