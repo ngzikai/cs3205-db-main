@@ -2,7 +2,6 @@ CREATE TABLE user(
    uid  INT NOT NULL  AUTO_INCREMENT,
    username VARCHAR(20) NOT NULL UNIQUE,
    password VARCHAR(255)  NOT NULL,
-   salt   VARCHAR(255) NOT NULL,
    firstname  VARCHAR (20)  NOT NULL,
    lastname  VARCHAR (20)  NOT NULL,
    nric  CHAR (10)  NOT NULL,
@@ -20,6 +19,7 @@ CREATE TABLE user(
    qualify INT NOT NULL,
    bloodtype VARCHAR(3) NOT NULL,
    nfcid VARCHAR(255),
+   secret VARCHAR(255)
    PRIMARY KEY (uid)
 );
 
@@ -88,7 +88,6 @@ CREATE TABLE admin(
    admin_id INT NOT NULL AUTO_INCREMENT,
    username VARCHAR(20) NOT NULL,
    password VARCHAR(255) NOT NULL,
-   salt VARCHAR(255) NOT NULL,
    PRIMARY KEY(admin_id)
 );
 
@@ -137,4 +136,13 @@ CREATE TABLE condition_category(
    PRIMARY KEY (approval_id),
    FOREIGN KEY (condition_id) REFERENCES `condition`(condition_id) ON UPDATE CASCADE ON DELETE CASCADE,
    FOREIGN KEY (category_id) REFERENCES category(category_id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE one_time_link(
+   token VARCHAR(255) NOT NULL,
+   uid INT NOT NULL,
+   filepath VARCHAR(100) NOT NULL,
+   csrf VARCHAR(255),
+   PRIMARY KEY (token),
+   FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE
 );

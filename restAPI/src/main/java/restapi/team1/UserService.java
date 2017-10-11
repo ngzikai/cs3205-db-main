@@ -26,10 +26,10 @@ public class UserService {
 		return createResponse(jsonObject);
 	}
 
-	@Path("{s}")
+	@Path("/username/{s}")
 	@GET
 	@Produces("application/json")
-	public Response getUserFromUsername(@PathParam("s") String user) throws JSONException {
+	public Response getUserWithUsername(@PathParam("s") String user) throws JSONException {
 		JSONObject jsonObject = new JSONObject();
 		if(!validateString(user)) {
 			jsonObject.put("result", false); 
@@ -51,21 +51,67 @@ public class UserService {
 		return createResponse(jsonObject);
 	}
 	
-	@Path("/create/{user}/{password}/{salt}/{fname}/{lname}/{nric}/"
+	@Path("/uid/{s}")
+	@GET
+	@Produces("application/json")
+	public Response getUserWithUID(@PathParam("s") String user) throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+		if(!validateString(user)) {
+			jsonObject.put("result", false); 
+			//String result = "@Produces(\"application/json\") Incorrect username";
+			return createResponse(jsonObject);
+		}
+
+		
+		jsonObject = uc.getUserWithUID(user); 
+
+		if(jsonObject == null) {
+			jsonObject = new JSONObject();
+			jsonObject.put("result", false); 
+			//String result = "@Produces(\"application/json\") Incorrect username";
+			return createResponse(jsonObject);
+		}
+		
+		//String result = "@Produces(\"application/json\") User details\n\n" + jsonObject;
+		return createResponse(jsonObject);
+	}
+	
+	@Path("/create/{user}/{password}/{fname}/{lname}/{nric}/"
 			+ "{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}"
 			+ "/{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}")
 	@GET
 	@Produces("application/json")
 	public Response createUser(@PathParam("user") String user, @PathParam("password") String password,
-			@PathParam("salt") String salt, @PathParam("fname") String fname, @PathParam("lname") String lname,
-			@PathParam("nric") String nric, @PathParam("dob") String dob, @PathParam("gender") String gender,
+			@PathParam("fname") String fname, @PathParam("lname") String lname, @PathParam("nric") String nric, 
+			@PathParam("dob") String dob, @PathParam("gender") String gender,
 			@PathParam("phone1") String phone1, @PathParam("phone2") String phone2, @PathParam("phone3") String phone3,
 			@PathParam("addr1") String addr1, @PathParam("addr2") String addr2, @PathParam("addr3") String addr3,
 			@PathParam("zip1") int zip1, @PathParam("zip2") int zip2, @PathParam("zip3") int zip3,
 			@PathParam("qualify") int qualify, @PathParam("bloodtype") String bloodType, @PathParam("nfcid") String nfcid
 			) throws JSONException {
 
-		JSONObject jsonObject = uc.createUser(user, password, salt, fname, lname, nric, dob, gender.charAt(0), phone1, phone2, phone3, 
+		JSONObject jsonObject = uc.createUser(user, password, fname, lname, nric, dob, gender.charAt(0), phone1, phone2, phone3, 
+				addr1, addr2, addr3, zip1, zip2, zip3, qualify, bloodType, nfcid);
+
+		//String result = "@Produces(\"application/json\") Creating user .... \n\n" + jsonObject;
+		return createResponse(jsonObject);
+	}
+	
+	@Path("/update/{uid}/{user}/{password}/{fname}/{lname}/{nric}/"
+			+ "{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}"
+			+ "/{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}")
+	@GET
+	@Produces("application/json")
+	public Response updateUser(@PathParam("uid") String uid, @PathParam("user") String user, @PathParam("password") String password,
+			@PathParam("fname") String fname, @PathParam("lname") String lname, @PathParam("nric") String nric, 
+			@PathParam("dob") String dob, @PathParam("gender") String gender,
+			@PathParam("phone1") String phone1, @PathParam("phone2") String phone2, @PathParam("phone3") String phone3,
+			@PathParam("addr1") String addr1, @PathParam("addr2") String addr2, @PathParam("addr3") String addr3,
+			@PathParam("zip1") int zip1, @PathParam("zip2") int zip2, @PathParam("zip3") int zip3,
+			@PathParam("qualify") int qualify, @PathParam("bloodtype") String bloodType, @PathParam("nfcid") String nfcid
+			) throws JSONException {
+
+		JSONObject jsonObject = uc.updateUser(uid, user, password, fname, lname, nric, dob, gender.charAt(0), phone1, phone2, phone3, 
 				addr1, addr2, addr3, zip1, zip2, zip3, qualify, bloodType, nfcid);
 
 		//String result = "@Produces(\"application/json\") Creating user .... \n\n" + jsonObject;
@@ -80,6 +126,50 @@ public class UserService {
 		JSONObject jsonObject = uc.deleteUser(uid);
 
 		//String result = "@Produces(\"application/json\") Delete user "+ uid +"\n\n" + jsonObject;
+		return createResponse(jsonObject);
+	}
+	
+	@Path("/therapists")
+	@GET
+	@Produces("application/json")
+	public Response getAllTherapists() throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+
+		
+		jsonObject = uc.getTherapists(); 
+
+		if(jsonObject == null) {
+			jsonObject = new JSONObject();
+			jsonObject.put("result", false); 
+			return createResponse(jsonObject);
+		}
+		
+		//String result = "@Produces(\"application/json\") User details\n\n" + jsonObject;
+		return createResponse(jsonObject);
+	}
+	
+	@Path("/secret/set/{uid}/{secret}")
+	@GET
+	@Produces("application/json")
+	public Response setSecret(@PathParam("uid") int uid, @PathParam("secret") String secret) throws JSONException {
+
+		JSONObject jsonObject = uc.userSetSecret(uid, secret);
+
+		return createResponse(jsonObject);
+	}
+	
+	@Path("/secret/{uid}/")
+	@GET
+	@Produces("application/json")
+	public Response getSecret(@PathParam("uid") int uid) throws JSONException {
+
+		JSONObject jsonObject = uc.userGetSecret(uid);
+		
+		if(jsonObject == null) {
+			jsonObject = new JSONObject();
+			jsonObject.put("result", false); 
+			return createResponse(jsonObject);
+		}
 		return createResponse(jsonObject);
 	}
 	
