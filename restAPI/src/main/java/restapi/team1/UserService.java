@@ -6,6 +6,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import controller.UserController;
+import entity.Researcher;
 import entity.User;
 
 @Path("/team1/user")
@@ -179,18 +181,18 @@ public class UserService {
 		return Response.status(200).entity(jsonObject.toString())
 				.header("Access-Control-Allow-Origin", "*")
 				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
+				.header("ALLOW", "GET, POST, DELETE, PUT, OPTIONS")
 				.build();
 	}
 
 	@Path("/create")
 	@POST
-	@Consumes("application/json")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
-	public Response createUserPost(String jsonRequest) throws JSONException {
-
-		//user.print();
-		JSONObject jsonObject = new JSONObject(jsonRequest);
-		System.out.print(jsonObject.toString());
+	public Response createUserPost(User newUser) throws JSONException {
+		
+		JSONObject jsonObject = new JSONObject();
+		jsonObject = uc.createUser(newUser);
 
 		return createResponse(jsonObject);
 	}
@@ -198,4 +200,17 @@ public class UserService {
 	private boolean validateString(String username) {
 		return StringUtils.isAlphanumeric(username);
 	}
+	
+	@Path("/update")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces("application/json")
+	public Response updateUser(User newUser) throws JSONException {
+
+		JSONObject jsonObject = new JSONObject();
+		jsonObject = uc.updateUser(newUser);
+
+		return createResponse(jsonObject);
+	}
+	
 }

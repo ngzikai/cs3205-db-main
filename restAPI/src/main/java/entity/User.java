@@ -16,16 +16,18 @@ public class User {
 	private String nric;
 	private LocalDate dob;
 	private char gender;
-	private String[] phone; //= new String[3];
-	private String[] address; //= new String[3];
-	private int[] zipcode; //= new int[3];
+	private String[] phone; 
+	private String[] address; 
+	private int[] zipcode; 
 	private int qualify;
 	private String bloodtype;
 	private String nfcid;
 	private String secret;
 	
 	//Constructors for User Class
-	
+	public User() {
+		
+	}
 	public User(int uid, String username, String password, String firstName, String lastName, String nric,
 			LocalDate dob, char gender, String[] phone, String[] address, int[] zipcode, int qualify, String bloodtype,
 			String nfcid) {
@@ -302,10 +304,12 @@ public class User {
 		this.username = username;
 	}
 	
+	
 	public void print() {
 		System.out.println("User id: " + uid);
 		System.out.println("User: " + username);
 		System.out.println("Password: " + password);
+		System.out.println("Salt: " + salt);
 		System.out.println("FirstName: " + firstName);
 		System.out.println("LastName: " + lastName);
 		System.out.println("NRIC: " + nric);
@@ -317,6 +321,7 @@ public class User {
 		System.out.println("Qualify: " + qualify);
 		System.out.println("Blood Type: " + bloodtype);
 		System.out.println("NFCID: " + nfcid);
+		System.out.println("Secret: " + secret);
 	}
 	
 	public String allPhoneToString() {
@@ -337,4 +342,6 @@ public class User {
 		}
 		return s;
 	}
+	
+	
 }
