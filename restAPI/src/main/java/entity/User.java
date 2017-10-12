@@ -10,39 +10,32 @@ public class User {
 	private int uid;
 	private String username;
 	private String password;
+	private String salt;
 	private String firstName;
 	private String lastName;
 	private String nric;
 	private LocalDate dob;
 	private char gender;
-	private String[] phone; //= new String[3];
-	private String[] address; //= new String[3];
-	private int[] zipcode; //= new int[3];
+	private String[] phone; 
+	private String[] address; 
+	private int[] zipcode; 
 	private int qualify;
 	private String bloodtype;
 	private String nfcid;
 	private String secret;
 	
 	//Constructors for User Class
-	
-	public User(int uid, String username, String password, String firstName, String lastName, String nric,
-			LocalDate dob, char gender, String[] phone, String[] address, int[] zipcode, int qualify, String bloodtype,
-			String nfcid) {
+	public User() {
+		
+	}
+
+	public User(int uid, String password, String salt, int qualify, String secret) {
 		super();
 		this.uid = uid;
-		this.username = username;
 		this.password = password;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.nric = nric;
-		this.dob = dob;
-		this.gender = gender;
-		this.phone = phone;
-		this.address = address;
-		this.zipcode = zipcode;
+		this.salt = salt;
 		this.qualify = qualify;
-		this.bloodtype = bloodtype;
-		this.nfcid = nfcid;
+		this.secret = secret;
 	}
 
 	public User(int uid, String firstName, String lastName, char gender, String phone, int qualify) {
@@ -57,31 +50,14 @@ public class User {
 	}
 
 	//Constructor without UID. Most likely used for creating a new user entry.
-	public User(String username, String password, String firstName, String lastName, String nric, LocalDate dob,
-			char gender, String[] phone, String[] address, int[] zipcode, int qualify, String bloodtype, String nfcid) {
-		super();
-		this.username = username;
-		this.password = password;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.nric = nric;
-		this.dob = dob;
-		this.gender = gender;
-		this.phone = phone;
-		this.address = address;
-		this.zipcode = zipcode;
-		this.qualify = qualify;
-		this.bloodtype = bloodtype;
-		this.nfcid = nfcid;
-	}
-
-	public User(String username, String password, String firstName, String lastName, String nric,
+	public User(String username, String password, String salt, String firstName, String lastName, String nric,
 			LocalDate dob, char gender, String phone1, String phone2, String phone3, String address1, String address2,
 			String address3, int zipcode1, int zipcode2, int zipcode3, int qualify, String bloodtype,
 			String nfcid) {
 		super();
 		this.username = username;
 		this.password = password;
+		this.salt = salt;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.nric = nric;
@@ -104,7 +80,7 @@ public class User {
 		this.nfcid = validateString(nfcid);
 	}
 	
-	public User(int uid, String username, String password, String firstName, String lastName, String nric,
+	public User(int uid, String username, String password, String salt, String firstName, String lastName, String nric,
 			LocalDate dob, char gender, String phone1, String phone2, String phone3, String address1, String address2,
 			String address3, int zipcode1, int zipcode2, int zipcode3, int qualify, String bloodtype,
 			String nfcid) {
@@ -112,6 +88,7 @@ public class User {
 		this.uid = uid;
 		this.username = username;
 		this.password = password;
+		this.salt = salt;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.nric = nric;
@@ -143,13 +120,14 @@ public class User {
 		this.gender = gender;
 	}
 
-	public User(int uid, String username, String password, String firstName, String lastName, String nric,
+	public User(int uid, String username, String password, String salt, String firstName, String lastName, String nric,
 			LocalDate dob, char gender, String[] phone, String[] address, int[] zipcode, int qualify, String bloodtype,
 			String nfcid, String secret) {
 		super();
 		this.uid = uid;
 		this.username = username;
 		this.password = password;
+		this.salt = salt;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.nric = nric;
@@ -284,10 +262,20 @@ public class User {
 		this.username = username;
 	}
 	
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+	
+	
 	public void print() {
 		System.out.println("User id: " + uid);
 		System.out.println("User: " + username);
 		System.out.println("Password: " + password);
+		System.out.println("Salt: " + salt);
 		System.out.println("FirstName: " + firstName);
 		System.out.println("LastName: " + lastName);
 		System.out.println("NRIC: " + nric);
@@ -299,6 +287,7 @@ public class User {
 		System.out.println("Qualify: " + qualify);
 		System.out.println("Blood Type: " + bloodtype);
 		System.out.println("NFCID: " + nfcid);
+		System.out.println("Secret: " + secret);
 	}
 	
 	public String allPhoneToString() {
@@ -319,4 +308,6 @@ public class User {
 		}
 		return s;
 	}
+	
+	
 }
