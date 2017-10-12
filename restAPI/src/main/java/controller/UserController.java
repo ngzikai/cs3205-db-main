@@ -124,44 +124,9 @@ public class UserController {
 			String nric, String dob, char gender, String phone1, String phone2, String phone3, String address1, 
 			String address2, String address3, int zipcode1, int zipcode2, int zipcode3, int qualify, String bloodtype,
 			String nfcid) {
-		User user = new User(username, password, firstName, lastName, nric, LocalDate.parse(dob), gender, phone1,
+		User user = new User(username, password, salt, firstName, lastName, nric, LocalDate.parse(dob), gender, phone1,
 				phone2, phone3,  address1, address2, address3, zipcode1, zipcode2, zipcode3, qualify, bloodtype, nfcid);
-		JSONObject jsonObject = new JSONObject();
-		int result = 0;
-		String sql = "INSERT INTO CS3205.user VALUES (default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, null)";
-		try {
-			Connection connect = MySQLAccess.connectDatabase();
-			PreparedStatement preparedStatement = connect.prepareStatement(sql);
-			preparedStatement.setString(1, user.getUsername());
-			preparedStatement.setString(2, user.getPassword());
-			preparedStatement.setString(3, user.getSalt());
-			preparedStatement.setString(4, user.getFirstName());
-			preparedStatement.setString(5, user.getLastName());
-			preparedStatement.setString(6, user.getNric());
-			preparedStatement.setObject(7, user.getDob());
-			preparedStatement.setString(8, user.getGender() +"");
-			preparedStatement.setString(9, user.getPhone()[0]);
-			preparedStatement.setString(10, user.getPhone()[1]);
-			preparedStatement.setString(11, user.getPhone()[2]);
-			preparedStatement.setString(12, user.getAddress()[0]);
-			preparedStatement.setString(13, user.getAddress()[1]);
-			preparedStatement.setString(14, user.getAddress()[2]);
-			preparedStatement.setInt(15, user.getZipcode()[0]);
-			preparedStatement.setInt(16, user.getZipcode()[1]);
-			preparedStatement.setInt(17, user.getZipcode()[2]);
-			preparedStatement.setInt(18, user.getQualify());
-			preparedStatement.setString(19, user.getBloodtype());
-			preparedStatement.setString(20, user.getNfcid());
-			result = MySQLAccess.updateDataBasePS(preparedStatement);
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-		MySQLAccess.close();
-		System.out.println("Created user: " + username);
-		jsonObject.put("result", result);
+		JSONObject jsonObject = createUser(user);
 		return jsonObject;
 	}
 	
@@ -210,46 +175,9 @@ public class UserController {
 			String address2, String address3, int zipcode1, int zipcode2, int zipcode3, int qualify, String bloodtype,
 			String nfcid) {
 		
-		User user = new User(Integer.parseInt(uid), username, password, firstName, lastName, nric, LocalDate.parse(dob), gender, phone1,
+		User user = new User(Integer.parseInt(uid), username, password, salt, firstName, lastName, nric, LocalDate.parse(dob), gender, phone1,
 				phone2, phone3,  address1, address2, address3, zipcode1, zipcode2, zipcode3, qualify, bloodtype, nfcid);
-		JSONObject jsonObject = new JSONObject();
-		int result = 0;
-		String sql = "UPDATE CS3205.user SET username = ?, password = ?, salt = ?, firstname = ?, lastname = ?, "
-				+ "nric = ?, dob = ?, gender = ?, phone1 = ?, phone2 = ?, phone3 = ?, address1 = ?, address2 = ?, "
-				+ "address3 = ?, zipcode1 = ?, zipcode2 = ?, zipcode3 = ?, qualify = ?, bloodtype = ?, nfcid = ? WHERE uid = ?";
-		try {
-			Connection connect = MySQLAccess.connectDatabase();
-			PreparedStatement preparedStatement = connect.prepareStatement(sql);
-			preparedStatement.setString(1, user.getUsername());
-			preparedStatement.setString(2, user.getPassword());
-			preparedStatement.setString(3, user.getSalt());
-			preparedStatement.setString(4, user.getFirstName());
-			preparedStatement.setString(5, user.getLastName());
-			preparedStatement.setString(6, user.getNric());
-			preparedStatement.setObject(7, user.getDob());
-			preparedStatement.setString(8, user.getGender() +"");
-			preparedStatement.setString(9, user.getPhone()[0]);
-			preparedStatement.setString(10, user.getPhone()[1]);
-			preparedStatement.setString(11, user.getPhone()[2]);
-			preparedStatement.setString(12, user.getAddress()[0]);
-			preparedStatement.setString(13, user.getAddress()[1]);
-			preparedStatement.setString(14, user.getAddress()[2]);
-			preparedStatement.setInt(15, user.getZipcode()[0]);
-			preparedStatement.setInt(16, user.getZipcode()[1]);
-			preparedStatement.setInt(17, user.getZipcode()[2]);
-			preparedStatement.setInt(18, user.getQualify());
-			preparedStatement.setString(19, user.getBloodtype());
-			preparedStatement.setString(20, user.getNfcid());
-			preparedStatement.setInt(21, user.getUid());
-			result = MySQLAccess.updateDataBasePS(preparedStatement);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-		MySQLAccess.close();
-		System.out.println("Updated user: " + username);
-		jsonObject.put("result", result);
+		JSONObject jsonObject = updateUser(user);
 		return jsonObject;
 	}
 	
@@ -413,6 +341,7 @@ public class UserController {
 			int id = resultSet.getInt("uid");
 			String username = resultSet.getString("username");
 			String password = resultSet.getString("password");
+			String salt = resultSet.getString("salt");
 			String firstName = resultSet.getString("firstname");
 			String lastName = resultSet.getString("lastname");
 			String nric = resultSet.getString("nric");
@@ -425,7 +354,7 @@ public class UserController {
 			String bloodType = resultSet.getString("bloodtype");
 			String nfcid = resultSet.getString("nfcid");
 			String secret = resultSet.getString("secret");
-			User user = new User(id, username, password, firstName, lastName, nric
+			User user = new User(id, username, password, salt, firstName, lastName, nric
 					, dob, gender, phone, address, zipcode, qualify, bloodType, nfcid, secret);
 			userList.add(user);
 		}
@@ -453,6 +382,7 @@ public class UserController {
 		jsonObjectUser.put("uid", user.getUid()); 
 		jsonObjectUser.put("username", user.getUsername());
 		jsonObjectUser.put("password", user.getPassword());
+		jsonObjectUser.put("salt", user.getSalt());
 		jsonObjectUser.put("firstname", user.getFirstName());
 		jsonObjectUser.put("lastname", user.getLastName());
 		jsonObjectUser.put("dob", user.getDob().toString());

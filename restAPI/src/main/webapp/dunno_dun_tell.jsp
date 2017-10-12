@@ -12,7 +12,11 @@
     - /api/team1/user/uid/public/{uid}<br>
     - /api/team1/user/therapists<br>
     - /api/team1/user/create/{username}/{password}/{salt}/{fname}/{lname}/{nric}/{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}/{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}<br>
+    - /api/team1/user/create/<br>
+    	&emsp;- Accepts POST request JSON data <br>
     - /api/team1/user/update/{uid}/{user}/{password}/{salt}/{fname}/{lname}/{nric}/{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}/{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}<br>
+    - /api/team1/user/update/<br>
+    	&emsp;- Accepts POST request JSON data <br>
     - /api/team1/user/update/{username}/{password}/{salt}<br>
     - /api/team1/user/delete/{uid}<br>
     - /api/team1/user/secret/set/{uid}/{secret}<br>

@@ -14,7 +14,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import controller.UserController;
-import entity.Researcher;
 import entity.User;
 
 @Path("/team1/user")
