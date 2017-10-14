@@ -19,15 +19,19 @@ import entity.Researcher;
 public class ResearcherService {
 	ResearcherController rc = new ResearcherController();
 	
-	@GET
+	@POST
 	@Path("/login")
 	public Researcher Login(Researcher login) {
 		return rc.login(login);
 	}
 
 	@POST
-	public void addResearcher(Researcher newResearcher) {
-		rc.addResearcher(newResearcher);
+	public String addResearcher(Researcher newResearcher) {
+		if(rc.addResearcher(newResearcher)) {
+			return "Success";
+		}else {
+			return "Failed";
+		}
 	}
 
 	@PUT
@@ -38,7 +42,11 @@ public class ResearcherService {
 
 	@DELETE
 	@Path("/{uid}")
-	public void deleteResearcher(@PathParam("uid") int uid) {
-		rc.deleteResearcher(uid);
+	public String deleteResearcher(@PathParam("uid") int uid) {
+		if(rc.deleteResearcher(uid)) {
+			return "Success";
+		}else {
+			return "Failed";
+		}
 	}
 }
