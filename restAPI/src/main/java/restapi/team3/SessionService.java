@@ -2,60 +2,75 @@ package restapi.team3;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.core.Context;
 import controller.*;
 import java.util.*;
 import java.io.*;
 import java.nio.file.Files;
+import java.sql.Timestamp;
 import entity.*;
 import entity.sessions.*;
 
 import org.json.JSONObject;
 
 import utils.SystemConfig;
+import utils.GUID;
 
 @Path("/team3/{type}/{userID}")
 public class SessionService{
-  // @Context
-  // UriInfo uri;
 
   private String fileDirectory = SystemConfig.getConfig("storage_directory");
 
-  // @GET
-  // public Response getRoot() {
-  //     return Response.ok(new Links(Links.newLink(this.uri, "", "self", "GET"),
-  //             Links.newLink(this.uri, "get/{uid}", "oauth.token", "GET"),
-  //             Links.newLink(this.uri, "all", "all", "GET"),
-  //             Links.newLink(this.uri, "upload", "upload", "POST"))).build();
-  // }
-  @Path("/get/{uid}")
+  @GET
+  @Produces("application/json")
+  public Response get(){
+    return Response.status(200).entity("it is running").build();
+  }
+
+  @Path("/get/{uid}/meta")
   @GET
   @Produces("application/octet-stream")
-  public Response get(@PathParam("type")String type, @PathParam("userID") int userID, @PathParam("uid") String uid){
+  public Response getMeta(@PathParam("type")String type, @PathParam("userID") int userID, @PathParam("uid") int uid){
     SessionController sc = getSessionController(type);
-    HeartRate hr = null;
-    ImageVideo iv = null;
-    Step s = null;
-    File file = null;
-    if(type.equalsIgnoreCase("heart")){
-       hr = sc.getHeartrate(uid, userID);
-    } else if (type.equalsIgnoreCase("video") || type.equalsIgnoreCase("image")){
-      iv = sc.getFile(uid, userID, type);
-      file = (iv != null) ? sc.getActualFile(iv.getFileLocation(), iv.getOwnerID(), type) : null;
-    } else if (type.equalsIgnoreCase("step")){
-      s = sc.getStep(uid, userID);
-      file = (s != null) ? sc.getActualFile(s.getFileLocation(), s.getOwnerID(), type) : null;
-    }
+    Data data = null;
+    data = sc.get(userID, uid);
 
-    if(s == null && iv == null && hr == null){
+    if(data == null){
       return Response.status(400).entity("Invalid request.").build();
     }
 
-    JSONObject jObj = (hr != null) ? new JSONObject(hr) : null;
+    JSONObject jObj = new JSONObject(data);
+    if(data.getSubtype().equalsIgnoreCase("step")){
+        jObj = sc.getStepMetaInfo(data);
+    }
+
     if(jObj != null){
       return Response.status(200).entity(jObj.toString()).build();
-    } else if(file != null){
+    }
+
+    return Response.status(400).entity("Server error, contact the administrator.").build();
+  }
+
+  @Path("/get/{uid}")
+  @GET
+  @Produces("application/octet-stream")
+  public Response get(@PathParam("type")String type, @PathParam("userID") int userID, @PathParam("uid") int uid){
+    SessionController sc = getSessionController(type);
+    File file = null;
+    Data data = null;
+    data = sc.get(userID, uid);
+
+    if(data == null){
+      return Response.status(400).entity("Invalid request.").build();
+    }
+
+    JSONObject jObj = new JSONObject(data);
+    if(jObj != null && data.getSubtype().equalsIgnoreCase("heart")){
+      return Response.status(200).entity(jObj.toString()).build();
+    } else {
+      file = sc.getActualFile(data.getAbsolutePath());
+    }
+
+    if(file != null){
       return Response.ok(file, "application/octet-stream").build();
     }
     return Response.status(400).entity("Server error, contact the administrator.").build();
@@ -67,23 +82,15 @@ public class SessionService{
   public Response getAll(@PathParam("type")String type, @PathParam("userID") int userID){
     // Authentication
     SessionController sc = getSessionController(type);
-    List<HeartRate> hr = null;
-    List<ImageVideo> iv = null;
-    List<Step> s = null;
-    if(type.equalsIgnoreCase("heart")){
-       hr = sc.getAllHeartRate(userID);
-    } else if (type.equalsIgnoreCase("video") || type.equalsIgnoreCase("image")){
-      iv = sc.getAllImageVideo(userID, type);
-    } else if (type.equalsIgnoreCase("step")){
-      s = sc.getAllStep(userID);
-    }
+    List<Data> dataList = null;
+    dataList = sc.getAll(userID, type);
 
-    if(s == null && iv == null && hr == null){
+    if(dataList == null){
       return Response.status(400).entity("Invalid request.").build();
     }
 
     JSONObject jObj = new JSONObject();
-    jObj.put("list", ((hr!=null)? hr : (iv != null) ? iv : s));
+    jObj.put("list", dataList);
     return Response.status(200).entity(jObj.toString())
     				.header("Access-Control-Allow-Origin", "*")
     				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
@@ -104,17 +111,19 @@ public class SessionService{
         return Response.status(400).entity("heartrate is not an integer.").build();
       }
       HeartRate hr = new HeartRate();
-      hr.setOwnerID(userID);
-      hr.setHeartrate(heartrate);
-      hr.setTimestamp(createdDate);
-      int result = sc.insertHeartRate(hr);
+      Data data = new Data();
+      data.setUid(userID);
+      data.setContent(String.valueOf(heartrate));
+      data.setCreationdate(new Timestamp(createdDate));
+      data.setModifieddate(new Timestamp(System.currentTimeMillis()));
+      data.setType("Heart Rate");
+      data.setTitle("Heartrate of user: " + userID);
+      data.setSubtype(type);
+      int result = sc.insert(data);
       if(result == 1){
-        return Response.status(200).entity("successfully added uid: " + hr.getUid()).build();
+        return Response.status(200).entity("successfully added heartrate: " + data.getContent()).build();
       }
     } else if (type.equalsIgnoreCase("video") || type.equalsIgnoreCase("image")){
-      ImageVideo s = new ImageVideo();
-      s.setTimestamp(createdDate);
-      s.setOwnerID(userID);
       String mediaExt = (type.equalsIgnoreCase("video")) ? ".mp4" : ".jpeg";
       if(mediaExt.equalsIgnoreCase("unknown")){
         return Response.status(400).entity("unknown type request").build();
@@ -143,12 +152,18 @@ public class SessionService{
         return Response.status(400).entity("Invalid file received.").build();
       }
 
-      s.setFileLocation(createdDate + "_" + s.getUid() + mediaExt);
-      s.setType(type);
-      int result = sc.insertFile(s);
+      Data data = new Data();
+      data.setUid(userID);
+      data.setContent(createdDate + "_" + GUID.BASE58() + mediaExt);
+      data.setCreationdate(new Timestamp(createdDate));
+      data.setModifieddate(new Timestamp(System.currentTimeMillis()));
+      data.setType("File");
+      data.setTitle(type + " of user: " + userID);
+      data.setSubtype(type);
+      int result = sc.insert(data);
       if (result == 1){
-        sc.writeToFile(inputstream, fileDirectory + "/" + s.getOwnerID() + "/" + type +"/" + s.getFileLocation());
-        return Response.status(200).entity("successfully added uid: " + s.getUid()).build();
+        sc.writeToFile(inputstream, fileDirectory + "/" + data.getUid() + "/" + type +"/" + data.getContent());
+        return Response.status(200).entity("successfully added "+type+": " + data.getContent()).build();
       }
     } else if (type.equalsIgnoreCase("step")){
       // Check if it is an JSON object
@@ -164,14 +179,19 @@ public class SessionService{
       }catch(Exception e){
         return Response.status(400).entity("Not a JSON file.").build();
       }
-      Step s = new Step();
-      s.setTimestamp(createdDate);
-      s.setOwnerID(userID);
-      s.setFileLocation(createdDate + "_" + s.getUid() + ".json");
-      int result = sc.insertStep(s);
+
+      Data data = new Data();
+      data.setUid(userID);
+      data.setContent(createdDate + "_" + GUID.BASE58() + ".json");
+      data.setCreationdate(new Timestamp(createdDate));
+      data.setModifieddate(new Timestamp(System.currentTimeMillis()));
+      data.setType("Time Series");
+      data.setTitle(type + " of user: " + userID);
+      data.setSubtype(type);
+      int result = sc.insert(data);
       if (result == 1){
-        sc.writeToFile(inputstream, fileDirectory + "/" + s.getOwnerID() + "/" + type +"/" + s.getFileLocation());
-        return Response.status(200).entity("successfully added uid: " + s.getUid()).build();
+        sc.writeToFile(inputstream, fileDirectory + "/" + data.getUid() + "/" + type +"/" + data.getContent());
+        return Response.status(200).entity("successfully added step: " + data.getContent()).build();
       }
     }
     return Response.status(400).entity("unknown type request").build();

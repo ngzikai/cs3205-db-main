@@ -14,6 +14,11 @@ import utils.SystemConfig;
 public class SessionController<T extends Session> {
   private String fileDirectory = SystemConfig.getConfig("storage_directory");
   protected String tableName = "";
+
+  public SessionController(){
+
+  }
+
   public SessionController(String tableName){
     this.tableName = tableName;
   }
@@ -23,15 +28,18 @@ public class SessionController<T extends Session> {
     this.fileDirectory = fileDirectory;
   }
 
-  public int insertStep(Step object){
-    String sql = "INSERT INTO CS3205.step VALUES (?, ?, ?, ?)";
+  public int insert(Data object){
+    String sql = "INSERT INTO CS3205.data (uid, type, subtype, title, creationdate, modifieddate, content) VALUES (?, ?, ?, ?, ?, ?, ?)";
     int result = -1;
     try{
       PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
-      ps.setString(1, object.getUid());
-      ps.setLong(2, object.getTimestamp());
-      ps.setString(3, object.getFileLocation());
-      ps.setInt(4, object.getOwnerID());
+      ps.setInt(1, object.getUid());
+      ps.setString(2, object.getType());
+      ps.setString(3, object.getSubtype());
+      ps.setString(4, object.getTitle());
+      ps.setTimestamp(5, object.getCreationdate());
+      ps.setTimestamp(6, object.getModifieddate());
+      ps.setString(7, object.getContent());
       result = ps.executeUpdate();
       ps.close();
     } catch(Exception e){
@@ -40,177 +48,59 @@ public class SessionController<T extends Session> {
     return result;
   }
 
-  public int insertHeartRate(HeartRate object){
-    String sql = "INSERT INTO CS3205.heartrate VALUES (?, ?, ?, ?)";
-    int result = -1;
+  public JSONObject getStepMetaInfo(Data step){
+    String jsonStr = readFile(step.getAbsolutePath());
+    JSONObject jObj = new JSONObject(jsonStr);
+    jObj.remove("sensor");
+    return jObj;
+  }
+
+  public Data get(int userID, int rid){
+    String sql = "SELECT * FROM CS3205.data WHERE uid = ? AND rid = ?";
+    Data data = null;
     try{
       PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
-      ps.setString(1, object.getUid());
-      ps.setLong(2, object.getTimestamp());
-      ps.setInt(3, object.getHeartrate());
-      ps.setInt(4, object.getOwnerID());
-      result = ps.executeUpdate();
-      ps.close();
-    } catch(Exception e){
-      e.printStackTrace();
-    }
-    return result;
-  }
-
-  public int insertFile(ImageVideo object){
-    String sql = "INSERT INTO CS3205.file VALUES (?, ?, ?, ?, ?)";
-    int result = -1;
-    try{
-      PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
-      ps.setString(1, object.getUid());
-      ps.setLong(2, object.getTimestamp());
-      ps.setString(3, object.getFileLocation());
-      ps.setInt(4, object.getOwnerID());
-      ps.setString(5, object.getType());
-      result = ps.executeUpdate();
-      ps.close();
-    } catch(Exception e){
-      e.printStackTrace();
-    }
-    return result;
-  }
-
-  public int update(T object){
-    return -1;
-  }
-
-  public int remove(T object){
-    return -1;
-  }
-
-  public Step getStep(String uid, int userID){
-    String sql = "SELECT * FROM CS3205.step WHERE uid = ? AND ownerID = ?";
-    Step step = null;
-    try{
-      PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
-      ps.setString(1, uid);
-      ps.setInt(2, userID);
+      ps.setInt(1, userID);
+      ps.setInt(2, rid);
       ResultSet rs = ps.executeQuery();
       while(rs.next()){
-        step = new Step();
-        step.setUid(rs.getString("uid"));
-        step.setTimestamp(rs.getLong("createdDate"));
-        step.setOwnerID(rs.getInt("ownerID"));
-        step.setFileLocation(rs.getString("location"));
+        data = new Data();
+        data.setRid(rs.getInt("rid"));
+        data.setUid(rs.getInt("uid"));
+        data.setType(rs.getString("type"));
+        data.setSubtype(rs.getString("subtype"));
+        data.setContent(rs.getString("content"));
+        data.setTitle(rs.getString("title"));
+        data.setCreationdate(rs.getTimestamp("creationdate"));
+        data.setModifieddate(rs.getTimestamp("modifieddate"));
         break;
       }
       ps.close();
     } catch(Exception e) {
       e.printStackTrace();
     }
-    return step;
-  }
-  public HeartRate getHeartrate(String uid, int userID){
-    String sql = "SELECT * FROM CS3205.heartrate WHERE uid = ? AND ownerID = ?";
-    HeartRate heartrate = null;
-    try{
-      PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
-      ps.setString(1, uid);
-      ps.setInt(2, userID);
-      ResultSet rs = ps.executeQuery();
-      while(rs.next()){
-        heartrate = new HeartRate();
-        heartrate.setUid(rs.getString("uid"));
-        heartrate.setTimestamp(rs.getLong("createdDate"));
-        heartrate.setOwnerID(rs.getInt("ownerID"));
-        heartrate.setHeartrate(rs.getInt("heartrate"));
-        break;
-      }
-      ps.close();
-    } catch(Exception e) {
-      e.printStackTrace();
-    }
-    return heartrate;
-  }
-  public ImageVideo getFile(String uid, int userID, String type){
-    String sql = "SELECT * FROM CS3205.file WHERE uid = ? AND ownerID = ? AND type = ?";
-    ImageVideo iv = null;
-    try{
-      PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
-      ps.setString(1, uid);
-      ps.setInt(2, userID);
-      ps.setString(3, type);
-      ResultSet rs = ps.executeQuery();
-      while(rs.next()){
-        iv = new ImageVideo();
-        iv.setUid(rs.getString("uid"));
-        iv.setTimestamp(rs.getLong("createdDate"));
-        iv.setOwnerID(rs.getInt("ownerID"));
-        iv.setFileLocation(rs.getString("location"));
-        iv.setType(rs.getString("type"));
-        break;
-      }
-      ps.close();
-    } catch(Exception e) {
-      e.printStackTrace();
-    }
-    return iv;
+    return data;
   }
 
-  public List<Step> getAllStep(int userID){
-    String sql = "SELECT * FROM CS3205.step WHERE ownerID = ?";
-    List<Step> list = new ArrayList<>();
+  public List<Data> getAll(int userID, String subtype){
+    String sql = "SELECT * FROM CS3205.data WHERE uid = ? AND subtype =?";
+    List<Data> list = new ArrayList<>();
     try{
       PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
       ps.setInt(1, userID);
+      ps.setString(2, subtype);
       ResultSet rs = ps.executeQuery();
       while(rs.next()){
-        Step s = new Step();
-        s.setUid(rs.getString("uid"));
-        s.setTimestamp(rs.getLong("createdDate"));
-        s.setFileLocation(rs.getString("location"));
-        s.setOwnerID(rs.getInt("ownerID"));
-        list.add(s);
-      }
-    }catch(Exception e){
-      e.printStackTrace();
-    }
-    return list;
-  }
-
-  public List<HeartRate> getAllHeartRate(int userID){
-    String sql = "SELECT * FROM CS3205.heartrate WHERE ownerID = ?";
-    List<HeartRate> list = new ArrayList<>();
-    try{
-      PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
-      ps.setInt(1, userID);
-      ResultSet rs = ps.executeQuery();
-      while(rs.next()){
-        HeartRate hr = new HeartRate();
-        hr.setOwnerID(rs.getInt("ownerID"));
-        hr.setUid(rs.getString("uid"));
-        hr.setHeartrate(rs.getInt("heartrate"));
-        hr.setTimestamp(rs.getLong("createdDate"));
-        list.add(hr);
-      }
-      ps.close();
-    } catch(Exception e) {
-      e.printStackTrace();
-    }
-    return list;
-  }
-
-  public List<ImageVideo> getAllImageVideo(int userID, String type){
-    String sql = "SELECT * FROM CS3205.file WHERE ownerID = ? AND type = ?";
-    List<ImageVideo> list = new ArrayList<>();
-    try{
-      PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
-      ps.setInt(1, userID);
-      ps.setString(2, type);
-      ResultSet rs = ps.executeQuery();
-      while(rs.next()){
-        ImageVideo s = new ImageVideo();
-        s.setUid(rs.getString("uid"));
-        s.setTimestamp(rs.getLong("createdDate"));
-        s.setFileLocation(rs.getString("location"));
-        s.setOwnerID(rs.getInt("ownerID"));
-        s.setType(rs.getString("type"));
-        list.add(s);
+        Data data = new Data();
+        data.setRid(rs.getInt("rid"));
+        data.setUid(rs.getInt("uid"));
+        data.setType(rs.getString("type"));
+        data.setSubtype(rs.getString("subtype"));
+        data.setContent(rs.getString("content"));
+        data.setTitle(rs.getString("title"));
+        data.setCreationdate(rs.getTimestamp("creationdate"));
+        data.setModifieddate(rs.getTimestamp("modifieddate"));
+        list.add(data);
       }
     }catch(Exception e){
       e.printStackTrace();
@@ -220,6 +110,11 @@ public class SessionController<T extends Session> {
 
   public File getActualFile(String fileLocation, int userID, String type){
     File file = new File(fileDirectory + "/" + userID + "/" + type + "/" + fileLocation);
+    return file;
+  }
+
+  public File getActualFile(String fileLocation){
+    File file = new File(fileLocation);
     return file;
   }
 

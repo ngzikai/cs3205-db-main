@@ -43,6 +43,7 @@
     - /api/team3/image/{userID}<br>
     - /api/team3/video/{userID}<br>
     - prefix + /get/{objectID}<br>
+    - prefix + /get/{objectID}/meta<br>
     - prefix + /all<br>
     - prefix + /upload/{timestamp}<br>
 
