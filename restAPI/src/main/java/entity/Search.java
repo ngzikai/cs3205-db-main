@@ -1,8 +1,6 @@
 package entity;
 
 import java.util.ArrayList;
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement

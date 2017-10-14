@@ -80,7 +80,7 @@ public class ResearcherController {
 	}
 	
 	public void addResearcher(Researcher researcher) {
-		String sql = "INSERT INTO researcher (researcher_username, password, salt, firstname, lastname, nric, dob, gender,"
+		String sql = "INSERT INTO researcher (researcher_username, password, firstname, lastname, nric, dob, gender,"
 				+ "phone1, phone2, address1, address2, zipcode1, zipcode2, qualification, qualification_name) "
 				+ "VALUES ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
 		
@@ -102,7 +102,7 @@ public class ResearcherController {
 			ps.setString(12, researcher.getAddress2());
 			ps.setInt(13, researcher.getZipcode1());
 			ps.setInt(14, researcher.getZipcode2());
-			ps.setString(15, researcher.getQualifcation());
+			ps.setString(15, researcher.getQualification());
 			ps.setString(16, researcher.getQualification_name());
 			
 			MySQLAccess.updateDataBasePS(ps);
