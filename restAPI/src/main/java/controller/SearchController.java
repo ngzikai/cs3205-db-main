@@ -19,11 +19,23 @@ public class SearchController {
 				+ "WHERE user.uid = diagnosis.patient_id AND diagnosis.condition_id = `condition`.condition_id";
 		
 		if (search.getBloodType() != null) {
-			sql = sql + " AND user.bloodtype = '" + search.getBloodType() + "'";
+			sql += " AND (user.bloodtype = '" + search.getBloodType().get(0) + "'";
+			
+			for(int i=1; i < search.getBloodType().size(); i++) {
+				sql += " OR user.bloodtype = '" + search.getBloodType().get(i) + "'";
+			}
+			
+			sql += ")";
 		}
 		
 		if(search.getGender() != null) {
-			sql = sql + " AND user.gender = '" + search.getGender() + "'";
+			sql += " AND (user.gender = '" + search.getGender().get(0) + "'";
+			
+			for(int i=1; i < search.getGender().size(); i++) {
+				sql += " OR user.gender = '" + search.getGender().get(i) + "'";
+			}
+			
+			sql += ")";
 		}
 		
 		if (search.getStartDob() != null || search.getEndDob() != null) {
@@ -38,11 +50,23 @@ public class SearchController {
 		}
 		
 		if (search.getZipcode() != null) {
-			sql = sql + " AND (user.zipcode1 LIKE '" + search.getZipcode() + "%' OR user.zipcode2 LIKE '"+ search.getZipcode() +"%')";
+			sql += " AND ((user.zipcode1 LIKE '" + search.getZipcode().get(0) + "%' OR user.zipcode2 LIKE '"+ search.getZipcode().get(0) +"%')";
+			
+			for(int i=1; i < search.getZipcode().size(); i++) {
+				sql += " OR (user.zipcode1 LIKE '" + search.getZipcode().get(i) + "%' OR user.zipcode2 LIKE '"+ search.getZipcode().get(i) +"%')";
+			}
+			
+			sql += ")";
 		}
 		
 		if(search.getCid() != null) {
-			sql = sql + " AND diagnosis.condition_id = '" + search.getCid() + "'";
+			sql +=  " AND diagnosis.condition_id = '" + search.getCid().get(0) + "'";
+			
+			for(int i=1; i < search.getCid().size(); i++) {
+				sql += " OR diagnosis.condition_id = '" + search.getCid().get(i) + "'";
+			}
+			
+			sql += ")";
 		}
 		
 		Connection connect = MySQLAccess.connectDatabase();
@@ -72,6 +96,7 @@ public class SearchController {
 			e.printStackTrace();
 		}
 		
+		MySQLAccess.close();
 		return results;
 	}
 

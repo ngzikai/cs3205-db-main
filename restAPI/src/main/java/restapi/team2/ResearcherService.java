@@ -24,18 +24,6 @@ public class ResearcherService {
 	public Researcher Login(Researcher login) {
 		return rc.login(login);
 	}
-	
-	@GET
-	@Path("/{uid}")
-	public Researcher getResearcher(@PathParam("uid") int uid) {
-		return null;
-	}
-	
-	@GET
-	@Path("/{uid}/category")
-	public Researcher getResearcherCategory(@PathParam("uid") int uid) {
-		return null;
-	}
 
 	@POST
 	public void addResearcher(Researcher newResearcher) {

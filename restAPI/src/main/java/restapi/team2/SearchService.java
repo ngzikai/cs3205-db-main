@@ -1,7 +1,6 @@
 package restapi.team2;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -21,7 +20,6 @@ public class SearchService {
 	
 	@GET
 	public ArrayList<SearchResult> Search(Search search) {
-		//Date startDob, Date endDob, String gender, String bloodType, String zipcode, int conditionID
 		return sc.search(search);
 	}
 }
