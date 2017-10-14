@@ -12,7 +12,6 @@ public class Researcher {
 	private int researcher_id;
 	private String researcher_username;
 	private String password;
-	private String salt;
 	private String firstname;
 	private String lastname;
 	private String nric;
@@ -24,7 +23,7 @@ public class Researcher {
 	private String address2;
 	private int zipcode1;
 	private int zipcode2;
-	private String qualifcation;
+	private String qualification;
 	private String qualification_name;
 	private ArrayList<Integer> research_category;
 	
@@ -38,15 +37,14 @@ public class Researcher {
 		this.password = password;
 	}
 	
-	public Researcher(int researcher_id, String researcher_username, String password, String salt, String firstname,
+	public Researcher(int researcher_id, String researcher_username, String password, String firstname,
 			String lastname, String nric, Date dob, String gender, String phone1, String phone2, String address1,
-			String address2, int zipcode1, int zipcode2, String qualifcation, String qualification_name,
+			String address2, int zipcode1, int zipcode2, String qualification, String qualification_name,
 			ArrayList<Integer> research_category) {
 		super();
 		this.researcher_id = researcher_id;
 		this.researcher_username = researcher_username;
 		this.password = password;
-		this.salt = salt;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.nric = nric;
@@ -58,7 +56,7 @@ public class Researcher {
 		this.address2 = address2;
 		this.zipcode1 = zipcode1;
 		this.zipcode2 = zipcode2;
-		this.qualifcation = qualifcation;
+		this.qualification = qualification;
 		this.qualification_name = qualification_name;
 		this.research_category = research_category;
 	}
@@ -80,12 +78,6 @@ public class Researcher {
 	}
 	public void setPassword(String password) {
 		this.password = password;
-	}
-	public String getSalt() {
-		return salt;
-	}
-	public void setSalt(String salt) {
-		this.salt = salt;
 	}
 	public String getFirstname() {
 		return firstname;
@@ -153,11 +145,11 @@ public class Researcher {
 	public void setZipcode2(int zipcode2) {
 		this.zipcode2 = zipcode2;
 	}
-	public String getQualifcation() {
-		return qualifcation;
+	public String getQualification() {
+		return qualification;
 	}
-	public void setQualifcation(String qualifcation) {
-		this.qualifcation = qualifcation;
+	public void setQualification(String qualification) {
+		this.qualification = qualification;
 	}
 	public String getQualification_name() {
 		return qualification_name;

@@ -60,7 +60,7 @@ public class SearchController {
 		}
 		
 		if(search.getCid() != null) {
-			sql +=  " AND diagnosis.condition_id = '" + search.getCid().get(0) + "'";
+			sql +=  " AND (diagnosis.condition_id = '" + search.getCid().get(0) + "'";
 			
 			for(int i=1; i < search.getCid().size(); i++) {
 				sql += " OR diagnosis.condition_id = '" + search.getCid().get(i) + "'";
