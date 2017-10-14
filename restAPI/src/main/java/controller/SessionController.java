@@ -1,6 +1,5 @@
 package controller;
 
-import entity.sessions.*;
 import entity.*;
 import java.io.*;
 import java.sql.PreparedStatement;
@@ -8,10 +7,9 @@ import java.sql.ResultSet;
 import java.util.*;
 import org.json.JSONObject;
 import utils.db.*;
-import utils.db.core.*;
 import utils.SystemConfig;
 
-public class SessionController<T extends Session> {
+public class SessionController {
   private String fileDirectory = SystemConfig.getConfig("storage_directory");
   protected String tableName = "";
 

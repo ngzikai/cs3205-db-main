@@ -8,7 +8,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.sql.Timestamp;
 import entity.*;
-import entity.sessions.*;
 
 import org.json.JSONObject;
 
@@ -110,7 +109,6 @@ public class SessionService{
       }catch(Exception e){
         return Response.status(400).entity("heartrate is not an integer.").build();
       }
-      HeartRate hr = new HeartRate();
       Data data = new Data();
       data.setUid(userID);
       data.setContent(String.valueOf(heartrate));
