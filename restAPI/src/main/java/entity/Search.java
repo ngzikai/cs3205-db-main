@@ -1,5 +1,6 @@
 package entity;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -8,31 +9,27 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Search {
 	private String startDob;
 	private String endDob;
-	private String gender;
-	private String bloodType;
-	private String zipcode;
-	private String cid;
+	private ArrayList<String> gender;
+	private ArrayList<String> bloodType;
+	private ArrayList<String> zipcode;
+	private ArrayList<String> cid;
 	
 	public Search() {
 		
 	}
 	
-	public Search(String startDob, String endDob, String gender, String bloodType, String zipcode, String cid)  {
+	public Search(String startDob, String endDob, ArrayList<String> gender, ArrayList<String> bloodType,
+			ArrayList<String> zipcode, ArrayList<String> cid) {
 		super();
 		this.startDob = startDob;
 		this.endDob = endDob;
 		this.gender = gender;
 		this.bloodType = bloodType;
 		this.zipcode = zipcode;
-		this.cid = cid; 
-		
-		System.out.println("Start Date: " + startDob);
-		System.out.println("End Date: " + endDob);
-		System.out.println("Gender: " + gender);
-		System.out.println("Bloodtype: " + bloodType);
-		System.out.println("Zipcode: " + zipcode);
-		System.out.println("Condition ID: " + cid);
+		this.cid = cid;
 	}
+
+
 
 	public String getStartDob() {
 		return startDob;
@@ -49,41 +46,36 @@ public class Search {
 	public void setEndDob(String endDob) {
 		this.endDob = endDob;
 	}
-	
-	public String getGender() {
-		return this.gender;
+
+	public ArrayList<String> getGender() {
+		return gender;
 	}
-	
-	public void setGender(String gender) {
+
+	public void setGender(ArrayList<String> gender) {
 		this.gender = gender;
 	}
 
-	public String getBloodType() {
+	public ArrayList<String> getBloodType() {
 		return bloodType;
 	}
 
-	public void setBloodType(String bloodType) {
+	public void setBloodType(ArrayList<String> bloodType) {
 		this.bloodType = bloodType;
 	}
 
-	public String getZipcode() {
-		if (zipcode == null) {
-			return null;
-		}
-		
+	public ArrayList<String> getZipcode() {
 		return zipcode;
 	}
 
-	public void setZipcode(String zipcode) {
+	public void setZipcode(ArrayList<String> zipcode) {
 		this.zipcode = zipcode;
 	}
-	
-	
-	public String getCid() {
+
+	public ArrayList<String> getCid() {
 		return cid;
 	}
 
-	public void setCid(String cid) {
+	public void setCid(ArrayList<String> cid) {
 		this.cid = cid;
 	}
 
