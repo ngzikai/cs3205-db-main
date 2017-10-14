@@ -4,13 +4,15 @@ public class Admin {
 	private int adminId;
 	private String username;
 	private String password;
+	private String salt;
 	
 	
-	public Admin(int adminId, String username, String password) {
+	public Admin(int adminId, String username, String password, String salt) {
 		super();
 		this.adminId = adminId;
 		this.username = username;
 		this.password = password;
+		this.salt = salt;
 	}
 	
 	public Admin(String username, String password) {
@@ -35,10 +37,19 @@ public class Admin {
 		return password;
 	}
 	
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+
 	public void print() {
 		System.out.println("Admin id: " + adminId);
 		System.out.println("User: " + username);
 		System.out.println("Password: " + password);
+		System.out.println("Salt: " + salt);
 	}
 	
 

@@ -2,7 +2,9 @@ CREATE TABLE user(
    uid  INT NOT NULL  AUTO_INCREMENT,
    username VARCHAR(20) NOT NULL UNIQUE,
    password VARCHAR(255)  NOT NULL,
+   password2 VARCHAR(255)  NOT NULL,
    salt VARCHAR(50)  NOT NULL,
+   salt2 VARCHAR(50)  NOT NULL,
    firstname  VARCHAR (20)  NOT NULL,
    lastname  VARCHAR (20)  NOT NULL,
    nric  CHAR (10)  NOT NULL,
@@ -44,7 +46,8 @@ CREATE TABLE data(
    title VARCHAR(200) NOT NULL,
    creationdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
    modifieddate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-   location VARCHAR(100) NOT NULL,
+   --Location of file and steps data, heartrate as value (bpm)--
+   content VARCHAR(100) NOT NULL,
    PRIMARY KEY(rid),
    FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -97,7 +100,6 @@ CREATE TABLE researcher(
    researcher_id  INT NOT NULL  AUTO_INCREMENT,
    researcher_username VARCHAR(255) NOT NULL UNIQUE,
    password VARCHAR(255)  NOT NULL,
-   salt   VARCHAR(255) NOT NULL,
    firstname  VARCHAR (20)  NOT NULL,
    lastname  VARCHAR (20)  NOT NULL,
    nric  CHAR (10)  NOT NULL,

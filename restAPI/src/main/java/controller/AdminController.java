@@ -35,6 +35,7 @@ public class AdminController {
 			jsonObjectAdmin.put("admin_id", admin.getAdminId()); 
 			jsonObjectAdmin.put("username", admin.getUsername());
 			jsonObjectAdmin.put("password", admin.getPassword());
+			jsonObjectAdmin.put("salt", admin.getSalt());
 			adminArray.put(jsonObjectAdmin);
 		}
 		jsonObjectFinal.put("admins", adminArray);
@@ -62,6 +63,7 @@ public class AdminController {
 		jsonObject.put("admin_id", admin.getAdminId()); 
 		jsonObject.put("username", admin.getUsername());
 		jsonObject.put("password", admin.getPassword());
+		jsonObject.put("salt", admin.getSalt());
 		admin.print();
 		
 		return jsonObject;
@@ -74,8 +76,9 @@ public class AdminController {
 			int id = resultSet.getInt("admin_id");
 			String username = resultSet.getString("username");
 			String password = resultSet.getString("password");
-
-			Admin admin = new Admin(id, username, password);
+			String salt = resultSet.getString("salt");
+			
+			Admin admin = new Admin(id, username, password, salt);
 			adminList.add(admin);
 		}
 		MySQLAccess.close();
