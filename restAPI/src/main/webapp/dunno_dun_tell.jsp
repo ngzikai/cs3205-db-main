@@ -40,6 +40,7 @@
 	- /api/team1/csrf/create/{csrfToken}/{uid}/{expiry}<br>
 	- /api/team1/csrf/delete/{csrfToken}<br><br>
 	- /api/team1/records/all/{uid}<br>
+	- /api/team1/records/get/{type}/{rid}<br>
 
     <br>
     <h3>Team 3 API:</h3>
