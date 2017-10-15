@@ -75,6 +75,9 @@ public class DataService {
 		SessionController sc = getSessionController(type);
 		File file = null;
 		Data data = null;
+		if(sc == null){
+			return Response.status(400).entity("Invalid request.").build();
+		}
 		data = sc.get(rid);
 
 		if(data == null){
