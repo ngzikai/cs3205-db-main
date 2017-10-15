@@ -47,31 +47,7 @@ public class DataService {
 		return Response.status(400).entity("Server error, contact the administrator.").build();
 	}
 
-	@Path("/get/{uid}")
-	@GET
-	@Produces("application/octet-stream")
-	public Response get(@PathParam("type")String type, @PathParam("userID") int userID, @PathParam("uid") int uid){
-		SessionController sc = getSessionController(type);
-		File file = null;
-		Data data = null;
-		data = sc.get(userID, uid);
 
-		if(data == null){
-			return Response.status(400).entity("Invalid request.").build();
-		}
-
-		JSONObject jObj = new JSONObject(data);
-		if(jObj != null && data.getSubtype().equalsIgnoreCase("heart")){
-			return Response.status(200).entity(jObj.toString()).build();
-		} else {
-			file = sc.getActualFile(data.getAbsolutePath());
-		}
-
-		if(file != null){
-			return Response.ok(file, "application/octet-stream").build();
-		}
-		return Response.status(400).entity("Server error, contact the administrator.").build();
-	}
 */
 	@Path("/all/{uid}")
 	@GET
@@ -92,6 +68,31 @@ public class DataService {
 		return createResponse(jsonObject);
 	}
 
+	@Path("/get/{type}/{rid}")
+	@GET
+	@Produces("application/octet-stream")
+	public Response get(@PathParam("type")String type, @PathParam("uid") int userID, @PathParam("rid") int rid){
+		SessionController sc = getSessionController(type);
+		File file = null;
+		Data data = null;
+		data = sc.get(rid);
+
+		if(data == null){
+			return Response.status(400).entity("Invalid request.").build();
+		}
+
+		JSONObject jObj = new JSONObject(data);
+		if(jObj != null && data.getSubtype().equalsIgnoreCase("heart")){
+			return Response.status(200).entity(jObj.toString()).build();
+		} else {
+			file = sc.getActualFile(data.getAbsolutePath());
+		}
+
+		if(file != null){
+			return Response.ok(file, "application/octet-stream").build();
+		}
+		return Response.status(400).entity("Server error, contact the administrator.").build();
+	}
 
 	private SessionController getSessionController(String type){
 		if(type.equalsIgnoreCase("image") || type.equalsIgnoreCase("video")){
