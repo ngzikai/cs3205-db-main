@@ -68,16 +68,13 @@ public class DataService {
 		return createResponse(jsonObject);
 	}
 
-	@Path("/get/{type}/{rid}")
+	@Path("/get/{rid}")
 	@GET
 	@Produces("application/octet-stream")
-	public Response get(@PathParam("type")String type, @PathParam("uid") int userID, @PathParam("rid") int rid){
-		SessionController sc = getSessionController(type);
+	public Response get(@PathParam("rid") int rid){
+		SessionController sc = new SessionController();
 		File file = null;
 		Data data = null;
-		if(sc == null){
-			return Response.status(400).entity("Invalid request.").build();
-		}
 		data = sc.get(rid);
 
 		if(data == null){

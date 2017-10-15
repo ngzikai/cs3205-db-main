@@ -164,7 +164,7 @@ public class Data{
 	}
 
   public String getAbsolutePath(){
-    if(!subtype.equalsIgnoreCase("heart")){
+    if(!type.equalsIgnoreCase("Heart Rate")){
       return SystemConfig.getConfig("storage_directory") + "/" + uid + "/" + subtype + "/" + content;
     }
     return null;
