@@ -70,7 +70,7 @@ public class DataService {
 
 	@Path("/get/{rid}")
 	@GET
-	@Produces("application/octet-stream")
+	@Produces( {"application/octet-stream", "application/json"})
 	public Response get(@PathParam("rid") int rid){
 		SessionController sc = new SessionController();
 		File file = null;
