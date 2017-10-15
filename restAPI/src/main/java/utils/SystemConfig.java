@@ -23,6 +23,8 @@ public class SystemConfig{
           return clazz.cast(getConfig(key).getBytes(StandardCharsets.UTF_8));
       } else if (clazz == long.class || clazz == Long.class) {
           return clazz.cast(Long.valueOf(getConfig(key)));
+      } else if (clazz == boolean.class || clazz == Boolean.class) {
+        return clazz.cast(Boolean.valueOf(getConfig(key)));
       } else {
           return clazz.cast(getConfig(key));
       }
