@@ -14,10 +14,21 @@ import org.json.JSONObject;
 import utils.SystemConfig;
 import utils.GUID;
 
-@Path("/team3/{type}/{userID}")
+
 public class SessionService{
 
   private String fileDirectory = SystemConfig.getConfig("storage_directory");
+  private int userID;
+  private String type = "";
+
+  public SessionService(){
+
+  }
+
+  public SessionService(String type, int userID){
+    this.userID = userID;
+    this.type = type;
+  }
 
   @GET
   @Produces("application/json")
@@ -28,7 +39,7 @@ public class SessionService{
   @Path("/get/{uid}/meta")
   @GET
   @Produces("application/octet-stream")
-  public Response getMeta(@PathParam("type")String type, @PathParam("userID") int userID, @PathParam("uid") int uid){
+  public Response getMeta(@PathParam("uid") int uid){
     SessionController sc = getSessionController(type);
     Data data = null;
     data = sc.get(userID, uid);
@@ -52,7 +63,7 @@ public class SessionService{
   @Path("/get/{uid}")
   @GET
   @Produces("application/octet-stream")
-  public Response get(@PathParam("type")String type, @PathParam("userID") int userID, @PathParam("uid") int uid){
+  public Response get(@PathParam("uid") int uid){
     SessionController sc = getSessionController(type);
     File file = null;
     Data data = null;
@@ -78,7 +89,7 @@ public class SessionService{
   @Path("/all")
   @GET
   @Produces("application/json")
-  public Response getAll(@PathParam("type")String type, @PathParam("userID") int userID){
+  public Response getAll(){
     // Authentication
     SessionController sc = getSessionController(type);
     List<Data> dataList = null;
@@ -99,7 +110,7 @@ public class SessionService{
   @Path("/upload/{timestamp}")
   @POST
   @Produces("application/octet-stream")
-  public Response insert(@PathParam("type")String type, @PathParam("timestamp") long createdDate, @PathParam("userID") int userID, InputStream inputstream){
+  public Response insert(@PathParam("timestamp") long createdDate, InputStream inputstream){
     SessionController sc = getSessionController(type);
     if(type.equalsIgnoreCase("heart")){
       int heartrate = -1;
