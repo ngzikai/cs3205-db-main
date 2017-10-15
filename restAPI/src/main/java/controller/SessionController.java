@@ -105,6 +105,31 @@ public class SessionController {
     }
     return list;
   }
+  
+  public List<Data> getAllFromUser(int userID){
+	    String sql = "SELECT * FROM CS3205.data WHERE uid = ?";
+	    List<Data> list = new ArrayList<>();
+	    try{
+	      PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
+	      ps.setInt(1, userID);
+	      ResultSet rs = ps.executeQuery();
+	      while(rs.next()){
+	        Data data = new Data();
+	        data.setRid(rs.getInt("rid"));
+	        data.setUid(rs.getInt("uid"));
+	        data.setType(rs.getString("type"));
+	        data.setSubtype(rs.getString("subtype"));
+	        data.setContent(rs.getString("content"));
+	        data.setTitle(rs.getString("title"));
+	        data.setCreationdate(rs.getTimestamp("creationdate"));
+	        data.setModifieddate(rs.getTimestamp("modifieddate"));
+	        list.add(data);
+	      }
+	    }catch(Exception e){
+	      e.printStackTrace();
+	    }
+	    return list;
+	  }
 
   public File getActualFile(String fileLocation, int userID, String type){
     File file = new File(fileDirectory + "/" + userID + "/" + type + "/" + fileLocation);
