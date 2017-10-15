@@ -38,7 +38,8 @@
     - /api/team1/csrf<br>
 	- /api/team1/csrf/{csrfToken}<br>
 	- /api/team1/csrf/create/{csrfToken}/{uid}/{expiry}<br>
-	- /api/team1/csrf/delete/{csrfToken}<br>
+	- /api/team1/csrf/delete/{csrfToken}<br><br>
+	- /api/team1/records/all/{uid}<br>
 
     <br>
     <h3>Team 3 API:</h3>
