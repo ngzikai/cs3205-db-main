@@ -180,6 +180,4 @@ public class ResearcherController {
 		MySQLAccess.close();
 		return true;
 	}
-	
-	//TODO: UPDATE RESEARCHER
 }
