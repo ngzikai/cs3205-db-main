@@ -27,6 +27,7 @@ public class AdminController {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
 		JSONArray adminArray = new JSONArray();
 		for(Admin admin : adminList) {
@@ -53,6 +54,7 @@ public class AdminController {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
 		if(adminList.size() < 1) {
 			return null;
@@ -75,7 +77,7 @@ public class AdminController {
 			String username = resultSet.getString("username");
 			String password = resultSet.getString("password");
 			String salt = resultSet.getString("salt");
-
+			
 			Admin admin = new Admin(id, username, password, salt);
 			adminList.add(admin);
 		}

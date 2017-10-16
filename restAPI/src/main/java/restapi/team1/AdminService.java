@@ -23,7 +23,6 @@ public class AdminService {
 
 		JSONObject jsonObject = ac.getAllAdmin();
 
-		//String result = "@Produces(\"application/json\") List of Admins \n\n" + jsonObject;
 		return createResponse(jsonObject);
 	}
 
@@ -41,18 +40,16 @@ public class AdminService {
 		System.out.println("Retrieving details of admin account: " + adminuser);
 		jsonObject = ac.getAdmin(adminuser);
 
-		if(jsonObject == null) {
-			jsonObject = new JSONObject();
-			jsonObject.put("result", false);
-			String result = "@Produces(\"application/json\") Incorrect username";
-			return createResponse(jsonObject);
-		}
-
-		//String result = "@Produces(\"application/json\") Admin details\n\n" + jsonObject;
 		return createResponse(jsonObject);
 	}
 
 	public Response createResponse(JSONObject jsonObject) {
+		if(jsonObject == null) {
+			jsonObject = new JSONObject();
+			jsonObject.put("result", false); 
+			jsonObject.put("msg", "Null object");
+		}
+		
 		return Response.status(200).entity(jsonObject.toString())
 				.header("Access-Control-Allow-Origin", "*")
 				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")

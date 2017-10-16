@@ -1,0 +1,28 @@
+{
+  "users" : [
+    {
+      "name" : "team1",
+      "restapi" : [
+        "team1",
+        "team2",
+        "team3"
+      ]
+    },
+    {
+      "name" : "team2",
+      "restapi" : [
+        "team1",
+        "team2",
+        "team3"
+      ]
+    },
+    {
+      "name" : "team3",
+      "restapi" : [
+        "team1",
+        "team2",
+        "team3"
+      ]
+    }
+  ]
+}

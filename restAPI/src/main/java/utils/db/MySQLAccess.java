@@ -11,6 +11,8 @@ import javax.naming.InitialContext;
 import javax.naming.Context;
 import javax.sql.DataSource;
 
+import utils.SystemConfig;
+
 public class MySQLAccess {
 	private static Connection connect = null;
 	private static Statement statement = null;
@@ -18,7 +20,7 @@ public class MySQLAccess {
 
 	private static DataSource datasource = null;
   private static Context initContext = null;
-  private static String connectURL = "java:comp/env/jdbc/TestDB";
+  private static String connectURL = SystemConfig.getConfig("database_resource");
 
 	////////////////////////////////////////////////////////////////////////
   //
