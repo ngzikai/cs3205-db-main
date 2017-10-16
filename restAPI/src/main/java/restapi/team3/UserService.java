@@ -51,7 +51,9 @@ public class UserService {
     }
     String password = "password";
     attribute = "password2";
-    response = setAttribute(password);
+    MessageDigest digest = MessageDigest.getInstance("SHA-256");
+    digest.digest(password+salt);
+    response = setAttribute(digest.toString());
     return response;
   }
 
