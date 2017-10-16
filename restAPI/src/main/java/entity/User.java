@@ -10,7 +10,9 @@ public class User {
 	private int uid;
 	private String username;
 	private String password;
-	private String salt;
+	private String salt;	
+	private String password2;
+	private String salt2;
 	private String firstName;
 	private String lastName;
 	private String nric;
@@ -269,8 +271,23 @@ public class User {
 	public void setSalt(String salt) {
 		this.salt = salt;
 	}
-	
-	
+		
+	public String getPassword2() {
+		return password2;
+	}
+
+	public void setPassword2(String password2) {
+		this.password2 = password2;
+	}
+
+	public String getSalt2() {
+		return salt2;
+	}
+
+	public void setSalt2(String salt2) {
+		this.salt2 = salt2;
+	}
+
 	public void print() {
 		System.out.println("User id: " + uid);
 		System.out.println("User: " + username);

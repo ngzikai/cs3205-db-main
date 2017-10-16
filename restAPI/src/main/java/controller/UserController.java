@@ -477,4 +477,55 @@ public class UserController {
 		jsonObjectUser.put("secret", user.getSecret());
 		return jsonObjectUser;
 	}
+	
+	//For team 3 
+	public JSONObject getUser2(String username) {
+		JSONObject jsonObject = new JSONObject();
+		String sql = "SELECT uid, password2, salt2, qualify, secret FROM CS3205.user WHERE username = ? ";
+		System.out.println("Retrieving details of User account: " + username);
+		try {
+			Connection connect = MySQLAccess.connectDatabase();
+			PreparedStatement preparedStatement = connect.prepareStatement(sql);
+			preparedStatement.setString(1, username);
+			ResultSet resultSet = MySQLAccess.readDataBasePS(preparedStatement);
+			while (resultSet.next()) {
+				jsonObject.put("uid", resultSet.getInt("uid")); 
+				jsonObject.put("password2", resultSet.getString("password2"));
+				jsonObject.put("salt2", resultSet.getString("salt2"));
+				jsonObject.put("qualify", resultSet.getInt("qualify"));
+				jsonObject.put("secret", resultSet.getString("secret"));
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
+		MySQLAccess.close();
+		
+		return jsonObject;
+	}
+	
+	public JSONObject updateUserPassword2(String username, String password, String salt) {
+		
+		JSONObject jsonObject = new JSONObject();
+		int result = 0;
+		String sql = "UPDATE CS3205.user SET password2 = ?, salt2 = ? WHERE username = ?";
+		try {
+			Connection connect = MySQLAccess.connectDatabase();
+			PreparedStatement preparedStatement = connect.prepareStatement(sql);
+			preparedStatement.setString(1, password);
+			preparedStatement.setString(2, salt);
+			preparedStatement.setString(3, username);
+			result = MySQLAccess.updateDataBasePS(preparedStatement);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		MySQLAccess.close();
+		System.out.println("Updated user: " + username);
+		jsonObject.put("result", result);
+		return jsonObject;
+	}
 }
