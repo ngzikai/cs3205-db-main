@@ -12,16 +12,38 @@ import utils.db.MySQLAccess;
 
 public class ResearcherController {
 	
-	public Researcher login(Researcher login) {
-		String sql = "SELECT * FROM researcher WHERE researcher_username = ? AND password = ?";
+	public String login(String username) {
+		String sql = "SELECT password FROM researcher WHERE researcher_username = ?";
+		Connection connect = MySQLAccess.connectDatabase();
+		String password = "false";
+		
+		try {
+			PreparedStatement ps = connect.prepareStatement(sql);
+			ps.setString(1, username);
+			ResultSet rs = MySQLAccess.readDataBasePS(ps);
+			
+			while(rs.next()) {
+				password = rs.getString(1);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		MySQLAccess.close();
+		return password;
+	}
+	
+	
+	public Researcher getResearcher(String username) {
+		String sql = "SELECT * FROM researcher WHERE researcher_username = ? ";
 		Researcher researcher = new Researcher();
 		Connection connect = MySQLAccess.connectDatabase();
 		
 		//GET RESEARCHER ENTITY BASED ON USERNAME
 		try {
 			PreparedStatement ps = connect.prepareStatement(sql);
-			ps.setString(1, login.getResearcher_username());
-			ps.setString(2, login.getPassword());
+			ps.setString(1, username);
 			ResultSet rs = MySQLAccess.readDataBasePS(ps);
 			
 			//System.out.println("Sucessfully retrieved user!");
@@ -80,30 +102,53 @@ public class ResearcherController {
 	}
 	
 	public boolean addResearcher(Researcher researcher) {
-		String sql = "INSERT INTO researcher (researcher_username, password, firstname, lastname, nric, dob, gender,"
-				+ "phone1, phone2, address1, address2, zipcode1, zipcode2, qualification, qualification_name) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		
+		String sql = "INSERT INTO researcher (researcher_username, password) VALUES (?,?)";
 		Connection connect = MySQLAccess.connectDatabase();
 		
 		try {
 			PreparedStatement ps = connect.prepareStatement(sql);
 			ps.setString(1, researcher.getResearcher_username());
 			ps.setString(2, researcher.getPassword());
-			ps.setString(3, researcher.getFirstname());
-			ps.setString(4, researcher.getLastname());
-			ps.setString(5, researcher.getNric());
-			ps.setDate(6, new java.sql.Date(researcher.getDob().getTime()));
-			ps.setString(7, researcher.getGender());
-			ps.setString(8, researcher.getPhone1());
-			ps.setString(9, researcher.getPhone2());
-			ps.setString(10, researcher.getAddress1());
-			ps.setString(11, researcher.getAddress2());
-			ps.setInt(12, researcher.getZipcode1());
-			ps.setInt(13, researcher.getZipcode2());
-			ps.setString(14, researcher.getQualification());
-			ps.setString(15, researcher.getQualification_name());
 			
+			MySQLAccess.updateDataBasePS(ps);
+		} catch (Exception e) {
+			e.printStackTrace();
+			MySQLAccess.close();
+			return false;
+		}
+		
+		MySQLAccess.close();
+		return true;
+		
+	}
+	
+	
+	public boolean updateResearcher(Researcher researcher) {
+		String sql = "UPDATE researcher SET password = ?, firstname = ?, lastname = ?, nric = ?, dob = ?, gender = ?,"
+				+ "phone1 = ?, phone2 = ?, address1 = ?, address2 = ?, zipcode1 = ?, zipcode2 = ?, qualification = ?, qualification_name = ? "
+				+ "WHERE researcher_username = ?";
+		
+		Connection connect = MySQLAccess.connectDatabase();
+		
+		try {
+			PreparedStatement ps = connect.prepareStatement(sql);
+			ps.setString(1, researcher.getPassword());
+			ps.setString(2, researcher.getFirstname());
+			ps.setString(3, researcher.getLastname());
+			ps.setString(4, researcher.getNric());
+			ps.setDate(5, new java.sql.Date(researcher.getDob().getTime()));
+			ps.setString(6, researcher.getGender());
+			ps.setString(7, researcher.getPhone1());
+			ps.setString(8, researcher.getPhone2());
+			ps.setString(9, researcher.getAddress1());
+			ps.setString(10, researcher.getAddress2());
+			ps.setInt(11, researcher.getZipcode1());
+			ps.setInt(12, researcher.getZipcode2());
+			ps.setString(13, researcher.getQualification());
+			ps.setString(14, researcher.getQualification_name());
+			ps.setString(15, researcher.getResearcher_username());
+			
+			System.out.println(ps.toString());
 			MySQLAccess.updateDataBasePS(ps);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
