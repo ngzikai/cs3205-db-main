@@ -57,7 +57,7 @@ public class SessionService{
       return Response.status(200).entity(jObj.toString()).build();
     }
 
-    return Response.status(400).entity("Server error, contact the administrator.").build();
+    return Response.status(500).entity("Server error, contact the administrator.").build();
   }
 
   @Path("/get/{uid}")
