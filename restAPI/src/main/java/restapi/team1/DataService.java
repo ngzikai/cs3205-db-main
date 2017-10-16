@@ -89,7 +89,12 @@ public class DataService {
 		}
 
 		if(file != null){
-			return Response.ok(file, "application/octet-stream").build();
+			return Response.ok(file, "application/octet-stream")
+					.header("X-File-Type", data.getContent().substring(data.getContent().lastIndexOf('.') + 1))
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
+					.header("ALLOW", "GET, POST, DELETE, PUT, OPTIONS")
+					.build();
 		}
 		return Response.status(400).entity("Server error, contact the administrator.").build();
 	}
