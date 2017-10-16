@@ -7,6 +7,7 @@ import utils.db.*;
 import java.sql.*;
 import utils.db.*;
 import utils.GUID;
+import java.util.Base64;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -55,8 +56,8 @@ public class UserService {
     attribute = "password2";
     try{
       MessageDigest digest = MessageDigest.getInstance("SHA-256");
-      digest.digest((password+salt).getBytes());
-      response = setAttribute(digest.toString());
+      byte[] bytes = digest.digest((password+salt).getBytes());
+      response = setAttribute(Base64.getEncoder().encodeToString(bytes));
     }catch(Exception e){
       e.printStackTrace();
     }
