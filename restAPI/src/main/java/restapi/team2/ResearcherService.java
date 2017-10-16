@@ -19,13 +19,21 @@ import entity.Researcher;
 public class ResearcherService {
 	ResearcherController rc = new ResearcherController();
 	
+	@GET
+	@Path("/{researcher_username}")
+	public Researcher getDetails(@PathParam("researcher_username") String username) {
+		return rc.getResearcher(username);
+	}
+	
 	@POST
 	@Path("/login")
-	public Researcher Login(Researcher login) {
-		return rc.login(login);
+	public String Login(Researcher login) {
+		//returns hash if available, else false
+		return rc.login(login.getResearcher_username());
 	}
 
 	@POST
+	@Path("/register")
 	public String addResearcher(Researcher newResearcher) {
 		if(rc.addResearcher(newResearcher)) {
 			return "Success";
@@ -35,9 +43,14 @@ public class ResearcherService {
 	}
 
 	@PUT
-	@Path("/{uid}")
-	public Researcher updateResearcher(@PathParam("uid") int uid, Researcher researcher) {
-		return null;
+	@Path("/edit")
+	public String updateResearcher(Researcher researcher) {
+		if(rc.updateResearcher(researcher)) {
+			return "Success";
+		}else {
+			return "Failed";
+		}
+		
 	}
 
 	@DELETE
