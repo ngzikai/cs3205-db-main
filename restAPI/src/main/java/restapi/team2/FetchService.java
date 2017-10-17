@@ -23,11 +23,14 @@ public class FetchService {
 	@POST
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public Response getFile(FetchRequest fetch) {
+		String pathPrefix = "/home/sadm/tmp/";
+		
 		StreamingOutput fileStream = new StreamingOutput() {
 			@Override
 			public void write(java.io.OutputStream output) throws IOException, WebApplicationException{
 				try {
-					java.nio.file.Path path = Paths.get(fetch.getPath());
+					java.nio.file.Path path = Paths.get(pathPrefix + fetch.getPath());
+					System.out.println(pathPrefix + fetch.getPath());
 					byte[] data = Files.readAllBytes(path);
 					output.write(data);
 					output.flush();
