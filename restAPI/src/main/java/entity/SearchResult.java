@@ -9,6 +9,7 @@ public class SearchResult {
 	private String zipcode2;
 	private String bloodtype;
 	private String condition_name;
+	private String timeseries_path;
 	
 	public SearchResult() {
 		
@@ -60,6 +61,14 @@ public class SearchResult {
 
 	public void setCondition_name(String condition_name) {
 		this.condition_name = condition_name;
+	}
+
+	public String getTimeseries_path() {
+		return timeseries_path;
+	}
+
+	public void setTimeseries_path(String timeseries_path) {
+		this.timeseries_path = timeseries_path;
 	}
 	
 	

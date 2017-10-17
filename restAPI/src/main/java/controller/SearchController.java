@@ -15,8 +15,8 @@ public class SearchController {
 	public ArrayList<SearchResult> search(Search search){
 		System.out.println(search.toString());
 		
-		String sql = "SELECT user.dob, user.gender, user.zipcode1, user.zipcode2, user.bloodtype, `condition`.condition_name FROM user, diagnosis, `condition` "
-				+ "WHERE user.uid = diagnosis.patient_id AND diagnosis.condition_id = `condition`.condition_id";
+		String sql = "SELECT user.dob, user.gender, user.zipcode1, user.zipcode2, user.bloodtype, `condition`.condition_name, data.content FROM user, diagnosis, `condition`, data "
+				+ "WHERE user.uid = diagnosis.patient_id AND diagnosis.condition_id = `condition`.condition_id AND user.uid = data.uid AND data.title = 'GMSv5_2-Foot_R'";
 		
 		if (search.getBloodType() != null) {
 			sql += " AND (user.bloodtype = '" + search.getBloodType().get(0) + "'";
@@ -87,6 +87,7 @@ public class SearchController {
 				}
 				result.setBloodtype(rs.getString(5));
 				result.setCondition_name(rs.getString(6));
+				result.setTimeseries_path(rs.getString(7));
 				
 				results.add(result);
 			}
