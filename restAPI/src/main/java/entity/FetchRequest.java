@@ -1,6 +1,7 @@
 package entity;
 
 public class FetchRequest {
+	private String pathPrefix = "/home/sadm/tmp/";
 	private String path;
 	private String filename;
 	
@@ -14,7 +15,8 @@ public class FetchRequest {
 	}
 
 	public String getPath() {
-		return path;
+		String[] split = path.split("/home/sadm/tmp/");
+		return split[split.length-1];
 	}
 
 	public void setPath(String path) {
