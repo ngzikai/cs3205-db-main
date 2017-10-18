@@ -22,7 +22,9 @@
     - /api/team1/user/secret/set/{uid}/{secret}<br>
     - /api/team1/user/secret/{uid}<br>
     - /api/team1/admin/<br>
-    - /api/team1/admin/{username}<br><br>
+    - /api/team1/admin/{username}<br>
+    - /api/team1/admin/secret/set/{adminid}/{secret}<br>
+    - /api/team1/admin/secret/{adminid}<br><br>
     - /api/team1/treatment<br>
     - /api/team1/treatment/{treatment_id}<br>
     - /api/team1/treatment/patient/{patientid}/{status}<br>
