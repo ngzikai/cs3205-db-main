@@ -42,6 +42,26 @@ public class AdminService {
 
 		return createResponse(jsonObject);
 	}
+	
+	@Path("/secret/set/{adminId}/{secret : .+}")
+	@GET
+	@Produces("application/json")
+	public Response setSecret(@PathParam("adminId") int adminId, @PathParam("secret") String secret) throws JSONException {
+
+		JSONObject jsonObject = ac.adminSetSecret(adminId, secret);
+
+		return createResponse(jsonObject);
+	}
+	
+	@Path("/secret/{adminId}/")
+	@GET
+	@Produces("application/json")
+	public Response getSecret(@PathParam("adminId") int adminId) throws JSONException {
+
+		JSONObject jsonObject = ac.adminGetSecret(adminId);
+		
+		return createResponse(jsonObject);
+	}
 
 	public Response createResponse(JSONObject jsonObject) {
 		if(jsonObject == null) {

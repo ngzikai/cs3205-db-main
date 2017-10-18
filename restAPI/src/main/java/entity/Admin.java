@@ -5,14 +5,16 @@ public class Admin {
 	private String username;
 	private String password;
 	private String salt;
+	private String secret;
+
 	
-	
-	public Admin(int adminId, String username, String password, String salt) {
+	public Admin(int adminId, String username, String password, String salt, String secret) {
 		super();
 		this.adminId = adminId;
 		this.username = username;
 		this.password = password;
 		this.salt = salt;
+		this.secret = secret;
 	}
 	
 	public Admin(String username, String password) {
@@ -45,11 +47,20 @@ public class Admin {
 		this.salt = salt;
 	}
 
+	public String getSecret() {
+		return secret;
+	}
+
+	public void setSecret(String secret) {
+		this.secret = secret;
+	}
+
 	public void print() {
 		System.out.println("Admin id: " + adminId);
 		System.out.println("User: " + username);
 		System.out.println("Password: " + password);
 		System.out.println("Salt: " + salt);
+		System.out.println("Secret: " + secret);
 	}
 	
 
