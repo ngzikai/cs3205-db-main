@@ -20,7 +20,7 @@
     - /api/team1/user/update/{username}/{password}/{salt}<br>
     - /api/team1/user/delete/{uid}<br>
     - /api/team1/user/secret/set/{uid}/{secret}<br>
-    - /api/team1/user/secret/{uid}<br>
+    - /api/team1/user/secret/{uid}<br><br>
     - /api/team1/admin/<br>
     - /api/team1/admin/{username}<br>
     - /api/team1/admin/secret/set/{adminid}/{secret}<br>
