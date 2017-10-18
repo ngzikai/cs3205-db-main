@@ -46,7 +46,6 @@ CREATE TABLE data(
    title VARCHAR(200) NOT NULL,
    creationdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
    modifieddate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-   --Location of file and steps data, heartrate as value (bpm)--
    content VARCHAR(100) NOT NULL,
    PRIMARY KEY(rid),
    FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE
@@ -101,19 +100,19 @@ CREATE TABLE researcher(
    researcher_id  INT NOT NULL  AUTO_INCREMENT,
    researcher_username VARCHAR(255) NOT NULL UNIQUE,
    password VARCHAR(255)  NOT NULL,
-   firstname  VARCHAR (20)  NOT NULL,
-   lastname  VARCHAR (20)  NOT NULL,
-   nric  CHAR (10)  NOT NULL,
-   dob  DATE  NOT NULL,
-   gender  ENUM('M', 'F')  NOT NULL,
-   phone1  VARCHAR (20)  NOT NULL,
+   firstname  VARCHAR (20) ,
+   lastname  VARCHAR (20) ,
+   nric  CHAR (10),
+   dob  DATE ,
+   gender  ENUM('M', 'F') ,
+   phone1  VARCHAR (20) ,
    phone2  VARCHAR (20),
-   address1 VARCHAR(255) NOT NULL,
+   address1 VARCHAR(255),
    address2 VARCHAR(255),
-   zipcode1 INT NOT NULL,
+   zipcode1 INT,
    zipcode2 INT,
-   qualification VARCHAR(255) NOT NULL,
-   qualification_name VARCHAR(255) NOT NULL,
+   qualification VARCHAR(255),
+   qualification_name VARCHAR(255),
    PRIMARY KEY (researcher_id)
 );
 
