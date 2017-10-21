@@ -87,11 +87,23 @@ public class ConsentService {
 	@Path("/user/{uid}/{status}")
 	@GET
 	@Produces("application/json")
-	public Response getConsentWithPatientId(@PathParam("uid") int uid, @PathParam("status") boolean status) throws JSONException {
+	public Response getConsentWithUid(@PathParam("uid") int uid, @PathParam("status") boolean status) throws JSONException {
 		JSONObject jsonObject = new JSONObject();
 
 		System.out.println("Retrieving all details of uid: " + uid + " with status : " + status);
 		jsonObject = cc.getConsentWithUid(uid, status);
+
+		return createResponse(jsonObject);
+	}
+	
+	@Path("/record/{rid}/")
+	@GET
+	@Produces("application/json")
+	public Response getConsentWithRid(@PathParam("rid") int rid) throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+
+		System.out.println("Retrieving all details of rid: " + rid );
+		jsonObject = cc.getConsentWithRid(rid);
 
 		return createResponse(jsonObject);
 	}

@@ -95,6 +95,33 @@ public class ConsentController {
 		//System.out.println("Retrieving details of Treatment: " + id);
 		return jsonObject;
 	}
+	
+	// This method will take in a patient id and a status, and return the treatment object from the database;
+	public JSONObject getConsentWithRid(int rid) {
+		JSONObject jsonObject = new JSONObject();
+		JSONArray consentArray = null;
+
+		String sql = "SELECT c.consent_id, c.uid, u.firstname, u.lastname, c.status FROM CS3205.consent c INNER JOIN CS3205.user u ON c.uid = u.uid WHERE rid = ? ";
+		try {
+			Connection connect = MySQLAccess.connectDatabase();
+			PreparedStatement preparedStatement = connect.prepareStatement(sql);
+			preparedStatement.setInt(1, rid);
+
+			consentArray = processTherapistList(MySQLAccess.readDataBasePS(preparedStatement));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
+		if(consentArray == null) {
+			return null;
+		}
+		MySQLAccess.close();
+		jsonObject.put("consents", consentArray);
+		//System.out.println("Retrieving details of Treatment: " + id);
+		return jsonObject;
+	}
 
 	public JSONObject createConsent(int uid, int rid) {
 		Consent consent = new Consent(uid, rid, false);
@@ -189,5 +216,27 @@ public class ConsentController {
 		jsonObjectConsent.put("status", consent.isStatus());
 
 		return jsonObjectConsent;
+	}
+	
+	
+	private JSONArray processTherapistList(ResultSet resultSet) throws SQLException {
+		// ResultSet is initially before the first data set
+		JSONArray result = new JSONArray();
+		boolean empty = true;
+		while (resultSet.next()) {
+			JSONObject jsonObjectConsent = new JSONObject();
+			jsonObjectConsent.put("consentId", resultSet.getInt("consent_id")); 
+			jsonObjectConsent.put("uid", resultSet.getInt("uid"));
+			jsonObjectConsent.put("firstname", resultSet.getString("firstname"));
+			jsonObjectConsent.put("lastname", resultSet.getString("lastname"));
+			jsonObjectConsent.put("status", (resultSet.getInt("status")==1) ? true : false);
+			result.put(jsonObjectConsent);
+			empty = false;
+		}
+		MySQLAccess.close();
+		if(empty) {
+			return null;
+		}
+		return result;
 	}
 }
