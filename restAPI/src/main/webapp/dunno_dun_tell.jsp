@@ -43,6 +43,13 @@
 	- /api/team1/csrf/delete/{csrfToken}<br><br>
 	- /api/team1/records/all/{uid}<br>
 	- /api/team1/records/get/{rid}<br>
+	- /api/team1/consent<br>
+    - /api/team1/consent/{consent_id}<br>
+    - /api/team1/consent/create/{uid}/{rid}<br>
+    - /api/team1/consent/update/{consent_id}<br>
+    - /api/team1/consent/delete/{consent_id}<br>
+    - /api/team1/consent/user/{uid}/{status}<br>
+    - /api/team1/consent/record/{rid}<br><br>
 
     <br>
     <h3>Team 3 API:</h3>
