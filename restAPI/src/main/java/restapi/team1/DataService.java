@@ -84,7 +84,7 @@ public class DataService {
 
 		JSONObject jObj = new JSONObject(data);
 		if(jObj != null && data.getType().equalsIgnoreCase("Heart Rate")){
-			return Response.status(200).entity(jObj.toString()).build();
+			return createResponse(jObj);
 		} else {
 			file = sc.getActualFile(data.getAbsolutePath());
 		}
