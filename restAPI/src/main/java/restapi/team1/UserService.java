@@ -212,4 +212,16 @@ public class UserService {
 		return createResponse(jsonObject);
 	}
 	
+	@Path("/update/password")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces("application/json")
+	public Response updateUserPassword(User newUser) throws JSONException {
+
+		JSONObject jsonObject = new JSONObject();
+		jsonObject = uc.updateUser(newUser);
+
+		return createResponse(jsonObject);
+	}
+	
 }

@@ -248,6 +248,29 @@ public class UserController {
 		return jsonObject;
 	}
 	
+	public JSONObject updateUserPassword(User user) {
+		
+		JSONObject jsonObject = new JSONObject();
+		int result = 0;
+		String sql = "UPDATE CS3205.user SET password = ?, salt = ? WHERE username = ?";
+		try {
+			Connection connect = MySQLAccess.connectDatabase();
+			PreparedStatement preparedStatement = connect.prepareStatement(sql);
+			preparedStatement.setString(1, user.getPassword());
+			preparedStatement.setString(2, user.getSalt());
+			preparedStatement.setString(3, user.getUsername());
+			result = MySQLAccess.updateDataBasePS(preparedStatement);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		MySQLAccess.close();
+		System.out.println("Updated user: " + user.getUsername());
+		jsonObject.put("result", result);
+		return jsonObject;
+	}
+	
 	public JSONObject deleteUser(int uid) {
 		int result = 0;
 		JSONObject jsonObject = new JSONObject();
