@@ -142,10 +142,11 @@ CREATE TABLE condition_category(
 );
 
 CREATE TABLE one_time_link(
-   token VARCHAR(255) NOT NULL,
+   token VARCHAR(255),
    uid INT NOT NULL,
    filepath VARCHAR(100) NOT NULL,
    csrf VARCHAR(255),
+   datatype VARCHAR(50) NOT NULL,
    PRIMARY KEY (token),
    FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE
 );
