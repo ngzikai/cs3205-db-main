@@ -48,6 +48,7 @@
     - /api/team1/consent/create/{uid}/{rid}<br>
     - /api/team1/consent/update/{consent_id}<br>
     - /api/team1/consent/delete/{consent_id}<br>
+    - /api/team1/consent/user/{uid}<br>
     - /api/team1/consent/user/{uid}/{status}<br>
     - /api/team1/consent/record/{rid}<br><br>
 

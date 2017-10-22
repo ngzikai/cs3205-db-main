@@ -84,6 +84,18 @@ public class ConsentService {
 		return createResponse(jsonObject);
 	}
 	
+	@Path("/user/{uid}")
+	@GET
+	@Produces("application/json")
+	public Response getConsentWithUid(@PathParam("uid") int uid) throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+
+		System.out.println("Retrieving all details of uid: " + uid );
+		jsonObject = cc.getConsentWithUid(uid);
+
+		return createResponse(jsonObject);
+	}
+	
 	@Path("/user/{uid}/{status}")
 	@GET
 	@Produces("application/json")
