@@ -68,6 +68,7 @@ public class DataService {
 		return createResponse(jsonObject);
 	}
 
+	//To get the file over with the rid
 	@Path("/get/{rid}")
 	@GET
 	@Produces( {"application/octet-stream", "application/json"})
@@ -87,10 +88,12 @@ public class DataService {
 		} else {
 			file = sc.getActualFile(data.getAbsolutePath());
 		}
-
+		
+		String fileType = processFileType(data);
 		if(file != null){
 			return Response.ok(file, "application/octet-stream")
-					.header("X-File-Type", data.getContent().substring(data.getContent().lastIndexOf('.') + 1))
+					.header("X-File-Format", data.getContent().substring(data.getContent().lastIndexOf('.') + 1))
+					.header("X-File-Type", fileType)
 					.header("Access-Control-Allow-Origin", "*")
 					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
 					.header("ALLOW", "GET, POST, DELETE, PUT, OPTIONS")
@@ -108,6 +111,13 @@ public class DataService {
 			return new SessionController("step");
 		}
 		return null;
+	}
+	
+	private String processFileType(Data data) {
+		if(data.getSubtype()!= null)
+			return data.getSubtype();
+		
+		return data.getType();
 	}
 	
 	public Response createResponse(JSONObject jsonObject) {
