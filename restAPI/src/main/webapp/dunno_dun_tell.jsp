@@ -18,6 +18,8 @@
     - /api/team1/user/update/<br>
     	&emsp;- Accepts POST request JSON data <br>
     - /api/team1/user/update/{username}/{password}/{salt}<br>
+    - /api/team1/user/update/password<br>
+    	&emsp;- Accepts POST request JSON data <br>
     - /api/team1/user/delete/{uid}<br>
     - /api/team1/user/secret/set/{uid}/{secret}<br>
     - /api/team1/user/secret/{uid}<br><br>
@@ -34,7 +36,8 @@
     - /api/team1/treatment/delete/{id}<br><br>
     - /api/team1/otl<br>
 	- /api/team1/otl/{token}<br>
-	- /api/team1/otl/create/{token}/{uid}/{filepath}/{csrf}<br>
+	- /api/team1/otl/create/{token}/{uid}/{filepath}/{csrf}/{dataType}<br>
+		&emsp;- Accepts POST request JSON data <br>
 	- /api/team1/otl/update/{token}/{csrf}<br>
 	- /api/team1/otl/delete/{token}<br><br>
     - /api/team1/csrf<br>
