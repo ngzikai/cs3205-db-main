@@ -1,8 +1,11 @@
 package entity;
 
+import java.util.ArrayList;
+
 public class Category {
 	private int category_id;
 	private String category_name;
+	private ArrayList<Condition> conditions;
 	
 	public Category() {
 		
@@ -12,6 +15,7 @@ public class Category {
 		super();
 		this.category_id = category_id;
 		this.category_name = category_name;
+		conditions =  new ArrayList<Condition>();
 	}
 
 	public int getCategory_id() {
@@ -28,5 +32,17 @@ public class Category {
 
 	public void setCategory_name(String category_name) {
 		this.category_name = category_name;
+	}
+
+	public ArrayList<Condition> getConditions() {
+		return conditions;
+	}
+
+	public void setConditions(ArrayList<Condition> conditions) {
+		this.conditions = conditions;
+	}
+	
+	public void addCondition(Condition condition) {
+		conditions.add(condition);
 	}
 }

@@ -20,10 +20,16 @@ import entity.Condition;
 public class CategoryService {
 	CategoryController cc = new CategoryController();
 	
+//	@GET
+//	@Path("/list")
+//	public ArrayList<Category> listCategories(){
+//		return cc.listAllCategories();
+//	}
+	
 	@GET
 	@Path("/list")
-	public ArrayList<Category> listCategories(){
-		return cc.listAllCategories();
+	public ArrayList<Category> listCategoryConditions(){
+		return cc.listAllCategoryConditions();
 	}
 	
 	@GET

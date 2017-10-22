@@ -59,5 +59,15 @@ public class CategoryController {
 		MySQLAccess.close();
 		return results;	
 	}
+	
+	public ArrayList<Category> listAllCategoryConditions(){
+		ArrayList<Category> categories = listAllCategories();
+		
+		for (Category category : categories) {
+			category.setConditions(listConditionsFromCategory(category.getCategory_id()));
+		}
+		
+		return categories;
+	}
 
 }
