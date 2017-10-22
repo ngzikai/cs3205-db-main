@@ -113,6 +113,7 @@ CREATE TABLE researcher(
    zipcode2 INT,
    qualification VARCHAR(255),
    qualification_name VARCHAR(255),
+   isAdmin INT,
    PRIMARY KEY (researcher_id)
 );
 
