@@ -1,15 +1,20 @@
 package restapi.team1;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import controller.OTLController;
+import entity.OneTimeLink;
+import entity.User;
 
 @Path("/team1/otl")
 public class OTLService {
@@ -35,13 +40,13 @@ public class OTLService {
 		return createResponse(jsonObject);
 	}
 	
-	@Path("/create/{token}/{uid}/{filepath: .+}/{csrf}")
+	@Path("/create/{token}/{uid}/{filepath: .+}/{csrf}/{datatype}")
 	@GET
 	@Produces("application/json")
 	public Response createOTL(@PathParam("token") String token,
 			@PathParam("uid") int uid, @PathParam("filepath") String filepath, 
-			@PathParam("csrf") String csrf) throws JSONException {
-		JSONObject jsonObject = oc.createOTL(token, uid, filepath, csrf);
+			@PathParam("csrf") String csrf, @PathParam("datatype") String dataType) throws JSONException {
+		JSONObject jsonObject = oc.createOTL(token, uid, filepath, csrf, dataType);
 
 		return createResponse(jsonObject);
 	}
@@ -76,6 +81,18 @@ public class OTLService {
 	public Response deleteTreatment(@PathParam("token") String token) throws JSONException {
 
 		JSONObject jsonObject = oc.deleteOTL(token);
+
+		return createResponse(jsonObject);
+	}
+	
+	@Path("/create")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces("application/json")
+	public Response createOTL(OneTimeLink otl) throws JSONException {
+		
+		JSONObject jsonObject = new JSONObject();
+		jsonObject = oc.createOTL(otl);
 
 		return createResponse(jsonObject);
 	}

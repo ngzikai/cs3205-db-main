@@ -5,7 +5,20 @@ public class OneTimeLink {
 	private String filepath;
 	private String csrf;
 	private int uid;
+	private String dataType;
 	
+	public OneTimeLink() {
+	}
+	
+	public OneTimeLink(String token, String filepath, String csrf, int uid, String dataType) {
+		super();
+		this.token = token;
+		this.filepath = filepath;
+		this.csrf = csrf;
+		this.uid = uid;
+		this.dataType = dataType;
+	}
+
 	public OneTimeLink(String token, String filepath, String csrf, int uid) {
 		super();
 		this.token = token;
@@ -46,6 +59,14 @@ public class OneTimeLink {
 		this.uid = uid;
 	}
 	
+	public String getDataType() {
+		return dataType;
+	}
+
+	public void setDataType(String dataType) {
+		this.dataType = dataType;
+	}
+
 	public String toString() {
 		return token + "||" + uid + "||" + filepath + "||" + csrf;
 	}

@@ -65,11 +65,16 @@ public class OTLController {
 		return jsonObject;
 	}
 
-	public JSONObject createOTL(String token, int uid, String filepath, String csrf) {
-		OneTimeLink otl = new OneTimeLink(token, filepath, csrf, uid);
+	public JSONObject createOTL(String token, int uid, String filepath, String csrf, String dataType) {
+		OneTimeLink otl = new OneTimeLink(token, filepath, csrf, uid, dataType);
+		JSONObject jsonObject = createOTL(otl);
+		return jsonObject;
+	}
+	
+	public JSONObject createOTL(OneTimeLink otl) {
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
-		String sql = "INSERT INTO CS3205.one_time_link VALUES (?, ?, ?, ?)";
+		String sql = "INSERT INTO CS3205.one_time_link VALUES (?, ?, ?, ?, ?)";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
@@ -77,6 +82,7 @@ public class OTLController {
 			preparedStatement.setInt(2, otl.getUid());
 			preparedStatement.setString(3, otl.getFilepath());
 			preparedStatement.setString(4, otl.getCsrf());
+			preparedStatement.setString(5, otl.getDataType());
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
 
 		} catch (Exception e) {
@@ -144,7 +150,8 @@ public class OTLController {
 			int uid = resultSet.getInt("uid");
 			String filepath = resultSet.getString("filepath");
 			String csrf = resultSet.getString("csrf");
-			OneTimeLink otl = new OneTimeLink(token, filepath, csrf, uid);
+			String dataType = resultSet.getString("datatype");
+			OneTimeLink otl = new OneTimeLink(token, filepath, csrf, uid, dataType);
 			treatmentList.add(otl);
 		}
 		MySQLAccess.close();
@@ -157,7 +164,7 @@ public class OTLController {
 		jsonObjectTreatment.put("uid", otl.getUid());
 		jsonObjectTreatment.put("filepath", otl.getFilepath());
 		jsonObjectTreatment.put("csrf", otl.getCsrf());
-
+		jsonObjectTreatment.put("datatype", otl.getDataType());
 		return jsonObjectTreatment;
 	}
 }
