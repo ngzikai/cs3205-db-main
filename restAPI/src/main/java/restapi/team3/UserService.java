@@ -34,7 +34,6 @@ public class UserService {
   public UserService(String username, String attribute){
     this.username = username;
     this.attribute = attribute;
-    //this.userID = userID;
   }
 
   @GET
@@ -42,17 +41,11 @@ public class UserService {
   public Response challenge(){
     // generate challenge token
     byte[] challenge = Challenge.generateChallenge();
-    JSONObject jObj = new JSONObject();
     // store challenge token
     if(Challenge.storeChallenge(challenge, username) >= 1){
-      // Put challenge to jObj
-      jObj.put("challenge", Base64.getEncoder().encodeToString(challenge));
-      // Obtain salt from server 4
-      jObj.put("salt", CommonUtil.getUserSalt(username));
       try{
         return Response.status(201)
-                .header("www-authenticate", jObj.toString())
-                .entity("Challenge generated.").build();
+                .entity(Base64.getEncoder().encodeToString(challenge)).build();
       } catch(Exception e){
         e.printStackTrace();
         return Response.status(500).entity("Server unable to generate challenge.").build();
@@ -66,7 +59,6 @@ public class UserService {
   public Response login(@HeaderParam("X-NFC-Token")String nfcToken, @HeaderParam("Authorization")String authorizationHeader){
     // check number of login attempts
     // read challenge token
-    System.out.println(authorizationHeader+" authorizationHeader:");
     String[] authHeader = authorizationHeader.split(" ");
     if(authHeader.length < 2){
       return Response.status(Response.Status.BAD_REQUEST)
