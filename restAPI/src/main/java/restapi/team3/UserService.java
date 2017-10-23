@@ -72,9 +72,11 @@ public class UserService {
     byte[] challenge = Challenge.getUserChallenge(username);
     byte[] passwordHash = Base64.getDecoder().decode(CommonUtil.getUserPasswordHash(username).getBytes());
     if(Challenge.validateResponse(response, challenge, passwordHash)){
+      // remove challenge
       // read NFC token
       String userNFC = CommonUtil.getUserNFC(username);
       String totp = CommonUtil.generateTOTP(userNFC);
+      System.out.println("totp:"+totp);
       if(totp.equals(nfcToken)){
         return Response.status(201).entity("true").build();
       }
@@ -88,7 +90,7 @@ public class UserService {
   public Response getSalt(){
     String salt = CommonUtil.getUserSalt(username);
     if(salt.isEmpty()){
-      return Response.status(400).entity("No salt for the user.").build();
+      return Response.status(401).entity("No salt for the user.").build();
     }
     return Response.status(200).entity(salt).build();
   }
