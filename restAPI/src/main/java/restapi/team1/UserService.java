@@ -219,7 +219,7 @@ public class UserService {
 	public Response updateUserPassword(User newUser) throws JSONException {
 
 		JSONObject jsonObject = new JSONObject();
-		jsonObject = uc.updateUser(newUser);
+		jsonObject = uc.updateUserPassword(newUser);
 
 		return createResponse(jsonObject);
 	}
