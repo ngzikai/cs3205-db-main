@@ -34,4 +34,5 @@ public class SessionServiceFilter{
   public UserService filter(@HeaderParam("Authorization")final String verificationToken, @QueryParam("username")String username, @QueryParam("attribute")String attribute){
     return new UserService(username, attribute);
   }
+
 }
