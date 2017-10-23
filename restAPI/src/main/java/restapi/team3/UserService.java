@@ -146,7 +146,7 @@ public class UserService {
       int result = ps.executeUpdate();
       System.out.println("result: "+result);
       if(result == 1){
-        return Response.status(201).entity("successfully added "+attribute + " to "+username).build();
+        return Response.status(201).entity(value).build();
       }
     }catch(Exception e){
       e.printStackTrace();
