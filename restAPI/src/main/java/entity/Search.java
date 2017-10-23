@@ -5,8 +5,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class Search {
-	private String startDob;
-	private String endDob;
+	private ArrayList<String> ageRange;
 	private ArrayList<String> gender;
 	private ArrayList<String> bloodType;
 	private ArrayList<String> zipcode;
@@ -15,34 +14,23 @@ public class Search {
 	public Search() {
 		
 	}
-	
-	public Search(String startDob, String endDob, ArrayList<String> gender, ArrayList<String> bloodType,
+
+	public Search(ArrayList<String> ageRange, ArrayList<String> gender, ArrayList<String> bloodType,
 			ArrayList<String> zipcode, ArrayList<String> cid) {
 		super();
-		this.startDob = startDob;
-		this.endDob = endDob;
+		this.ageRange = ageRange;
 		this.gender = gender;
 		this.bloodType = bloodType;
 		this.zipcode = zipcode;
 		this.cid = cid;
 	}
 
-
-
-	public String getStartDob() {
-		return startDob;
+	public ArrayList<String> getAgeRange() {
+		return ageRange;
 	}
 
-	public void setStartDob(String startDob) {
-		this.startDob = startDob;
-	}
-
-	public String getEndDob() {
-		return endDob;
-	}
-
-	public void setEndDob(String endDob) {
-		this.endDob = endDob;
+	public void setAgeRange(ArrayList<String> ageRange) {
+		this.ageRange = ageRange;
 	}
 
 	public ArrayList<String> getGender() {
@@ -76,16 +64,6 @@ public class Search {
 	public void setCid(ArrayList<String> cid) {
 		this.cid = cid;
 	}
-
-	public String toString() {
-		String s = "";
-		s += "Start dob:" + getStartDob() + "\n";
-		s += "End dob: " + getEndDob() + "\n";
-		s += "Gender: " + getGender() + "\n";
-		s += "Blood Type: " + getBloodType() + "\n";
-		s += "Zip Code: " + getZipcode() + "\n";
-		s += "Condition ID: " + getCid() + "\n";
-		
-		return s;
-	}
+	
+	
 }
