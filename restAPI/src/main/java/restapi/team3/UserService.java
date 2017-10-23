@@ -28,10 +28,10 @@ public class UserService {
   public UserService(){
 
   }
-  public UserService(String username, String attribute, String userID){
+  public UserService(String username, String attribute){
     this.username = username;
     this.attribute = attribute;
-    this.userID = userID;
+    //this.userID = userID;
   }
 
   @POST
@@ -130,8 +130,8 @@ public class UserService {
   @Path("/populateNFC")
   public Response setNFC(){
     String nfcID = GUID.BASE58();
-    String attribute = "nfcid";
-    Response response = setAttribute(attribute);
+    attribute = "nfcid";
+    Response response = setAttribute(nfcID);
     return response;
   }
 
