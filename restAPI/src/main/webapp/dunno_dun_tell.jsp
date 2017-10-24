@@ -54,7 +54,8 @@
     - /api/team1/consent/delete/{consent_id}<br>
     - /api/team1/consent/user/{uid}<br>
     - /api/team1/consent/user/{uid}/{status}<br>
-    - /api/team1/consent/record/{rid}<br><br>
+    - /api/team1/consent/record/{rid}<br>
+    - /api/team1/consent/owner/{ownerid}/{therapistid}<br><br>
 
     <br>
     <h3>Team 3 API:</h3>
