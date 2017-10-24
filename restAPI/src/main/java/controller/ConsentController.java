@@ -181,11 +181,31 @@ public class ConsentController {
 	public JSONObject updateConsent(int id) {	
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
-		String sql = "UPDATE CS3205.consent SET status = ? WHERE consent_id = ?";
+		
+		ArrayList<Consent> consentList = null;
+		String sql = "SELECT * FROM CS3205.consent WHERE consent_id = ? ";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
-			preparedStatement.setInt(1, 1);
+			preparedStatement.setInt(1, id);
+			consentList = resultSetToConsentList(MySQLAccess.readDataBasePS(preparedStatement));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
+		if(consentList.size() < 1) {
+			return null;
+		}
+		
+		Consent consent = consentList.get(0);
+		
+		String sql2 = "UPDATE CS3205.consent SET status = ? WHERE consent_id = ?";
+		try {
+			Connection connect = MySQLAccess.connectDatabase();
+			PreparedStatement preparedStatement = connect.prepareStatement(sql2);
+			preparedStatement.setInt(1, consent.isStatus() ? 0 : 1);
 			preparedStatement.setInt(2, id);
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
 		} catch (Exception e) {
