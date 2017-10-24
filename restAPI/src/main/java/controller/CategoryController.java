@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import entity.Category;
+import entity.CategoryRequest;
 import entity.Condition;
 import utils.db.MySQLAccess;
 
@@ -21,7 +22,9 @@ public class CategoryController {
 			ResultSet rs = MySQLAccess.readDataBasePS(ps);
 			
 			while(rs.next()) {
-				results.add(new Category(rs.getInt(1), rs.getString(2)));
+				Category newCategory = new Category(rs.getInt(1), rs.getString(2));
+				newCategory.setConditions(null);
+				results.add(newCategory);
 			}
 			
 		} catch (Exception e) {
@@ -68,6 +71,121 @@ public class CategoryController {
 		}
 		
 		return categories;
+	}
+	
+	public String newRequest(CategoryRequest request) {
+		String sql = "SELECT * FROM researcher_category WHERE researcher_id = ? AND category_id = ?";
+		
+		Connection connect = MySQLAccess.connectDatabase();
+		
+		try {
+			PreparedStatement ps = connect.prepareStatement(sql);
+			ps.setString(1, request.getResearcher_id());
+			ps.setString(2, request.getCategory_id());
+			
+			ResultSet rs = MySQLAccess.readDataBasePS(ps);
+			
+			int rowCount = 0;
+			
+			while(rs.next()) {
+				rowCount++;
+			}
+			
+			if(rowCount > 0) {
+				return "Failed";
+			}else {
+				sql = "INSERT INTO researcher_category (researcher_id, category_id, approval_status) VALUES (?,?, 'Pending')";
+				ps = connect.prepareStatement(sql);
+				ps.setString(1, request.getResearcher_id());
+				ps.setString(2, request.getCategory_id());
+				
+				MySQLAccess.updateDataBasePS(ps);
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+			MySQLAccess.close();
+			return "Failed";
+		}
+		
+		MySQLAccess.close();
+		return "Success";
+		
+	}
+	
+	public String approveRequest(CategoryRequest request) {
+		String sql = "SELECT * FROM researcher_category WHERE researcher_id = ? AND category_id = ?";
+		
+		Connection connect = MySQLAccess.connectDatabase();
+		
+		try {
+			PreparedStatement ps = connect.prepareStatement(sql);
+			ps.setString(1, request.getResearcher_id());
+			ps.setString(2, request.getCategory_id());
+			
+			ResultSet rs = MySQLAccess.readDataBasePS(ps);
+			
+			int rowCount = 0;
+			
+			while(rs.next()) {
+				rowCount++;
+			}
+						
+			if (rowCount != 1) {
+				return "Failed";
+			} else {
+				sql = "UPDATE researcher_category SET approval_status = 'Approved' WHERE researcher_id = ? AND category_id = ?";
+				ps = connect.prepareStatement(sql);
+				ps.setString(1, request.getResearcher_id());
+				ps.setString(2, request.getCategory_id());
+				
+				MySQLAccess.updateDataBasePS(ps);
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+			MySQLAccess.close();
+			return "Failed";
+		}
+		
+		MySQLAccess.close();
+		return "Success";
+	}
+	
+	public String declineRequest(CategoryRequest request) {
+		String sql = "SELECT * FROM researcher_category WHERE researcher_id = ? AND category_id = ?";
+		
+		Connection connect = MySQLAccess.connectDatabase();
+		
+		try {
+			PreparedStatement ps = connect.prepareStatement(sql);
+			ps.setString(1, request.getResearcher_id());
+			ps.setString(2, request.getCategory_id());
+			
+			ResultSet rs = MySQLAccess.readDataBasePS(ps);
+			
+			int rowCount = 0;
+			
+			while(rs.next()) {
+				rowCount++;
+			}
+						
+			if (rowCount != 1) {
+				return "Failed";
+			} else {
+				sql = "UPDATE researcher_category SET approval_status = 'Not Approved' WHERE researcher_id = ? AND category_id = ?";
+				ps = connect.prepareStatement(sql);
+				ps.setString(1, request.getResearcher_id());
+				ps.setString(2, request.getCategory_id());
+				
+				MySQLAccess.updateDataBasePS(ps);
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+			MySQLAccess.close();
+			return "Failed";
+		}
+		
+		MySQLAccess.close();
+		return "Success";
 	}
 
 }
