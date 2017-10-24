@@ -14,6 +14,7 @@ import controller.CategoryController;
 import entity.Category;
 import entity.CategoryRequest;
 import entity.Condition;
+import entity.ResearcherCategory;
 
 
 @Path("team2/category")
@@ -56,6 +57,18 @@ public class CategoryService {
 	@Path("/decline")
 	public String declineCategory(CategoryRequest request) {
 		return cc.declineRequest(request);
+	}
+	
+	@GET
+	@Path("/list/{researcher_id}")
+	public ResearcherCategory getRequests(@PathParam("researcher_id") String researcher_id) {
+		return cc.getResearcherCategories(researcher_id);
+	}
+	
+	@GET
+	@Path("/list/all")
+	public ArrayList<ResearcherCategory> getAllRequests() {
+		return cc.getAllResearcherCategories();
 	}
 	
 }
