@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import utils.SystemConfig;
 import utils.GUID;
 
-@Path("/team1/records/")
+@Path("/team1/record/")
 public class DataService {
 	private String fileDirectory = SystemConfig.getConfig("storage_directory");
 
@@ -132,6 +132,22 @@ public class DataService {
 				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
 				.header("ALLOW", "GET, POST, DELETE, PUT, OPTIONS")
 				.build();
+	}
+	
+	//Retrieves a particular records
+	@Path("/{rid}")
+	@GET
+	@Produces( {"application/json"})
+	public Response getRecord(@PathParam("rid") int rid){
+		SessionController sc = new SessionController();
+		Data data = null;
+		data = sc.get(rid);
+		JSONObject jObj = null;
+		
+		if(data != null) {
+			jObj = new JSONObject(data);
+		}
+		return createResponse(jObj);
 	}
 
 
