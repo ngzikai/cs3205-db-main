@@ -44,8 +44,9 @@
 	- /api/team1/csrf/{csrfToken}<br>
 	- /api/team1/csrf/create/{csrfToken}/{uid}/{expiry}<br>
 	- /api/team1/csrf/delete/{csrfToken}<br><br>
-	- /api/team1/records/all/{uid}<br>
-	- /api/team1/records/get/{rid}<br>
+	- /api/team1/record/all/{uid}<br>
+	- /api/team1/record/get/{rid}<br>
+	- /api/team1/record/{rid}<br><br>
 	- /api/team1/consent<br>
     - /api/team1/consent/{consent_id}<br>
     - /api/team1/consent/create/{uid}/{rid}<br>
