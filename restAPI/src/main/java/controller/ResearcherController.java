@@ -65,6 +65,13 @@ public class ResearcherController {
 				researcher.setZipcode2(rs.getInt(14));
 				researcher.setQualification(rs.getString(15));
 				researcher.setQualification_name(rs.getString(16));
+				
+				if(rs.getString(17).equals("1")) {
+					researcher.setIsAdmin("true");
+				}else {
+					researcher.setIsAdmin("false");
+				}
+				
 			}
 			
 			//System.out.println(researcher.getNric() + researcher.getQualifcation() + researcher.getAddress2());
@@ -102,7 +109,7 @@ public class ResearcherController {
 	}
 	
 	public boolean addResearcher(Researcher researcher) {
-		String sql = "INSERT INTO researcher (researcher_username, password) VALUES (?,?)";
+		String sql = "INSERT INTO researcher (researcher_username, password, isAdmin) VALUES (?,?,0)";
 		Connection connect = MySQLAccess.connectDatabase();
 		
 		try {

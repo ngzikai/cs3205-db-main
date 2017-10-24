@@ -23,6 +23,7 @@ public class Researcher {
 	private int zipcode2;
 	private String qualification;
 	private String qualification_name;
+	private String isAdmin;
 	private ArrayList<Integer> research_category;
 	
 	public Researcher() {
@@ -37,7 +38,7 @@ public class Researcher {
 	
 	public Researcher(int researcher_id, String researcher_username, String password, String firstname,
 			String lastname, String nric, Date dob, String gender, String phone1, String phone2, String address1,
-			String address2, int zipcode1, int zipcode2, String qualification, String qualification_name,
+			String address2, int zipcode1, int zipcode2, String qualification, String qualification_name, String isAdmin,
 			ArrayList<Integer> research_category) {
 		super();
 		this.researcher_id = researcher_id;
@@ -56,6 +57,7 @@ public class Researcher {
 		this.zipcode2 = zipcode2;
 		this.qualification = qualification;
 		this.qualification_name = qualification_name;
+		this.isAdmin = isAdmin;
 		this.research_category = research_category;
 	}
 
@@ -160,6 +162,14 @@ public class Researcher {
 	}
 	public void setResearchCategory(ArrayList<Integer> research_category) {
 		this.research_category = research_category;
+	}
+
+	public String getIsAdmin() {
+		return isAdmin;
+	}
+
+	public void setIsAdmin(String isAdmin) {
+		this.isAdmin = isAdmin;
 	}
 
 }
