@@ -46,7 +46,9 @@
 	- /api/team1/csrf/delete/{csrfToken}<br><br>
 	- /api/team1/record/all/{uid}<br>
 	- /api/team1/record/get/{rid}<br>
-	- /api/team1/record/{rid}<br><br>
+	- /api/team1/record/{rid}<br>
+	- /api/team1/record/document/create<br>
+	&emsp;- Accepts POST request JSON data <br><br>
 	- /api/team1/consent<br>
     - /api/team1/consent/{consent_id}<br>
     - /api/team1/consent/create/{uid}/{rid}<br>
