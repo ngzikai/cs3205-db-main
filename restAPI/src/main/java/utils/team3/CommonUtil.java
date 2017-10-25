@@ -86,4 +86,12 @@ public class CommonUtil{
     }
     return -1;
   }
+
+  public static byte[] computeXOR(byte[] b1, byte[] b2) {
+    byte[] result = new byte[32];
+    for (int i = 0; i < 32; i++) {
+        result[i] = (byte)(b1[i] ^ b2[i]);
+    }
+    return result;
+  }
 }
