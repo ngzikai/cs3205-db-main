@@ -154,6 +154,38 @@ public class ConsentController {
 		return jsonObject;
 	}
 
+	// This method will take in a patient id and a therapist, and return the Consent object from the database;
+	public JSONObject getConsentWithUidAndTherapistId(int patientid, int therapistId) {
+		JSONObject jsonObject = new JSONObject();
+		ArrayList<Consent> consentList = null;
+
+		String sql = "SELECT * FROM CS3205.consent c INNER JOIN CS3205.data d ON c.rid = d.rid WHERE d.uid = ? AND c.uid = ? ";
+		try {
+			Connection connect = MySQLAccess.connectDatabase();
+			PreparedStatement preparedStatement = connect.prepareStatement(sql);
+			preparedStatement.setInt(1, patientid);
+			preparedStatement.setInt(2, therapistId);
+			consentList = resultSetToConsentList(MySQLAccess.readDataBasePS(preparedStatement));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
+		if(consentList.size() < 1) {
+			return null;
+		}
+		JSONArray consentArray = new JSONArray();
+		for(Consent consent : consentList) {
+			JSONObject jsonObjectTreatment = buildConsentObject(consent);
+			consentArray.put(jsonObjectTreatment);
+		}
+		MySQLAccess.close();
+		jsonObject.put("consents", consentArray);
+		//System.out.println("Retrieving details of Consent: " + id);
+		return jsonObject;
+	}
+	
 	public JSONObject createConsent(int uid, int rid) {
 		Consent consent = new Consent(uid, rid, false);
 		JSONObject jsonObject = new JSONObject();
@@ -181,11 +213,31 @@ public class ConsentController {
 	public JSONObject updateConsent(int id) {	
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
-		String sql = "UPDATE CS3205.consent SET status = ? WHERE consent_id = ?";
+		
+		ArrayList<Consent> consentList = null;
+		String sql = "SELECT * FROM CS3205.consent WHERE consent_id = ? ";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
-			preparedStatement.setInt(1, 1);
+			preparedStatement.setInt(1, id);
+			consentList = resultSetToConsentList(MySQLAccess.readDataBasePS(preparedStatement));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
+		if(consentList.size() < 1) {
+			return null;
+		}
+		
+		Consent consent = consentList.get(0);
+		
+		String sql2 = "UPDATE CS3205.consent SET status = ? WHERE consent_id = ?";
+		try {
+			Connection connect = MySQLAccess.connectDatabase();
+			PreparedStatement preparedStatement = connect.prepareStatement(sql2);
+			preparedStatement.setInt(1, consent.isStatus() ? 0 : 1);
 			preparedStatement.setInt(2, id);
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
 		} catch (Exception e) {

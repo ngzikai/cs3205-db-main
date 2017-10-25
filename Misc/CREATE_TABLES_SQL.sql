@@ -11,7 +11,7 @@ CREATE TABLE user(
    lastname  VARCHAR (20)  NOT NULL,
    nric  CHAR (10)  NOT NULL,
    dob  DATE  NOT NULL,
-   gender  ENUM('M', 'F')  NOT NULL,
+   sex  ENUM('M', 'F')  NOT NULL,
    phone1  VARCHAR (20)  NOT NULL,
    phone2  VARCHAR (20),
    phone3  VARCHAR (20),
@@ -25,6 +25,9 @@ CREATE TABLE user(
    bloodtype VARCHAR(3) NOT NULL,
    nfcid VARCHAR(255),
    secret VARCHAR(255),
+   ethnicity VARCHAR(255) NOT NULL,
+   nationality VARCHAR(255) NOT NULL,
+   drug_allergy TINYINT(1) NOT NULL,
    PRIMARY KEY (uid)
 );
 

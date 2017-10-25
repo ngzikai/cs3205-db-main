@@ -108,7 +108,7 @@ public class ConsentService {
 		return createResponse(jsonObject);
 	}
 	
-	@Path("/record/{rid}/")
+	@Path("/record/{rid}")
 	@GET
 	@Produces("application/json")
 	public Response getConsentWithRid(@PathParam("rid") int rid) throws JSONException {
@@ -116,6 +116,18 @@ public class ConsentService {
 
 		System.out.println("Retrieving all details of rid: " + rid );
 		jsonObject = cc.getConsentWithRid(rid);
+
+		return createResponse(jsonObject);
+	}
+	
+	@Path("/owner/{ownerid}/{therapistid}")
+	@GET
+	@Produces("application/json")
+	public Response getConsentWithUidAndTherapistId(@PathParam("ownerid") int ownerid, @PathParam("therapistid") int therapistid) throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+
+		System.out.println("Retrieving all details of uid: " + ownerid + " and therapistId : " + therapistid);
+		jsonObject = cc.getConsentWithUidAndTherapistId(ownerid, therapistid);
 
 		return createResponse(jsonObject);
 	}

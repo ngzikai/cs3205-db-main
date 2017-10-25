@@ -3,7 +3,9 @@ package controller;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import entity.Search;
@@ -13,10 +15,14 @@ import utils.db.MySQLAccess;
 public class SearchController {
 	
 	public ArrayList<SearchResult> search(Search search){
-		System.out.println(search.toString());
+		//System.out.println(search.toString());
 		
 		String sql = "SELECT user.dob, user.gender, user.zipcode1, user.zipcode2, user.bloodtype, `condition`.condition_name, data.content FROM user, diagnosis, `condition`, data "
 				+ "WHERE user.uid = diagnosis.patient_id AND diagnosis.condition_id = `condition`.condition_id AND user.uid = data.uid AND data.title = 'GMSv5_2-Foot_R'";
+		
+		if(search.getAgeRange() == null && search.getBloodType() == null && search.getCid() == null && search.getGender() == null && search.getZipcode() == null) {
+			return null;
+		}
 		
 		if (search.getBloodType() != null) {
 			sql += " AND (user.bloodtype = '" + search.getBloodType().get(0) + "'";
@@ -38,16 +44,30 @@ public class SearchController {
 			sql += ")";
 		}
 		
-		if (search.getStartDob() != null || search.getEndDob() != null) {
-			if(search.getStartDob() == null) {
-				search.setStartDob(search.getEndDob());
+//		if (search.getStartDob() != null || search.getEndDob() != null) {
+//			if(search.getStartDob() == null) {
+//				search.setStartDob(search.getEndDob());
+//			}
+//			
+//			if(search.getEndDob() == null) {
+//				search.setEndDob(search.getStartDob());
+//			}
+//			sql = sql + " AND user.dob BETWEEN '" + search.getStartDob() + "' AND '" + search.getEndDob() + "'";
+//		}
+		
+		if(search.getAgeRange() != null) {
+			ArrayList<String> dateRanges = getDatesFromAgeRange(search.getAgeRange().get(0));
+			
+			sql += " AND (user.dob BETWEEN '" + dateRanges.get(0) + "' AND '" + dateRanges.get(1) + "'";
+			
+			for(int i = 1; i < search.getAgeRange().size(); i++) {
+				dateRanges = getDatesFromAgeRange(search.getAgeRange().get(i));
+				sql += " OR user.dob BETWEEN '" + dateRanges.get(0) + "' AND '" + dateRanges.get(1) + "'";
 			}
 			
-			if(search.getEndDob() == null) {
-				search.setEndDob(search.getStartDob());
-			}
-			sql = sql + " AND user.dob BETWEEN '" + search.getStartDob() + "' AND '" + search.getEndDob() + "'";
+			sql += ")";
 		}
+		
 		
 		if (search.getZipcode() != null) {
 			sql += " AND ((user.zipcode1 LIKE '" + search.getZipcode().get(0) + "%' OR user.zipcode2 LIKE '"+ search.getZipcode().get(0) +"%')";
@@ -99,6 +119,34 @@ public class SearchController {
 		
 		MySQLAccess.close();
 		return results;
+	}
+	
+	private ArrayList<String> getDatesFromAgeRange(String ageRange){
+		int endRange = Integer.parseInt(ageRange.split("-")[0]);
+		int startRange = Integer.parseInt(ageRange.split("-")[1]);
+		
+		Calendar startDate = Calendar.getInstance();
+		Calendar endDate = Calendar.getInstance();
+		
+		startDate.add(Calendar.YEAR, -startRange);
+		endDate.add(Calendar.YEAR, -endRange);
+		
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		
+		String start = df.format(startDate.getTime());
+		String end = df.format(endDate.getTime());
+		
+		System.out.println(startRange);
+		System.out.println(endRange);
+		
+		System.out.println("Start Date: " + start);
+		System.out.println("End Date: " + end);
+		
+		ArrayList<String> result = new ArrayList<String>();
+		result.add(start);
+		result.add(end);
+		
+		return result;
 	}
 
 }

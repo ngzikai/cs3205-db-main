@@ -1,5 +1,6 @@
 package restapi.team1;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import controller.*;
 import java.util.*;
@@ -13,9 +14,10 @@ import org.json.JSONObject;
 import utils.SystemConfig;
 import utils.GUID;
 
-@Path("/team1/records/")
+@Path("/team1/record/")
 public class DataService {
 	private String fileDirectory = SystemConfig.getConfig("storage_directory");
+	DocumentController dc = new DocumentController();
 
 	@GET
 	@Produces("application/json")
@@ -51,7 +53,7 @@ public class DataService {
 */
 	@Path("/all/{uid}")
 	@GET
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAll(@PathParam("uid") int uid){
 		// Authentication
 		String type = "all";
@@ -71,7 +73,7 @@ public class DataService {
 	//To get the file over with the rid
 	@Path("/get/{rid}")
 	@GET
-	@Produces( {"application/octet-stream", "application/json"})
+	@Produces( {MediaType.APPLICATION_JSON, "application/octet-stream" })
 	public Response get(@PathParam("rid") int rid){
 		SessionController sc = new SessionController();
 		File file = null;
@@ -90,6 +92,10 @@ public class DataService {
 		}
 		
 		String fileType = processFileType(data);
+		if(fileType.equals(DocumentController.SUBTYPE) ) {
+			jObj = dc.getDocument(data);
+			return createResponse(jObj);
+		}
 		if(file != null){
 			return Response.ok(file, "application/octet-stream")
 					.header("X-File-Format", data.getContent().substring(data.getContent().lastIndexOf('.') + 1))
@@ -132,6 +138,22 @@ public class DataService {
 				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
 				.header("ALLOW", "GET, POST, DELETE, PUT, OPTIONS")
 				.build();
+	}
+	
+	//Retrieves a particular records
+	@Path("/{rid}")
+	@GET
+	@Produces( {"application/json"})
+	public Response getRecord(@PathParam("rid") int rid){
+		SessionController sc = new SessionController();
+		Data data = null;
+		data = sc.get(rid);
+		JSONObject jObj = null;
+		
+		if(data != null) {
+			jObj = new JSONObject(data);
+		}
+		return createResponse(jObj);
 	}
 
 
