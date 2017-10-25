@@ -77,7 +77,7 @@ public class UserService {
     byte[] response = Base64.getDecoder().decode(authHeader[1].getBytes());
     byte[] challenge = Challenge.getUserChallenge(username);
     byte[] passwordHash = Base64.getDecoder().decode(CommonUtil.getUserPasswordHash(username).getBytes());
-    if(debugMode || Challenge.validateResponse(response, challenge, passwordHash)){
+    if(debugMode || response.length == 32 && Challenge.validateResponse(response, challenge, passwordHash)){
       // remove challenge
       if(nfcToken.length() < 88){
         return Response.status(401).entity("Invalid NFC Token.").build();
