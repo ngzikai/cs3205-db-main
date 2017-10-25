@@ -19,13 +19,15 @@ import entity.Consent;
 import entity.Data;
 import entity.Document;
 import entity.User;
+import utils.SystemConfig;
 import utils.db.MySQLAccess;
 
 public class DocumentController {
 	private String type = "File";
 	public static String SUBTYPE = "document";
 	private String format = ".xml";
-	private String fileDir = "C:\\data\\" ;
+	private String fileDirectory = SystemConfig.getConfig("storage_directory");
+
 	SessionController sc = new SessionController();
 
 	/*
@@ -76,7 +78,8 @@ public class DocumentController {
 			marshallObj.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
 			//calling the marshall method
-			marshallObj.marshal(document, new FileOutputStream(fileDir + document.getRid() + format));
+			marshallObj.marshal(document, new FileOutputStream(fileDirectory + "/" + document.getTherapistId() 
+			+ "/" + SUBTYPE +"/" + document.getRid() + format));
 			result = true;
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -134,7 +137,7 @@ public class DocumentController {
 	public JSONObject getDocument(Data data) {
 		JSONObject jsonObject = null;
 		try {
-			File file = new File(fileDir + data.getContent());
+			File file = new File(fileDirectory + "/" + data.getUid() + "/" + SUBTYPE +"/" + data.getContent());
 			JAXBContext jContext = JAXBContext.newInstance(Document.class);
 			Unmarshaller unmarshallerObj = jContext.createUnmarshaller();
 			Document document = (Document) unmarshallerObj.unmarshal(file);
