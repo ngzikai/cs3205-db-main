@@ -67,9 +67,19 @@ public class DocumentController {
 		return jsonObject;
 	}
 
+	/*
+	 * Write XMl file of the document from a therapist.
+	 * If directory does not exist, it will be created.
+	 */
 	private boolean writeDocument(Document document) {
 		boolean result = false;
 		try{
+			String filepath = fileDirectory + "/" + document.getTherapistId() 
+			+ "/" + SUBTYPE +"/";
+		    File directory = new File(filepath);
+		    if (! directory.exists()){
+		        directory.mkdirs();
+		    }
 			//creating the JAXB context
 			JAXBContext jContext = JAXBContext.newInstance(Document.class);
 			//creating the marshaller object
@@ -78,8 +88,7 @@ public class DocumentController {
 			marshallObj.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
 			//calling the marshall method
-			marshallObj.marshal(document, new FileOutputStream(fileDirectory + "/" + document.getTherapistId() 
-			+ "/" + SUBTYPE +"/" + document.getRid() + format));
+			marshallObj.marshal(document, new FileOutputStream(filepath +"/" + document.getRid() + format));
 			result = true;
 		} catch(Exception e) {
 			e.printStackTrace();
