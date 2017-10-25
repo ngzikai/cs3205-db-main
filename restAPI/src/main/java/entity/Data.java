@@ -34,6 +34,17 @@ public class Data{
 		this.modifieddate = modifieddate;
 		this.content = content;
 	}
+	
+	public Data(int uid, String type, String subtype, String title, Timestamp creationdate, Timestamp modifieddate, String content) {
+		super();
+		this.uid = uid;
+		this.type = type;
+		this.subtype = subtype;
+		this.title = title;
+		this.creationdate = creationdate;
+		this.modifieddate = modifieddate;
+		this.content = content;
+	}
 
 	/**
 	* Returns value of rid

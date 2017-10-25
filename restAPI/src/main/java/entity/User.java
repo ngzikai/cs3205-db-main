@@ -17,7 +17,7 @@ public class User {
 	private String lastName;
 	private String nric;
 	private LocalDate dob;
-	private char gender;
+	private char sex;
 	private String[] phone; 
 	private String[] address; 
 	private int[] zipcode; 
@@ -25,6 +25,9 @@ public class User {
 	private String bloodtype;
 	private String nfcid;
 	private String secret;
+	private String ethnicity;
+	private String nationality;
+	private boolean drugAllergy;
 	
 	//Constructors for User Class
 	public User() {
@@ -40,12 +43,12 @@ public class User {
 		this.secret = secret;
 	}
 
-	public User(int uid, String firstName, String lastName, char gender, String phone, int qualify) {
+	public User(int uid, String firstName, String lastName, char sex, String phone, int qualify) {
 		super();
 		this.uid = uid;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.gender = gender;
+		this.sex = sex;
 		this.phone = new String[3];
 		this.phone[0] = phone;
 		this.qualify = qualify;
@@ -53,7 +56,7 @@ public class User {
 
 	//Constructor without UID. Most likely used for creating a new user entry.
 	public User(String username, String password, String salt, String firstName, String lastName, String nric,
-			LocalDate dob, char gender, String phone1, String phone2, String phone3, String address1, String address2,
+			LocalDate dob, char sex, String phone1, String phone2, String phone3, String address1, String address2,
 			String address3, int zipcode1, int zipcode2, int zipcode3, int qualify, String bloodtype,
 			String nfcid) {
 		super();
@@ -64,7 +67,7 @@ public class User {
 		this.lastName = lastName;
 		this.nric = nric;
 		this.dob = dob;
-		this.gender = gender;
+		this.sex = sex;
 		this.phone = new String[3];
 		phone[0] = phone1;
 		phone[1] = validateString(phone2);
@@ -83,7 +86,7 @@ public class User {
 	}
 	
 	public User(int uid, String username, String password, String salt, String firstName, String lastName, String nric,
-			LocalDate dob, char gender, String phone1, String phone2, String phone3, String address1, String address2,
+			LocalDate dob, char sex, String phone1, String phone2, String phone3, String address1, String address2,
 			String address3, int zipcode1, int zipcode2, int zipcode3, int qualify, String bloodtype,
 			String nfcid) {
 		super();
@@ -95,7 +98,7 @@ public class User {
 		this.lastName = lastName;
 		this.nric = nric;
 		this.dob = dob;
-		this.gender = gender;
+		this.sex = sex;
 		this.phone = new String[3];
 		phone[0] = validateString(phone1);
 		phone[1] = validateString(phone2);
@@ -114,16 +117,16 @@ public class User {
 	}
 	
 
-	public User(int uid, String firstName, String lastName, char gender) {
+	public User(int uid, String firstName, String lastName, char sex) {
 		super();
 		this.uid = uid;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.gender = gender;
+		this.sex = sex;
 	}
 
 	public User(int uid, String username, String password, String salt, String firstName, String lastName, String nric,
-			LocalDate dob, char gender, String[] phone, String[] address, int[] zipcode, int qualify, String bloodtype,
+			LocalDate dob, char sex, String[] phone, String[] address, int[] zipcode, int qualify, String bloodtype,
 			String nfcid, String secret) {
 		super();
 		this.uid = uid;
@@ -134,7 +137,7 @@ public class User {
 		this.lastName = lastName;
 		this.nric = nric;
 		this.dob = dob;
-		this.gender = gender;
+		this.sex = sex;
 		this.phone = phone;
 		this.address = address;
 		this.zipcode = zipcode;
@@ -142,6 +145,31 @@ public class User {
 		this.bloodtype = bloodtype;
 		this.nfcid = nfcid;
 		this.secret = secret;
+	}
+
+	public User(int uid, String username, String password, String salt, String firstName, String lastName, String nric,
+			LocalDate dob, char sex, String[] phone, String[] address, int[] zipcode, int qualify, String bloodtype,
+			String nfcid, String secret, String ethnicity, String nationality, boolean drugAllergy) {
+		super();
+		this.uid = uid;
+		this.username = username;
+		this.password = password;
+		this.salt = salt;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.nric = nric;
+		this.dob = dob;
+		this.sex = sex;
+		this.phone = phone;
+		this.address = address;
+		this.zipcode = zipcode;
+		this.qualify = qualify;
+		this.bloodtype = bloodtype;
+		this.nfcid = nfcid;
+		this.secret = secret;
+		this.ethnicity = ethnicity;
+		this.nationality = nationality;
+		this.drugAllergy = drugAllergy;
 	}
 
 	public String getSecret() {
@@ -200,12 +228,12 @@ public class User {
 		this.dob = dob;
 	}
 
-	public char getGender() {
-		return gender;
+	public char getSex() {
+		return sex;
 	}
 
-	public void setGender(char gender) {
-		this.gender = gender;
+	public void setSex(char sex) {
+		this.sex = sex;
 	}
 
 	public String[] getPhone() {
@@ -288,6 +316,30 @@ public class User {
 		this.salt2 = salt2;
 	}
 
+	public String getEthnicity() {
+		return ethnicity;
+	}
+
+	public void setEthnicity(String ethnicity) {
+		this.ethnicity = ethnicity;
+	}
+
+	public String getNationality() {
+		return nationality;
+	}
+
+	public void setNationality(String nationality) {
+		this.nationality = nationality;
+	}
+
+	public boolean isDrugAllergy() {
+		return drugAllergy;
+	}
+
+	public void setDrugAllergy(boolean drugAllergy) {
+		this.drugAllergy = drugAllergy;
+	}
+
 	public void print() {
 		System.out.println("User id: " + uid);
 		System.out.println("User: " + username);
@@ -297,7 +349,7 @@ public class User {
 		System.out.println("LastName: " + lastName);
 		System.out.println("NRIC: " + nric);
 		System.out.println("DOB: " + dob);
-		System.out.println("Gender: " + gender);
+		System.out.println("Sex: " + sex);
 		System.out.println("Phone: " + allPhoneToString());
 		System.out.println("Address: " + allAddressToString());
 		System.out.println("Zipcode: " + allZipcodeToString());
@@ -305,6 +357,9 @@ public class User {
 		System.out.println("Blood Type: " + bloodtype);
 		System.out.println("NFCID: " + nfcid);
 		System.out.println("Secret: " + secret);
+		System.out.println("Ethnicity: " + ethnicity);
+		System.out.println("Nationality: " + nationality);
+		System.out.println("Drug Allergy: " + drugAllergy);
 	}
 	
 	public String allPhoneToString() {
