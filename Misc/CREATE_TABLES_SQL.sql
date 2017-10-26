@@ -36,7 +36,9 @@ CREATE TABLE treatment(
    treatment_id INT UNIQUE NOT NULL AUTO_INCREMENT,
    patient_id INT NOT NULL,
    therapist_id INT NOT NULL,
-   status TINYINT(1),
+   status TINYINT(1) DEFAULT 0,
+   current_consent TINYINT(1) DEFAULT 0,
+   future_consent TINYINT(1) DEFAULT 0,
    PRIMARY KEY(patient_id, therapist_id),
    FOREIGN KEY (patient_id) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE,
    FOREIGN KEY (therapist_id) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE

@@ -1,9 +1,12 @@
 package restapi.team1;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
@@ -11,6 +14,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import controller.TreatmentController;
+import entity.Treatment;
+import entity.User;
 
 @Path("/team1/treatment")
 public class TreatmentService {
@@ -105,6 +110,18 @@ public class TreatmentService {
 
 		System.out.println("Retrieving all details of therapistid: " + therapistid + " with status : " + status);
 		jsonObject = tc.getTreatmentWithTherapistId(therapistid, status);
+
+		return createResponse(jsonObject);
+	}
+	
+	@Path("/update/consentsetting")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces("application/json")
+	public Response updateConsentSetting(Treatment treatment) throws JSONException {
+
+		JSONObject jsonObject = new JSONObject();
+		jsonObject = tc.updateConsentSetting(treatment);
 
 		return createResponse(jsonObject);
 	}
