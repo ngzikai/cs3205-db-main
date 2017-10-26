@@ -128,17 +128,20 @@ public class TreatmentController {
 		return jsonObject;
 	}
 
-	public JSONObject createTreatment(int patientId, int therapistId) {
-		Treatment treatment = new Treatment(patientId, therapistId, false);
+	public JSONObject createTreatment(int patientId, int therapistId, boolean currentConsent,
+			boolean futureConsent ) {
+		Treatment treatment = new Treatment(patientId, therapistId, false, currentConsent, futureConsent);
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
-		String sql = "INSERT INTO CS3205.treatment VALUES (default, ?, ?, ?, default,default)";
+		String sql = "INSERT INTO CS3205.treatment VALUES (default, ?, ?, ?, ?,?)";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setInt(1, treatment.getPatientId());
 			preparedStatement.setInt(2, treatment.getTherapistId());
 			preparedStatement.setInt(3, treatment.isStatus() ? 1: 0);
+			preparedStatement.setInt(4, treatment.isCurrentConsent() ? 1: 0);
+			preparedStatement.setInt(5, treatment.isFutureConsent() ? 1: 0);
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
 
 		} catch (Exception e) {

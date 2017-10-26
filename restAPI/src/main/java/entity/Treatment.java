@@ -15,13 +15,17 @@ public class Treatment {
 		this.therapistId = therapistId;
 		this.status = status;
 	}
-	
-	public Treatment(int patientId, int therapistId, boolean status) {
+ 
+
+	public Treatment(int patientId, int therapistId, boolean status, boolean currentConsent, boolean futureConsent) {
 		super();
 		this.patientId = patientId;
 		this.therapistId = therapistId;
 		this.status = status;
+		this.currentConsent = currentConsent;
+		this.futureConsent = futureConsent;
 	}
+
 
 	public Treatment(int id, int patientId, int therapistId, boolean status, boolean currentConsent,
 			boolean futureConsent) {

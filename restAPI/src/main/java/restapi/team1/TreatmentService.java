@@ -42,12 +42,13 @@ public class TreatmentService {
 		return createResponse(jsonObject);
 	}
 	
-	@Path("/create/{patient}/{therapist}")
+	@Path("/create/{patient}/{therapist}/{currentConsent}/{futureConsent}")
 	@GET
 	@Produces("application/json")
 	public Response createUser(@PathParam("patient") int patientId,
-			@PathParam("therapist") int therapistId) throws JSONException {
-		JSONObject jsonObject = tc.createTreatment(patientId, therapistId);
+			@PathParam("therapist") int therapistId, @PathParam("currentConsent") boolean currentConsent,
+			@PathParam("futureConsent") boolean futureConsent) throws JSONException {
+		JSONObject jsonObject = tc.createTreatment(patientId, therapistId, currentConsent, futureConsent);
 		
 		return createResponse(jsonObject);
 	}
