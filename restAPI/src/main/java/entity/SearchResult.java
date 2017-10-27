@@ -9,7 +9,11 @@ public class SearchResult {
 	private String zipcode2;
 	private String bloodtype;
 	private String condition_name;
+	private String ethnicity;
+	private String nationality;
+	private String drug_allergy;
 	private String timeseries_path;
+	private String heartrate_path;
 	
 	public SearchResult() {
 		
@@ -63,6 +67,30 @@ public class SearchResult {
 		this.condition_name = condition_name;
 	}
 
+	public String getEthnicity() {
+		return ethnicity;
+	}
+
+	public void setEthnicity(String ethnicity) {
+		this.ethnicity = ethnicity;
+	}
+
+	public String getNationality() {
+		return nationality;
+	}
+
+	public void setNationality(String nationality) {
+		this.nationality = nationality;
+	}
+
+	public String getDrug_allergy() {
+		return drug_allergy;
+	}
+
+	public void setDrug_allergy(String drug_allergy) {
+		this.drug_allergy = drug_allergy;
+	}
+
 	public String getTimeseries_path() {
 		return timeseries_path;
 	}
@@ -70,6 +98,17 @@ public class SearchResult {
 	public void setTimeseries_path(String timeseries_path) {
 		this.timeseries_path = timeseries_path;
 	}
-	
+
+	public String getHeartrate_path() {
+		return heartrate_path;
+	}
+
+	public void setHeartrate_path(String heartrate_path) {
+		this.heartrate_path = heartrate_path;
+	}
+
+
+
+
 	
 }
