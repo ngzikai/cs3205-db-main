@@ -12,14 +12,15 @@ import utils.db.MySQLAccess;
 
 public class ResearcherController {
 	
-	public String login(String username) {
-		String sql = "SELECT password FROM researcher WHERE researcher_username = ?";
+	public String login(Researcher login) {
+		String sql = "SELECT password FROM researcher WHERE researcher_username = ? AND otpsecret = ?";
 		Connection connect = MySQLAccess.connectDatabase();
 		String password = "false";
 		
 		try {
 			PreparedStatement ps = connect.prepareStatement(sql);
-			ps.setString(1, username);
+			ps.setString(1, login.getResearcher_username());
+			ps.setString(2, login.getOtpsecret());
 			ResultSet rs = MySQLAccess.readDataBasePS(ps);
 			
 			while(rs.next()) {
@@ -95,10 +96,10 @@ public class ResearcherController {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			researcher.setResearchCategory(researchCategory);
+			researcher.setResearch_category(researchCategory);
 		}
 		
-		ArrayList<Integer> categories = researcher.getResearchCategory();
+		ArrayList<Integer> categories = researcher.getResearch_category();
 		
 		for(int i : categories) {
 			System.out.println("Category ID: " + i);
@@ -109,13 +110,15 @@ public class ResearcherController {
 	}
 	
 	public boolean addResearcher(Researcher researcher) {
-		String sql = "INSERT INTO researcher (researcher_username, password, isAdmin) VALUES (?,?,0)";
+		String sql = "INSERT INTO researcher (firstname, lastname, researcher_username, password, isAdmin) VALUES (?,?,?,?,0)";
 		Connection connect = MySQLAccess.connectDatabase();
 		
 		try {
 			PreparedStatement ps = connect.prepareStatement(sql);
-			ps.setString(1, researcher.getResearcher_username());
-			ps.setString(2, researcher.getPassword());
+			ps.setString(1, researcher.getFirstname());
+			ps.setString(2, researcher.getLastname());
+			ps.setString(3, researcher.getResearcher_username());
+			ps.setString(4, researcher.getPassword());
 			
 			MySQLAccess.updateDataBasePS(ps);
 		} catch (Exception e) {
@@ -131,7 +134,7 @@ public class ResearcherController {
 	
 	
 	public boolean updateResearcher(Researcher researcher) {
-		String sql = "UPDATE researcher SET password = ?, firstname = ?, lastname = ?, nric = ?, dob = ?, gender = ?,"
+		String sql = "UPDATE researcher SET firstname = ?, lastname = ?, nric = ?, dob = ?, gender = ?,"
 				+ "phone1 = ?, phone2 = ?, address1 = ?, address2 = ?, zipcode1 = ?, zipcode2 = ?, qualification = ?, qualification_name = ? "
 				+ "WHERE researcher_username = ?";
 		
@@ -139,21 +142,20 @@ public class ResearcherController {
 		
 		try {
 			PreparedStatement ps = connect.prepareStatement(sql);
-			ps.setString(1, researcher.getPassword());
-			ps.setString(2, researcher.getFirstname());
-			ps.setString(3, researcher.getLastname());
-			ps.setString(4, researcher.getNric());
-			ps.setDate(5, new java.sql.Date(researcher.getDob().getTime()));
-			ps.setString(6, researcher.getGender());
-			ps.setString(7, researcher.getPhone1());
-			ps.setString(8, researcher.getPhone2());
-			ps.setString(9, researcher.getAddress1());
-			ps.setString(10, researcher.getAddress2());
-			ps.setInt(11, researcher.getZipcode1());
-			ps.setInt(12, researcher.getZipcode2());
-			ps.setString(13, researcher.getQualification());
-			ps.setString(14, researcher.getQualification_name());
-			ps.setString(15, researcher.getResearcher_username());
+			ps.setString(1, researcher.getFirstname());
+			ps.setString(2, researcher.getLastname());
+			ps.setString(3, researcher.getNric());
+			ps.setDate(4, new java.sql.Date(researcher.getDob().getTime()));
+			ps.setString(5, researcher.getGender());
+			ps.setString(6, researcher.getPhone1());
+			ps.setString(7, researcher.getPhone2());
+			ps.setString(8, researcher.getAddress1());
+			ps.setString(9, researcher.getAddress2());
+			ps.setInt(10, researcher.getZipcode1());
+			ps.setInt(11, researcher.getZipcode2());
+			ps.setString(12, researcher.getQualification());
+			ps.setString(13, researcher.getQualification_name());
+			ps.setString(14, researcher.getResearcher_username());
 			
 			System.out.println(ps.toString());
 			MySQLAccess.updateDataBasePS(ps);
@@ -187,4 +189,78 @@ public class ResearcherController {
 		MySQLAccess.close();
 		return true;
 	}
+	
+	public boolean registerOTP(Researcher researcher) {
+		String sql = "UPDATE researcher SET otpsecret = ? WHERE researcher_username = ?";
+		
+		Connection connect = MySQLAccess.connectDatabase();
+		
+		try {
+			PreparedStatement ps = connect.prepareStatement(sql);
+			ps.setString(1, researcher.getOtpsecret());
+			ps.setString(2, researcher.getResearcher_username());
+			
+			MySQLAccess.updateDataBasePS(ps);
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			MySQLAccess.close();
+			return false;
+		}
+		
+		MySQLAccess.close();
+		return true;
+	}
+	
+	public boolean changePassword(Researcher researcher) {
+		String sql = "UPDATE researcher SET password = ? WHERE researcher_username = ?";
+		
+		Connection connect = MySQLAccess.connectDatabase();
+		
+		try {
+			PreparedStatement ps = connect.prepareStatement(sql);
+			ps.setString(1, researcher.getPassword());
+			ps.setString(2, researcher.getResearcher_username());
+			
+			MySQLAccess.updateDataBasePS(ps);
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			MySQLAccess.close();
+			return false;
+		}
+		
+		MySQLAccess.close();
+		return true;
+	}
+	
+	public boolean checkOTPEnabled(String researcher_username) {
+		String sql = "SELECT otpsecret FROM researcher WHERE researcher_username = ?";
+		
+		Connection connect = MySQLAccess.connectDatabase();
+		
+		try {
+			PreparedStatement ps = connect.prepareStatement(sql);
+			ps.setString(1, researcher_username);
+			
+			ResultSet rs = MySQLAccess.readDataBasePS(ps);
+			
+			while(rs.next()) {
+				if(rs.getObject(1) == null) {
+					return false;
+				}else {
+					return true;
+				}
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			MySQLAccess.close();
+			return false;
+		}
+		
+		MySQLAccess.close();
+		return true;
+	}
+	
 }
