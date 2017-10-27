@@ -7,14 +7,17 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import controller.FilterController;
 import entity.Filter;
 
-@Path("/filter")
+@Path("team2/filters")
 @Produces(MediaType.APPLICATION_JSON)
 public class FilterService {
 	
+	FilterController fc = new FilterController();
+	
 	@GET
 	public ArrayList<Filter> getFilters(){
-		return null;
+		return fc.getFilters();
 	}
 }
