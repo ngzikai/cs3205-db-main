@@ -120,6 +120,7 @@ CREATE TABLE researcher(
    qualification VARCHAR(255),
    qualification_name VARCHAR(255),
    isAdmin INT,
+   otpsecret VARCHAR(255),
    PRIMARY KEY (researcher_id)
 );
 
