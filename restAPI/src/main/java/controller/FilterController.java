@@ -54,6 +54,8 @@ public class FilterController {
 			}
 			
 		}
+		
+		MySQLAccess.close();
 		return results;
 	}
 
