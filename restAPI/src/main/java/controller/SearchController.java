@@ -153,7 +153,7 @@ public class SearchController {
 				String uid = rs.getString(11);
 				
 				String heartUri = uriInfo.getBaseUriBuilder().path(HeartService.class).path(uid).build().toString();
-				System.out.println(heartUri);
+				//System.out.println(heartUri);
 				
 				result.setHeartrate_path(heartUri);
 				
