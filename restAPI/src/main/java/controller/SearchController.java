@@ -8,13 +8,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.ws.rs.core.UriInfo;
+
 import entity.Search;
 import entity.SearchResult;
+import restapi.team2.HeartService;
 import utils.db.MySQLAccess;
 
 public class SearchController {
 	
-	public ArrayList<SearchResult> search(Search search){
+	public ArrayList<SearchResult> search(Search search, UriInfo uriInfo){
 		//System.out.println(search.toString());
 		
 		String sql = "SELECT user.dob, user.sex, user.zipcode1, user.zipcode2, user.bloodtype, user.ethnicity, "
@@ -148,6 +151,11 @@ public class SearchController {
 				
 				//HATEOAS STUFF COME BACK LATER
 				String uid = rs.getString(11);
+				
+				String heartUri = uriInfo.getBaseUriBuilder().path(HeartService.class).path(uid).build().toString();
+				//System.out.println(heartUri);
+				
+				result.setHeartrate_path(heartUri);
 				
 				results.add(result);
 			}
