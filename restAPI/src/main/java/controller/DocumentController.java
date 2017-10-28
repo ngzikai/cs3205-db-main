@@ -1,7 +1,13 @@
 package controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,6 +25,7 @@ import entity.Consent;
 import entity.Data;
 import entity.Document;
 import entity.User;
+import utils.Cryptography;
 import utils.SystemConfig;
 import utils.db.MySQLAccess;
 
@@ -27,6 +34,7 @@ public class DocumentController {
 	public static String SUBTYPE = "document";
 	private String format = ".xml";
 	private String fileDirectory = SystemConfig.getConfig("storage_directory");
+	//private String fileDirectory = "C:\\data\\";
 
 	SessionController sc = new SessionController();
 
@@ -87,8 +95,18 @@ public class DocumentController {
 			//setting the property to show xml format output
 			marshallObj.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-			//calling the marshall method
-			marshallObj.marshal(document, new FileOutputStream(filepath +"/" + document.getRid() + format));
+			//calling the marshall method and outputing it to a byte stream
+			ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
+			marshallObj.marshal(document,dataStream);
+			
+			//Use utils.Cryptography to get instance and encrypt data
+			Cryptography crypto = Cryptography.getInstance();
+			byte[] encrypted = crypto.encrypt(dataStream.toByteArray());
+			
+			//Output file content
+			FileOutputStream outputStream =  new FileOutputStream(filepath +"/" + document.getRid() + format);
+			outputStream.write(encrypted);
+			outputStream.close();
 			result = true;
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -146,10 +164,16 @@ public class DocumentController {
 	public JSONObject getDocument(Data data) {
 		JSONObject jsonObject = null;
 		try {
-			File file = new File(fileDirectory + "/" + data.getUid() + "/" + SUBTYPE +"/" + data.getContent());
+			Path path = Paths.get(fileDirectory + "/" + data.getUid() + "/" + SUBTYPE +"/" + data.getContent());
+			//Uses Cryptography to decrypt the content 
+			Cryptography crypto = Cryptography.getInstance();
+			byte[] encrypted = Files.readAllBytes(path);
+			byte[] content = crypto.decrypt(encrypted);
+			
+			//Converts XML content into document object
 			JAXBContext jContext = JAXBContext.newInstance(Document.class);
 			Unmarshaller unmarshallerObj = jContext.createUnmarshaller();
-			Document document = (Document) unmarshallerObj.unmarshal(file);
+			Document document = (Document) unmarshallerObj.unmarshal(new ByteArrayInputStream(content));
 			jsonObject = new JSONObject(document);
 		}catch(Exception e){
 		    e.printStackTrace();

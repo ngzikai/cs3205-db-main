@@ -24,7 +24,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /*
- * This class handles the encryption and decryption of the files in the application.
+ * Cryptography class handles the encryption and decryption of the files in the application.
  * This class applies the singleton pattern where only one instance of it will be created and used.
  */
 public class Cryptography {
@@ -39,6 +39,10 @@ public class Cryptography {
 		loadKey();
 	}
 	
+	/*
+	 * Use this method to get the instance of the cryptopgrahy class. 
+	 * This controls the instance for this singleton class. 
+	 */
 	public static Cryptography getInstance() {
 		return cryptoInstance;
 	}
