@@ -12,19 +12,19 @@ import utils.db.MySQLAccess;
 
 public class ResearcherController {
 	
-	public String login(Researcher login) {
-		String sql = "SELECT password FROM researcher WHERE researcher_username = ? AND otpsecret = ?";
+	public Researcher login(Researcher login) {
+		String sql = "SELECT password, otpsecret FROM researcher WHERE researcher_username = ?";
 		Connection connect = MySQLAccess.connectDatabase();
-		String password = "false";
+		Researcher researcher = new Researcher();
 		
 		try {
 			PreparedStatement ps = connect.prepareStatement(sql);
 			ps.setString(1, login.getResearcher_username());
-			ps.setString(2, login.getOtpsecret());
 			ResultSet rs = MySQLAccess.readDataBasePS(ps);
 			
 			while(rs.next()) {
-				password = rs.getString(1);
+				researcher.setPassword(rs.getString(1));
+				researcher.setOtpsecret(rs.getString(2));
 			}
 			
 		} catch (Exception e) {
@@ -32,7 +32,7 @@ public class ResearcherController {
 		}
 		
 		MySQLAccess.close();
-		return password;
+		return researcher;
 	}
 	
 	
@@ -50,7 +50,7 @@ public class ResearcherController {
 			//System.out.println("Sucessfully retrieved user!");
 			
 			while (rs.next()) {
-				researcher.setResearcher_id(rs.getInt(1));
+				researcher.setResearcher_id(rs.getString(1));
 				researcher.setResearcher_username(rs.getString(2));
 				researcher.setPassword(rs.getString(3));
 				researcher.setFirstname(rs.getString(4));
@@ -62,8 +62,8 @@ public class ResearcherController {
 				researcher.setPhone2(rs.getString(10));
 				researcher.setAddress1(rs.getString(11));
 				researcher.setAddress2(rs.getString(12));
-				researcher.setZipcode1(rs.getInt(13));
-				researcher.setZipcode2(rs.getInt(14));
+				researcher.setZipcode1(rs.getString(13));
+				researcher.setZipcode2(rs.getString(14));
 				researcher.setQualification(rs.getString(15));
 				researcher.setQualification_name(rs.getString(16));
 				
@@ -82,12 +82,12 @@ public class ResearcherController {
 			e.printStackTrace();
 		}
 		
-		if(researcher.getResearcher_id() >= 0) {
+		if(researcher.getResearcher_id() != null) {
 			sql = "SELECT category_id FROM researcher_category WHERE researcher_id = ? AND approval_status = 'Approved'";
 			ArrayList<Integer> researchCategory = new ArrayList<Integer>();
 			try {
 				PreparedStatement ps = connect.prepareStatement(sql);
-				ps.setInt(1, researcher.getResearcher_id());
+				ps.setString(1, researcher.getResearcher_id());
 				ResultSet rs = MySQLAccess.readDataBasePS(ps);
 				
 				while(rs.next()) {
@@ -151,8 +151,8 @@ public class ResearcherController {
 			ps.setString(7, researcher.getPhone2());
 			ps.setString(8, researcher.getAddress1());
 			ps.setString(9, researcher.getAddress2());
-			ps.setInt(10, researcher.getZipcode1());
-			ps.setInt(11, researcher.getZipcode2());
+			ps.setString(10, researcher.getZipcode1());
+			ps.setString(11, researcher.getZipcode2());
 			ps.setString(12, researcher.getQualification());
 			ps.setString(13, researcher.getQualification_name());
 			ps.setString(14, researcher.getResearcher_username());

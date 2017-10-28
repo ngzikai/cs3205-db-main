@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class Researcher {
-	private int researcher_id;
+	private String researcher_id;
 	private String researcher_username;
 	private String password;
 	private String firstname;
@@ -19,8 +19,8 @@ public class Researcher {
 	private String phone2;
 	private String address1;
 	private String address2;
-	private int zipcode1;
-	private int zipcode2;
+	private String zipcode1;
+	private String zipcode2;
 	private String qualification;
 	private String qualification_name;
 	private String isAdmin;
@@ -37,10 +37,10 @@ public class Researcher {
 		this.password = password;
 	}
 
-	public Researcher(int researcher_id, String researcher_username, String password, String firstname, String lastname,
-			String nric, Date dob, String gender, String phone1, String phone2, String address1, String address2,
-			int zipcode1, int zipcode2, String qualification, String qualification_name, String isAdmin,
-			String otpsecret, ArrayList<Integer> research_category) {
+	public Researcher(String researcher_id, String researcher_username, String password, String firstname,
+			String lastname, String nric, Date dob, String gender, String phone1, String phone2, String address1,
+			String address2, String zipcode1, String zipcode2, String qualification, String qualification_name,
+			String isAdmin, String otpsecret, ArrayList<Integer> research_category) {
 		super();
 		this.researcher_id = researcher_id;
 		this.researcher_username = researcher_username;
@@ -63,11 +63,11 @@ public class Researcher {
 		this.research_category = research_category;
 	}
 
-	public int getResearcher_id() {
+	public String getResearcher_id() {
 		return researcher_id;
 	}
 
-	public void setResearcher_id(int researcher_id) {
+	public void setResearcher_id(String researcher_id) {
 		this.researcher_id = researcher_id;
 	}
 
@@ -159,19 +159,19 @@ public class Researcher {
 		this.address2 = address2;
 	}
 
-	public int getZipcode1() {
+	public String getZipcode1() {
 		return zipcode1;
 	}
 
-	public void setZipcode1(int zipcode1) {
+	public void setZipcode1(String zipcode1) {
 		this.zipcode1 = zipcode1;
 	}
 
-	public int getZipcode2() {
+	public String getZipcode2() {
 		return zipcode2;
 	}
 
-	public void setZipcode2(int zipcode2) {
+	public void setZipcode2(String zipcode2) {
 		this.zipcode2 = zipcode2;
 	}
 
@@ -214,6 +214,8 @@ public class Researcher {
 	public void setResearch_category(ArrayList<Integer> research_category) {
 		this.research_category = research_category;
 	}
+
+	
 	
 
 

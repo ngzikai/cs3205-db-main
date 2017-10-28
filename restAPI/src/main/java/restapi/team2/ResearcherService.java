@@ -27,7 +27,7 @@ public class ResearcherService {
 	
 	@POST
 	@Path("/login")
-	public String Login(Researcher login) {
+	public Researcher Login(Researcher login) {
 		//returns hash if available, else false
 		return rc.login(login);
 	}
