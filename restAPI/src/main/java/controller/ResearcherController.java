@@ -99,11 +99,11 @@ public class ResearcherController {
 			researcher.setResearch_category(researchCategory);
 		}
 		
-		ArrayList<Integer> categories = researcher.getResearch_category();
-		
-		for(int i : categories) {
-			System.out.println("Category ID: " + i);
-		}
+//		ArrayList<Integer> categories = researcher.getResearch_category();
+//		
+//		for(int i : categories) {
+//			System.out.println("Category ID: " + i);
+//		}
 		
 		MySQLAccess.close();
 		return researcher;
