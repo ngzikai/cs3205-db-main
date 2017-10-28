@@ -227,7 +227,7 @@ public class CategoryController {
 		if(categories.isEmpty()) {
 			return null;
 		} else {
-			researcher =  new ResearcherCategory(Integer.toString(currResearcher.getResearcher_id()),currResearcher.getResearcher_username(), currResearcher.getFirstname(), currResearcher.getLastname(), currResearcher.getQualification(), currResearcher.getQualification_name(), categories);
+			researcher =  new ResearcherCategory(currResearcher.getResearcher_id(),currResearcher.getResearcher_username(), currResearcher.getFirstname(), currResearcher.getLastname(), currResearcher.getQualification(), currResearcher.getQualification_name(), categories);
 		}
 		
 		MySQLAccess.close();
