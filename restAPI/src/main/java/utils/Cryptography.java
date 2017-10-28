@@ -33,7 +33,7 @@ public class Cryptography {
 	public static final String AES_METHOD = "AES/CBC/PKCS5Padding" ;
 	private Key key = null;
 	private static Cryptography cryptoInstance = new Cryptography();
-	private static final String CONFIG_FILE_PATH = "C:\\data\\crypto.conf";
+	private static final String CONFIG_FILE_PATH = "/usr/keys/crypto.conf";
 	
 	private Cryptography() {
 		loadKey();
@@ -169,6 +169,11 @@ public class Cryptography {
 		return new IvParameterSpec(iv);
 	}
 	
+	/*
+	 * This method checks the config file if it exists. 
+	 * If exists, load config.
+	 * Else, generate a new AES key and create a config file.
+	 */
 	private void loadKey(){
 		Path path = Paths.get(CONFIG_FILE_PATH);
 		File file = path.toFile();
@@ -188,6 +193,9 @@ public class Cryptography {
 		}
 	}
 	
+	/*
+	 * This method loads the config file and updates the key used.
+	 */
 	private void loadConfig(Path path) {
 		String encodedKey = "";
 		try (BufferedReader reader = Files.newBufferedReader(path)) {
