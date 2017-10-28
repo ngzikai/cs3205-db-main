@@ -31,6 +31,7 @@ public class Cryptography {
 	public static final int KEY_SIZE = 256 ;
 	public static final int IV_SIZE = 16 ;
 	public static final String AES_METHOD = "AES/CBC/PKCS5Padding" ;
+	public static final String ENCRYPTION = "AES" ;
 	private Key key = null;
 	private static Cryptography cryptoInstance = new Cryptography();
 	private static final String CONFIG_FILE_PATH = "/usr/keys/crypto.conf";
@@ -56,7 +57,7 @@ public class Cryptography {
 		byte[] encryptedData = null;
 		Cipher cipher = null;
 		try {
-			cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			cipher = Cipher.getInstance(AES_METHOD);
 		} catch(NoSuchAlgorithmException e) {
 			System.out.println("Exception while encrypting. Algorithm being requested is not available in this environment " + e); 
 			return null;
@@ -104,7 +105,7 @@ public class Cryptography {
 		byte[] data = new byte[buffer.remaining()];
 		buffer.get(data);		
 		try {
-			cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			cipher = Cipher.getInstance(AES_METHOD);
 		} catch (NoSuchAlgorithmException e) {
 			System.out.println("Exception while decrypting. Algorithm being requested is not available in environment " + e);  
 			return null;
@@ -144,11 +145,11 @@ public class Cryptography {
 		
 		KeyGenerator keygen;
 		try {
-			keygen = KeyGenerator.getInstance("AES");
+			keygen = KeyGenerator.getInstance(ENCRYPTION);
 			keygen.init(KEY_SIZE) ; // Key size is specified here.
 			byte[] newKey = keygen.generateKey().getEncoded();
 
-			key = new SecretKeySpec(newKey, "AES");
+			key = new SecretKeySpec(newKey, ENCRYPTION);
 			System.out.println("Generating key");
 			return true;
 		} catch (NoSuchAlgorithmException e) {
@@ -208,7 +209,7 @@ public class Cryptography {
 		// decode the base64 encoded string
 		byte[] decodedKey = Base64.getDecoder().decode(encodedKey);
 		// rebuild key using SecretKeySpec
-		key = new SecretKeySpec(decodedKey, "AES"); 
+		key = new SecretKeySpec(decodedKey, ENCRYPTION); 
 	}
 
 }
