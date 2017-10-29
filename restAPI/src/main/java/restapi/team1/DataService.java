@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.sql.Timestamp;
 import entity.*;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import utils.SystemConfig;
@@ -156,5 +157,14 @@ public class DataService {
 		return createResponse(jObj);
 	}
 
+	@Path("/delete/{rid}/{uid}")
+	@GET
+	@Produces("application/json")
+	public Response deleteDocument(@PathParam("rid") int rid, @PathParam("uid") int uid) throws JSONException {
+
+		JSONObject jsonObject = dc.deleteDocument(rid, uid);
+
+		return createResponse(jsonObject);
+	}
 
 }
