@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,14 +19,12 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import entity.Consent;
 import entity.Data;
 import entity.Document;
-import entity.User;
 import utils.Cryptography;
+import utils.Logger;
 import utils.SystemConfig;
 import utils.db.MySQLAccess;
 
@@ -70,7 +69,6 @@ public class DocumentController {
 		} else if (result < 0) {
 			result = 0;
 		}
-
 		jsonObject.put("result", result);
 		return jsonObject;
 	}
@@ -184,5 +182,43 @@ public class DocumentController {
 		jsonObject.put("modifieddate", data.getModifieddate());
 		//System.out.println("Retrieving details of Consent: " + id);
 		return jsonObject;
+	}
+	
+	public JSONObject deleteDocument(int rid, int uid) {
+		int result = 0;
+		JSONObject jsonObject = new JSONObject();
+		String sql = "DELETE FROM CS3205.data where rid = ?";
+		
+		System.out.println("Deleting data : " + rid);
+		try {
+			Connection connect = MySQLAccess.connectDatabase();
+			PreparedStatement preparedStatement = connect.prepareStatement(sql);
+		    preparedStatement.setInt(1, rid);
+		    String statement = preparedStatement.toString();
+			result = MySQLAccess.updateDataBasePS(preparedStatement);
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(), statement, result);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		if(result == 1) {
+			boolean isRemoved = removeDocument(Paths.get(fileDirectory + "/" + uid + "/" + SUBTYPE +"/" + rid + format));
+		}
+		MySQLAccess.close();
+		jsonObject.put("result", result);
+		return jsonObject;
+	}
+	
+	private boolean removeDocument(Path path) {
+		System.out.println("Removing " + path.toString());
+		try {
+			Files.deleteIfExists(path);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 }

@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import entity.Treatment;
+import utils.Logger;
 import utils.db.MySQLAccess;
 
 public class TreatmentController {
@@ -21,7 +22,9 @@ public class TreatmentController {
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
+			String statement = preparedStatement.toString();
 			treatmentList = resultSetToTreatmentList(MySQLAccess.readDataBasePS(preparedStatement));
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, treatmentList.size() == 0 ? 0 : 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -48,7 +51,9 @@ public class TreatmentController {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setInt(1, id);
+			String statement = preparedStatement.toString();
 			treatmentList = resultSetToTreatmentList(MySQLAccess.readDataBasePS(preparedStatement));
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, treatmentList.size() == 0 ? 0 : 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -75,7 +80,9 @@ public class TreatmentController {
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setInt(1, patientid);
 			preparedStatement.setInt(2, status ? 1 : 0);
+			String statement = preparedStatement.toString();
 			treatmentList = resultSetToTreatmentList(MySQLAccess.readDataBasePS(preparedStatement));
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, treatmentList.size() == 0 ? 0 : 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -107,7 +114,10 @@ public class TreatmentController {
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setInt(1, therapistid);
 			preparedStatement.setInt(2, status ? 1 : 0);
+			String statement = preparedStatement.toString();
 			treatmentList = resultSetToTreatmentList(MySQLAccess.readDataBasePS(preparedStatement));
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, treatmentList.size() == 0 ? 0 : 1);
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -142,8 +152,9 @@ public class TreatmentController {
 			preparedStatement.setInt(3, treatment.isStatus() ? 1: 0);
 			preparedStatement.setInt(4, treatment.isCurrentConsent() ? 1: 0);
 			preparedStatement.setInt(5, treatment.isFutureConsent() ? 1: 0);
+			String statement = preparedStatement.toString();
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
-
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(), statement, result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -167,7 +178,9 @@ public class TreatmentController {
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setInt(1, 1);
 			preparedStatement.setInt(2, id);
+			String statement = preparedStatement.toString();
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(), statement, result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -192,7 +205,9 @@ public class TreatmentController {
 			preparedStatement.setInt(1, treatment.isCurrentConsent() ? 1 : 0);
 			preparedStatement.setInt(2, treatment.isFutureConsent() ? 1 : 0);
 			preparedStatement.setInt(3, treatment.getId());
+			String statement = preparedStatement.toString();
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(), statement, result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -214,7 +229,9 @@ public class TreatmentController {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 		    preparedStatement.setInt(1, id);
+		    String statement = preparedStatement.toString();
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(), statement, result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

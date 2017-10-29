@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import entity.User;
+import utils.Logger;
 import utils.db.MySQLAccess;
 
 public class UserController {
@@ -25,7 +26,9 @@ public class UserController {
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
+			String statement = preparedStatement.toString();
 			userList = resultSetToUserList(MySQLAccess.readDataBasePS(preparedStatement));
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, userList.size() == 0 ? 0 : 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -37,6 +40,7 @@ public class UserController {
 			userArray.put(jsonObjectUser);
 		}
 		MySQLAccess.close();
+
 		jsonObjectFinal.put("users", userArray);
 		return jsonObjectFinal;
 	}
@@ -51,7 +55,9 @@ public class UserController {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setString(1, username);
+			String statement = preparedStatement.toString();
 			user = resultSetToUserLogin(MySQLAccess.readDataBasePS(preparedStatement));
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, (user == null)? 0 : 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -62,6 +68,8 @@ public class UserController {
 			return null;
 		}
 		MySQLAccess.close();
+
+
 		jsonObject = buildLoginObject(user);
 
 		return jsonObject;
@@ -77,7 +85,9 @@ public class UserController {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setInt(1, Integer.parseInt(uid));
+			String statement = preparedStatement.toString();
 			userList = resultSetToUserList(MySQLAccess.readDataBasePS(preparedStatement));
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(),  statement, 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -104,7 +114,9 @@ public class UserController {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setInt(1, Integer.parseInt(uid));
+			String statement = preparedStatement.toString();
 			user = resultSetGetPublicInfo(MySQLAccess.readDataBasePS(preparedStatement));
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(),  statement, 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -162,8 +174,9 @@ public class UserController {
 			preparedStatement.setString(23, user.getEthnicity());
 			preparedStatement.setString(24, user.getNationality());
 			preparedStatement.setInt(25, user.isDrugAllergy() ? 1 : 0);
+			String statement = preparedStatement.toString();
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
-
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(),  statement, result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -220,7 +233,9 @@ public class UserController {
 			preparedStatement.setString(22, user.getNationality());
 			preparedStatement.setInt(23, user.isDrugAllergy() ? 1 : 0);
 			preparedStatement.setInt(24, user.getUid());
+			String statement = preparedStatement.toString();
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(),  statement, result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -243,7 +258,9 @@ public class UserController {
 			preparedStatement.setString(1, password);
 			preparedStatement.setString(2, salt);
 			preparedStatement.setString(3, username);
+			String statement = preparedStatement.toString();
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(),  statement, result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -266,7 +283,9 @@ public class UserController {
 			preparedStatement.setString(1, user.getPassword());
 			preparedStatement.setString(2, user.getSalt());
 			preparedStatement.setString(3, user.getUsername());
+			String statement = preparedStatement.toString();
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(),  statement, result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -288,7 +307,9 @@ public class UserController {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 		    preparedStatement.setInt(1, uid);
+		    String statement = preparedStatement.toString();
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(),  statement, result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -306,7 +327,9 @@ public class UserController {
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
+			String statement = preparedStatement.toString();
 			userList = resultSetToTherapistsList(MySQLAccess.readDataBasePS(preparedStatement));
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(),  statement, userList.size() == 0 ? 0 : 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -333,7 +356,9 @@ public class UserController {
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setString(1, secret);
 		    preparedStatement.setInt(2, uid);
+		    String statement = preparedStatement.toString();
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(),  statement, result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -353,10 +378,12 @@ public class UserController {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setInt(1, uid);
+			String statement = preparedStatement.toString();
 			ResultSet resultSet = MySQLAccess.readDataBasePS(preparedStatement);
 			while (resultSet.next()) {
 				jsonObject.put("secret", resultSet.getString("secret"));
 			}
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, jsonObject.length() == 0 ? 0 : 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -524,6 +551,7 @@ public class UserController {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setString(1, username);
+			String statement = preparedStatement.toString();
 			ResultSet resultSet = MySQLAccess.readDataBasePS(preparedStatement);
 			while (resultSet.next()) {
 				jsonObject.put("uid", resultSet.getInt("uid"));
@@ -533,6 +561,7 @@ public class UserController {
 				jsonObject.put("secret", resultSet.getString("secret"));
 				jsonObject.put("nfcid", resultSet.getString("nfcid"));
 			}
+			Logger.log(Logger.API.TEAM3.name(), Logger.TYPE.READ.name(),  statement, jsonObject.length() == 0 ? 0 : 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -540,7 +569,6 @@ public class UserController {
 		}
 
 		MySQLAccess.close();
-
 		return jsonObject;
 	}
 
@@ -555,7 +583,9 @@ public class UserController {
 			preparedStatement.setString(1, password);
 			preparedStatement.setString(2, salt);
 			preparedStatement.setString(3, username);
+			String statement = preparedStatement.toString();
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
+			Logger.log(Logger.API.TEAM3.name(), Logger.TYPE.WRITE.name(),  statement, result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -44,13 +44,14 @@
 	- /api/team1/otl/delete/{token}<br><br>
     - /api/team1/csrf<br>
 	- /api/team1/csrf/{csrfToken}<br>
-	- /api/team1/csrf/create/{csrfToken}/{uid}/{expiry}<br>
+	- /api/team1/csrf/create/{csrfToken}/{uid}/{expiry}/{description}<br>
 	- /api/team1/csrf/delete/{csrfToken}<br><br>
 	- /api/team1/record/all/{uid}<br>
 	- /api/team1/record/get/{rid}<br>
 	- /api/team1/record/{rid}<br>
 	- /api/team1/record/document/create<br>
-	&emsp;- Accepts POST request JSON data <br><br>
+	&emsp;- Accepts POST request JSON data <br>
+	- /api/team1/record/delete/{rid}/{uid}<br><br>
 	- /api/team1/consent<br>
     - /api/team1/consent/{consent_id}<br>
     - /api/team1/consent/create/{uid}/{rid}<br>

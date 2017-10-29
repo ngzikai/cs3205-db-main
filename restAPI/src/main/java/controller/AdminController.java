@@ -1,5 +1,6 @@
 package controller;
 
+import utils.Logger;
 import utils.db.MySQLAccess;
 
 import java.sql.PreparedStatement;
@@ -23,7 +24,9 @@ public class AdminController {
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
+			String statement = preparedStatement.toString();
 			adminList = resultSetToAdminList(MySQLAccess.readDataBasePS(preparedStatement));
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, adminList.size() == 0 ? 0 : 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -39,6 +42,7 @@ public class AdminController {
 			jsonObjectAdmin.put("secret", admin.getSecret());
 			adminArray.put(jsonObjectAdmin);
 		}
+
 		jsonObjectFinal.put("admins", adminArray);
 		return jsonObjectFinal;
 	}
@@ -51,7 +55,9 @@ public class AdminController {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setString(1, username);
+			String statement = preparedStatement.toString();
 			adminList = resultSetToAdminList(MySQLAccess.readDataBasePS(preparedStatement));
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -67,7 +73,6 @@ public class AdminController {
 		jsonObject.put("salt", admin.getSalt());
 		jsonObject.put("secret", admin.getSecret());
 		admin.print();
-		
 		return jsonObject;
 	}
 	
@@ -98,7 +103,9 @@ public class AdminController {
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setString(1, secret);
 		    preparedStatement.setInt(2, adminId);
+		    String statement = preparedStatement.toString();
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(), statement, result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -118,16 +125,19 @@ public class AdminController {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setInt(1, adminId);
+			String statement = preparedStatement.toString();
 			ResultSet resultSet = MySQLAccess.readDataBasePS(preparedStatement);
 			while (resultSet.next()) {
 				jsonObject.put("secret", resultSet.getString("secret")); 
 			}
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, jsonObject.length() == 0 ? 0 : 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
 		MySQLAccess.close();
+
 		return jsonObject;
 	}
 }

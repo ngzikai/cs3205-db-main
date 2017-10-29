@@ -163,6 +163,7 @@ CREATE TABLE csrf(
    csrf_token VARCHAR(255) NOT NULL,
    uid INT NOT NULL,
    expiry int NOT NULL,
+   description VARCHAR(255),
    PRIMARY KEY (csrf_token),
    FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -182,3 +183,15 @@ CREATE TABLE user_metadata(
   PRIMARY KEY(uid),
   FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+CREATE TABLE logs(
+   log_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   api	ENUM('Team1', 'Team2', 'Team3') NOT NULL,
+   type ENUM('Read', 'Write') NOT NULL,
+   time TIMESTAMP NOT NULL,
+   description VARCHAR(255) NOT NULL,
+   result TINYINT(1) NOT NULL
+);
+   
+
+	

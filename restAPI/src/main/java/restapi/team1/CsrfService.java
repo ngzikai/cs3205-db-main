@@ -34,12 +34,12 @@ public class CsrfService {
 		return createResponse(jsonObject);
 	}
 
-	@Path("/create/{csrfToken: .+}/{uid}/{expiry}")
+	@Path("/create/{csrfToken: .+}/{uid}/{expiry}/{description}")
 	@GET
 	@Produces("application/json")
-	public Response createOTL(@PathParam("csrfToken") String csrfToken,
-			@PathParam("uid") int uid, @PathParam("expiry") int expiry) throws JSONException {
-		JSONObject jsonObject = cc.createCsrf(csrfToken, uid, expiry);
+	public Response createOTL(@PathParam("csrfToken") String csrfToken, @PathParam("uid") int uid,
+			@PathParam("expiry") int expiry, @PathParam("description") String description) throws JSONException {
+		JSONObject jsonObject = cc.createCsrf(csrfToken, uid, expiry, description);
 
 		return createResponse(jsonObject);
 	}

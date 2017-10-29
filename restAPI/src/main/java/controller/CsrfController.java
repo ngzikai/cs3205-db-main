@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import entity.Csrf;
+import utils.Logger;
 import utils.db.MySQLAccess;
 
 public class CsrfController {
@@ -20,7 +21,9 @@ public class CsrfController {
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
+			String statement = preparedStatement.toString();
 			csrfList = resultSetToCsrfList(MySQLAccess.readDataBasePS(preparedStatement));
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, csrfList.size() == 0 ? 0 : 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -47,7 +50,9 @@ public class CsrfController {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setString(1, csrfToken);
+			String statement = preparedStatement.toString();
 			csrfList = resultSetToCsrfList(MySQLAccess.readDataBasePS(preparedStatement));
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -58,31 +63,35 @@ public class CsrfController {
 			return null;
 		}
 		MySQLAccess.close();
+		
 		Csrf otl = csrfList.get(0);
 		jsonObject = buildCsrfObject(otl);
 		System.out.println("Retrieving details of Csrf Token: " + csrfToken);
 		return jsonObject;
 	}
 
-	public JSONObject createCsrf(String csrfToken, int uid, int expiry) {
-		Csrf csrf = new Csrf(csrfToken, uid, expiry);
+	public JSONObject createCsrf(String csrfToken, int uid, int expiry, String description) {
+		Csrf csrf = new Csrf(csrfToken, uid, expiry, description);
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
-		String sql = "INSERT INTO CS3205.csrf VALUES (?, ?, ?)";
+		String sql = "INSERT INTO CS3205.csrf VALUES (?, ?, ?, ?)";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setString(1, csrf.getCsrfToken());
 			preparedStatement.setInt(2, csrf.getUid());
 			preparedStatement.setInt(3, csrf.getExpiry());
+			preparedStatement.setString(4, csrf.getDescription());
+			String statement = preparedStatement.toString();
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
-
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(), statement, result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
 		MySQLAccess.close();
+
 		System.out.println("Created One Time Link: " + csrf.toString());
 		jsonObject.put("result", result);
 		return jsonObject;
@@ -101,13 +110,16 @@ public class CsrfController {
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setInt(1, expiry);
 			preparedStatement.setString(2, csrfToken);
+			String statement = preparedStatement.toString();
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(), statement, result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
 		MySQLAccess.close();
+
 		System.out.println("Updated csrf: " + csrfToken + " to new expiry " + expiry);
 		jsonObject.put("result", result);
 		return jsonObject;
@@ -125,13 +137,16 @@ public class CsrfController {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setString(1, csrfToken);
+			String statement = preparedStatement.toString();
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(), statement, result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
 		MySQLAccess.close();
+
 		jsonObject.put("result", result);
 		return jsonObject;
 	}
@@ -142,8 +157,9 @@ public class CsrfController {
 		while (resultSet.next()) {
 			String csrfToken = resultSet.getString("csrf_token");
 			int uid = resultSet.getInt("uid");
-			int expiry = resultSet.getInt("expiry");;
-			Csrf csrf = new Csrf(csrfToken, uid, expiry);
+			int expiry = resultSet.getInt("expiry");
+			String description = resultSet.getString("description");
+			Csrf csrf = new Csrf(csrfToken, uid, expiry, description);
 			csrfList.add(csrf);
 		}
 		MySQLAccess.close();
@@ -155,6 +171,7 @@ public class CsrfController {
 		jsonObjectCsrf.put("csrfToken", csrf.getCsrfToken()); 
 		jsonObjectCsrf.put("uid", csrf.getUid());
 		jsonObjectCsrf.put("expiry", csrf.getExpiry());
+		jsonObjectCsrf.put("description", csrf.getDescription());
 		return jsonObjectCsrf;
 	}
 }
