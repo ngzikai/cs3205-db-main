@@ -82,7 +82,7 @@ public class DataService {
 		data = sc.get(rid);
 
 		if(data == null){
-			return createResponse(new JSONObject(data));
+			return createResponse(null);
 		}
 
 		JSONObject jObj = new JSONObject(data);
