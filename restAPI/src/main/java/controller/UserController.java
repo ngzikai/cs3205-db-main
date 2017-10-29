@@ -40,7 +40,7 @@ public class UserController {
 		jsonObjectFinal.put("users", userArray);
 		return jsonObjectFinal;
 	}
-	
+
 	// This method will take in a user name and return the user object from the database;
 	public JSONObject getUser(String username) {
 		JSONObject jsonObject = new JSONObject();
@@ -57,16 +57,16 @@ public class UserController {
 			e.printStackTrace();
 			return null;
 		}
-		
+
 		if(user == null) {
 			return null;
 		}
 		MySQLAccess.close();
 		jsonObject = buildLoginObject(user);
-		
+
 		return jsonObject;
 	}
-	
+
 	// This method will take in a user name and return the user object from the database;
 	public JSONObject getUserWithUID(String uid) {
 		JSONObject jsonObject = new JSONObject();
@@ -83,7 +83,7 @@ public class UserController {
 			e.printStackTrace();
 			return null;
 		}
-		
+
 		if(userList.size() < 1) {
 			return null;
 		}
@@ -93,7 +93,7 @@ public class UserController {
 		System.out.println("Retrieving details of User account: " + uid);
 		return jsonObject;
 	}
-	
+
 	// This method will take in a user name and return the user object from the database;
 	public JSONObject getUserPublicInfo(String uid) {
 		JSONObject jsonObject = new JSONObject();
@@ -110,18 +110,18 @@ public class UserController {
 			e.printStackTrace();
 			return null;
 		}
-		
+
 		if(user == null) {
 			return null;
 		}
 		MySQLAccess.close();
 		jsonObject = buildPublicInfoObject(user);
-		
+
 		return jsonObject;
 	}
 
 	public JSONObject createUser(String username, String password, String salt, String firstName, String lastName,
-			String nric, String dob, char sex, String phone1, String phone2, String phone3, String address1, 
+			String nric, String dob, char sex, String phone1, String phone2, String phone3, String address1,
 			String address2, String address3, int zipcode1, int zipcode2, int zipcode3, int qualify, String bloodtype,
 			String nfcid) {
 		User user = new User(username, password, salt, firstName, lastName, nric, LocalDate.parse(dob), sex, phone1,
@@ -129,7 +129,7 @@ public class UserController {
 		JSONObject jsonObject = createUser(user);
 		return jsonObject;
 	}
-	
+
 	public JSONObject createUser(User user) {
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
@@ -174,18 +174,18 @@ public class UserController {
 		jsonObject.put("result", result);
 		return jsonObject;
 	}
-	
+
 	public JSONObject updateUser(String uid, String username, String password, String salt, String firstName, String lastName,
-			String nric, String dob, char sex, String phone1, String phone2, String phone3, String address1, 
+			String nric, String dob, char sex, String phone1, String phone2, String phone3, String address1,
 			String address2, String address3, int zipcode1, int zipcode2, int zipcode3, int qualify, String bloodtype,
 			String nfcid) {
-		
+
 		User user = new User(Integer.parseInt(uid), username, password, salt, firstName, lastName, nric, LocalDate.parse(dob), sex, phone1,
 				phone2, phone3,  address1, address2, address3, zipcode1, zipcode2, zipcode3, qualify, bloodtype, nfcid);
 		JSONObject jsonObject = updateUser(user);
 		return jsonObject;
 	}
-	
+
 	public JSONObject updateUser(User user) {
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
@@ -231,9 +231,9 @@ public class UserController {
 		jsonObject.put("result", result);
 		return jsonObject;
 	}
-	
+
 	public JSONObject updateUserPassword(String username, String password, String salt) {
-		
+
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
 		String sql = "UPDATE CS3205.user SET password = ?, salt = ? WHERE username = ?";
@@ -254,9 +254,9 @@ public class UserController {
 		jsonObject.put("result", result);
 		return jsonObject;
 	}
-	
+
 	public JSONObject updateUserPassword(User user) {
-		
+
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
 		String sql = "UPDATE CS3205.user SET password = ?, salt = ? WHERE username = ?";
@@ -277,12 +277,12 @@ public class UserController {
 		jsonObject.put("result", result);
 		return jsonObject;
 	}
-	
+
 	public JSONObject deleteUser(int uid) {
 		int result = 0;
 		JSONObject jsonObject = new JSONObject();
 		String sql = "DELETE FROM CS3205.user where uid = ?";
-		
+
 		System.out.println("Deleting user: " + uid);
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
@@ -298,7 +298,7 @@ public class UserController {
 		jsonObject.put("result", result);
 		return jsonObject;
 	}
-	
+
 	public JSONObject getTherapists() {
 		JSONObject jsonObjectFinal = new JSONObject();
 		ArrayList<User> userList = null;
@@ -321,12 +321,12 @@ public class UserController {
 		jsonObjectFinal.put("users", userArray);
 		return jsonObjectFinal;
 	}
-	
+
 	public JSONObject userSetSecret(int uid, String secret) {
 		int result = 0;
 		JSONObject jsonObject = new JSONObject();
 		String sql = "UPDATE CS3205.user SET secret = ? where uid = ?";
-		
+
 		System.out.println("Setting secret for user: " + uid);
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
@@ -343,11 +343,11 @@ public class UserController {
 		jsonObject.put("result", result);
 		return jsonObject;
 	}
-	
+
 	public JSONObject userGetSecret(int uid) {
 		JSONObject jsonObject = new JSONObject();
 		String sql = "SELECT secret FROM CS3205.user where uid = ?";
-		
+
 		System.out.println("Getting secret from user: " + uid);
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
@@ -355,7 +355,7 @@ public class UserController {
 			preparedStatement.setInt(1, uid);
 			ResultSet resultSet = MySQLAccess.readDataBasePS(preparedStatement);
 			while (resultSet.next()) {
-				jsonObject.put("secret", resultSet.getString("secret")); 
+				jsonObject.put("secret", resultSet.getString("secret"));
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -397,7 +397,7 @@ public class UserController {
 		MySQLAccess.close();
 		return userList;
 	}
-	
+
 	private ArrayList<User> resultSetToTherapistsList(ResultSet resultSet) throws SQLException {
 		// ResultSet is initially before the first data set
 		ArrayList<User> userList = new ArrayList<User>();
@@ -412,10 +412,10 @@ public class UserController {
 		MySQLAccess.close();
 		return userList;
 	}
-	
+
 	private JSONObject buildUserObject(User user) {
 		JSONObject jsonObjectUser = new JSONObject();
-		jsonObjectUser.put("uid", user.getUid()); 
+		jsonObjectUser.put("uid", user.getUid());
 		jsonObjectUser.put("username", user.getUsername());
 		jsonObjectUser.put("password", user.getPassword());
 		jsonObjectUser.put("salt", user.getSalt());
@@ -452,16 +452,16 @@ public class UserController {
 		user.print();
 		return jsonObjectUser;
 	}
-	
+
 	private JSONObject buildTherapistsObject(User user) {
 		JSONObject jsonObjectUser = new JSONObject();
-		jsonObjectUser.put("uid", user.getUid()); 
+		jsonObjectUser.put("uid", user.getUid());
 		jsonObjectUser.put("firstname", user.getFirstName());
 		jsonObjectUser.put("lastname", user.getLastName());
 		jsonObjectUser.put("sex", user.getSex()+"");
 		return jsonObjectUser;
 	}
-	
+
 	private User resultSetGetPublicInfo(ResultSet resultSet) throws SQLException {
 		// ResultSet is initially before the first data set
 		User user = null;
@@ -477,10 +477,10 @@ public class UserController {
 		MySQLAccess.close();
 		return user;
 	}
-	
+
 	private JSONObject buildPublicInfoObject(User user) {
 		JSONObject jsonObjectUser = new JSONObject();
-		jsonObjectUser.put("uid", user.getUid()); 
+		jsonObjectUser.put("uid", user.getUid());
 		jsonObjectUser.put("firstname", user.getFirstName());
 		jsonObjectUser.put("lastname", user.getLastName());
 		jsonObjectUser.put("sex", user.getSex()+"");
@@ -488,8 +488,8 @@ public class UserController {
 		jsonObjectUser.put("qualify", user.getQualify());
 		return jsonObjectUser;
 	}
-	
-	
+
+
 	private User resultSetToUserLogin(ResultSet resultSet) throws SQLException {
 		// ResultSet is initially before the first data set
 		User user = null;
@@ -504,21 +504,21 @@ public class UserController {
 		MySQLAccess.close();
 		return user;
 	}
-	
+
 	private JSONObject buildLoginObject(User user) {
 		JSONObject jsonObjectUser = new JSONObject();
-		jsonObjectUser.put("uid", user.getUid()); 
+		jsonObjectUser.put("uid", user.getUid());
 		jsonObjectUser.put("password", user.getPassword());
 		jsonObjectUser.put("salt", user.getSalt());
 		jsonObjectUser.put("qualify", user.getQualify());
 		jsonObjectUser.put("secret", user.getSecret());
 		return jsonObjectUser;
 	}
-	
-	//For team 3 
+
+	//For team 3
 	public JSONObject getUser2(String username) {
 		JSONObject jsonObject = new JSONObject();
-		String sql = "SELECT uid, password2, salt2, qualify, secret FROM CS3205.user WHERE username = ? ";
+		String sql = "SELECT uid, password2, salt2, qualify, secret, nfcid FROM CS3205.user WHERE username = ? ";
 		System.out.println("Retrieving details of User account: " + username);
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
@@ -526,25 +526,26 @@ public class UserController {
 			preparedStatement.setString(1, username);
 			ResultSet resultSet = MySQLAccess.readDataBasePS(preparedStatement);
 			while (resultSet.next()) {
-				jsonObject.put("uid", resultSet.getInt("uid")); 
+				jsonObject.put("uid", resultSet.getInt("uid"));
 				jsonObject.put("password2", resultSet.getString("password2"));
 				jsonObject.put("salt2", resultSet.getString("salt2"));
 				jsonObject.put("qualify", resultSet.getInt("qualify"));
 				jsonObject.put("secret", resultSet.getString("secret"));
+				jsonObject.put("nfcid", resultSet.getString("nfcid"));
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
-		
+
 		MySQLAccess.close();
-		
+
 		return jsonObject;
 	}
-	
+
 	public JSONObject updateUserPassword2(String username, String password, String salt) {
-		
+
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
 		String sql = "UPDATE CS3205.user SET password2 = ?, salt2 = ? WHERE username = ?";
