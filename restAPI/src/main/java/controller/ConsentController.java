@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import entity.Consent;
+import utils.Logger;
 import utils.db.MySQLAccess;
 
 public class ConsentController {
@@ -21,7 +22,9 @@ public class ConsentController {
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
+			String statement = preparedStatement.toString();
 			consentList = resultSetToConsentList(MySQLAccess.readDataBasePS(preparedStatement));
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, consentList.size() == 0 ? 0 : 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -33,6 +36,7 @@ public class ConsentController {
 			consentArray.put(jsonObjectTreatment);
 		}
 		MySQLAccess.close();
+
 		jsonObjectFinal.put("consents", consentArray);
 		return jsonObjectFinal;
 	}
@@ -48,7 +52,9 @@ public class ConsentController {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setInt(1, id);
+			String statement = preparedStatement.toString();
 			consentList = resultSetToConsentList(MySQLAccess.readDataBasePS(preparedStatement));
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -59,6 +65,7 @@ public class ConsentController {
 			return null;
 		}
 		MySQLAccess.close();
+		
 		Consent consent = consentList.get(0);
 		jsonObject = buildConsentObject(consent);
 		return jsonObject;
@@ -75,7 +82,9 @@ public class ConsentController {
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setInt(1, therapistid);
 			preparedStatement.setInt(2, status ? 1 : 0);
+			String statement = preparedStatement.toString();
 			consentList = resultSetToConsentList(MySQLAccess.readDataBasePS(preparedStatement));
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, consentList.size() == 0 ? 0 : 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -91,6 +100,7 @@ public class ConsentController {
 			consentArray.put(jsonObjectTreatment);
 		}
 		MySQLAccess.close();
+		
 		jsonObject.put("consents", consentArray);
 		//System.out.println("Retrieving details of Consent: " + id);
 		return jsonObject;
@@ -106,7 +116,9 @@ public class ConsentController {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setInt(1, therapistid);
+			String statement = preparedStatement.toString();
 			consentList = resultSetToConsentList(MySQLAccess.readDataBasePS(preparedStatement));
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, consentList.size() == 0 ? 0 : 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -122,6 +134,7 @@ public class ConsentController {
 			consentArray.put(jsonObjectTreatment);
 		}
 		MySQLAccess.close();
+
 		jsonObject.put("consents", consentArray);
 		//System.out.println("Retrieving details of Consent: " + id);
 		return jsonObject;
@@ -137,8 +150,9 @@ public class ConsentController {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setInt(1, rid);
-
+			String statement = preparedStatement.toString();
 			consentArray = processTherapistList(MySQLAccess.readDataBasePS(preparedStatement));
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -149,6 +163,7 @@ public class ConsentController {
 			return null;
 		}
 		MySQLAccess.close();
+		
 		jsonObject.put("consents", consentArray);
 		//System.out.println("Retrieving details of Consent: " + id);
 		return jsonObject;
@@ -166,17 +181,20 @@ public class ConsentController {
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setInt(1, patientid);
 			preparedStatement.setInt(2, therapistId);
+			String statement = preparedStatement.toString();
 			consentArray = processUidWithTherapistIdList(MySQLAccess.readDataBasePS(preparedStatement));
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, consentArray.length() == 0 ? 0 : 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
 		
-		if(consentArray == null) {
+		if(consentArray.length() == 0) {
 			return null;
 		}
 		MySQLAccess.close();
+		
 		jsonObject.put("consents", consentArray);
 		//System.out.println("Retrieving details of Consent: " + id);
 		return jsonObject;
@@ -193,8 +211,9 @@ public class ConsentController {
 			preparedStatement.setInt(1, consent.getUid());
 			preparedStatement.setInt(2, consent.getRid());
 			preparedStatement.setInt(3, consent.isStatus() ? 1: 0);
+			String statement = preparedStatement.toString();
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
-
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(), statement, result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -235,13 +254,16 @@ public class ConsentController {
 			PreparedStatement preparedStatement = connect.prepareStatement(sql2);
 			preparedStatement.setInt(1, consent.isStatus() ? 0 : 1);
 			preparedStatement.setInt(2, id);
+			String statement = preparedStatement.toString();
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(), statement, result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
 		MySQLAccess.close();
+
 		System.out.println("Updated consent: " + id);
 		jsonObject.put("result", result);
 		return jsonObject;
@@ -258,13 +280,16 @@ public class ConsentController {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 		    preparedStatement.setInt(1, id);
+		    String statement = preparedStatement.toString();
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(), statement, result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
 		MySQLAccess.close();
+		Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(), sql, result);
 		jsonObject.put("result", result);
 		return jsonObject;
 	}

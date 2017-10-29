@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import entity.Data;
 import entity.Document;
 import utils.Cryptography;
+import utils.Logger;
 import utils.SystemConfig;
 import utils.db.MySQLAccess;
 
@@ -68,7 +69,6 @@ public class DocumentController {
 		} else if (result < 0) {
 			result = 0;
 		}
-
 		jsonObject.put("result", result);
 		return jsonObject;
 	}
@@ -194,7 +194,9 @@ public class DocumentController {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 		    preparedStatement.setInt(1, rid);
+		    String statement = preparedStatement.toString();
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(), statement, result);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
