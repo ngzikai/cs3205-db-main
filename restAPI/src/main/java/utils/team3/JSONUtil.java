@@ -13,7 +13,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import entity.Steps;
+import entity.steps.*;
 
 /**
  * @author Yee
@@ -82,8 +82,8 @@ public class JSONUtil {
     }
 
     private static void processMETA(Steps data, String fileFolder, String fileName) throws IOException {
-        Steps.Time time = data.getTime();
-        ArrayList<Steps.Channel> channels = data.getChannels();
+        Steps_Time time = data.getTime();
+        ArrayList<Steps_Channel> channels = data.getChannels();
 
         time.setValues(null);
 
@@ -103,7 +103,7 @@ public class JSONUtil {
     }
 
     private static void processCSV(Steps data, String fileFolder, String fileName) throws IOException {
-        ArrayList<Steps.Channel> channels = data.getChannels();
+        ArrayList<Steps_Channel> channels = data.getChannels();
 
         ArrayList<Long> timeValues = data.getTime().getValues();
         ArrayList<ArrayList<Long>> channelsValues = new ArrayList<ArrayList<Long>>();
@@ -113,7 +113,7 @@ public class JSONUtil {
             timeValues.set(i, timestamp);
         }
 
-        for (Steps.Channel channel : channels) {
+        for (Steps_Channel channel : channels) {
             channelsValues.add(channel.getValues());
         }
 

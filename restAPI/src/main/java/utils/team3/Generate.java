@@ -8,7 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import com.google.gson.Gson;
 
-import entity.Steps;
+import entity.steps.*;
 
 public class Generate {
     private static final long ZERO_LONG = 0L;
@@ -21,19 +21,19 @@ public class Generate {
     private static final int POS_1 = 1;
     private static final int POS_2 = 2;
     private static int noOFDataSessions = 10;
-    private static String filePath = "/tmp/CS3205";
+    private static String filePath = "/tmp/CS3205/";
 
-   public static void main(String[] args) {
-       ArrayList<Steps> stepsDataList = createStepsData(noOFDataSessions);
-       System.out.println(stepsDataList.size());
-       write(stepsDataList);
-
-       // for (int i = 0; i < stepsDataList.size(); i++) {
-       // String json = gson.toJson(stepsDataList.get(i));
-       //
-       // System.out.println(json);
-       // }
-   }
+  //  public static void main(String[] args) {
+  //      ArrayList<Steps> stepsDataList = createStepsData(noOFDataSessions);
+  //      System.out.println(stepsDataList.size());
+  //      write(stepsDataList);
+   //
+  //      // for (int i = 0; i < stepsDataList.size(); i++) {
+  //      // String json = gson.toJson(stepsDataList.get(i));
+  //      //
+  //      // System.out.println(json);
+  //      // }
+  //  }
 
     private static ArrayList<Steps> createStepsData(int noOFDataSessions) {
         ArrayList<Steps> stepsDataList = new ArrayList<Steps>();
@@ -45,14 +45,14 @@ public class Generate {
             int seed = ThreadLocalRandom.current().nextInt(SESSION_LOWER_BOUND, SESSION_UPPER_BOUND);
             ArrayList<ArrayList<Long>> values = generateValues(timestamp, seed);
 
-            Steps.Time time = data.new Time();
+            Steps_Time time = new Steps_Time();
             time.setValues(values.get(POS_0));
             data.setTime(time);
 
-            ArrayList<Steps.Channel> channels = new ArrayList<Steps.Channel>();
+            ArrayList<Steps_Channel> channels = new ArrayList<Steps_Channel>();
 
-            Steps.Channel noOfSteps = data.new Channel();
-            Steps.Channel timeDifference = data.new Channel();
+            Steps_Channel noOfSteps = new Steps_Channel();
+            Steps_Channel timeDifference = new Steps_Channel();
 
             noOfSteps.setName(Steps.FIELD_CHANNELS_TYPES[POS_0]);
             timeDifference.setName(Steps.FIELD_CHANNELS_TYPES[POS_1]);
@@ -150,6 +150,7 @@ public class Generate {
 //                System.out.println();
 
                 Gson gson = new Gson();
+                System.out.println(data.getDisplayUnit());
                 gson.toJson(data, writer);
 
                 writer.close();
