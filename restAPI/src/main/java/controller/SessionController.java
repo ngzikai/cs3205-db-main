@@ -54,49 +54,23 @@ public class SessionController {
   }
 
   public Data get(int rid){
-    String sql = "SELECT * FROM CS3205.data WHERE rid = ?";
-    Data data = null;
-    try{
-      PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
-      ps.setInt(1, rid);
-      ResultSet rs = ps.executeQuery();
-      while(rs.next()){
-        data = new Data();
-        data.setRid(rs.getInt("rid"));
-        data.setUid(rs.getInt("uid"));
-        data.setType(rs.getString("type"));
-        data.setSubtype(rs.getString("subtype"));
-        data.setContent(rs.getString("content"));
-        data.setTitle(rs.getString("title"));
-        data.setCreationdate(rs.getTimestamp("creationdate"));
-        data.setModifieddate(rs.getTimestamp("modifieddate"));
-        break;
-      }
-      ps.close();
-    } catch(Exception e) {
-      e.printStackTrace();
-    }
-    return data;
+      return get(-1, rid);
   }
 
   public Data get(int userID, int rid){
-    String sql = "SELECT * FROM CS3205.data WHERE uid = ? AND rid = ?";
+    String sql = "SELECT * FROM CS3205.data WHERE `uid` = ? AND `rid` = ?";
     Data data = null;
     try{
       PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
-      ps.setInt(1, userID);
+      if(userID == -1){
+        ps.setString(1, "`uid`");
+      } else {
+        ps.setInt(1, userID);
+      }
       ps.setInt(2, rid);
       ResultSet rs = ps.executeQuery();
       while(rs.next()){
-        data = new Data();
-        data.setRid(rs.getInt("rid"));
-        data.setUid(rs.getInt("uid"));
-        data.setType(rs.getString("type"));
-        data.setSubtype(rs.getString("subtype"));
-        data.setContent(rs.getString("content"));
-        data.setTitle(rs.getString("title"));
-        data.setCreationdate(rs.getTimestamp("creationdate"));
-        data.setModifieddate(rs.getTimestamp("modifieddate"));
+        data = setAllData(rs);
         break;
       }
       ps.close();
@@ -115,15 +89,7 @@ public class SessionController {
       ps.setString(2, subtype);
       ResultSet rs = ps.executeQuery();
       while(rs.next()){
-        Data data = new Data();
-        data.setRid(rs.getInt("rid"));
-        data.setUid(rs.getInt("uid"));
-        data.setType(rs.getString("type"));
-        data.setSubtype(rs.getString("subtype"));
-        data.setContent(rs.getString("content"));
-        data.setTitle(rs.getString("title"));
-        data.setCreationdate(rs.getTimestamp("creationdate"));
-        data.setModifieddate(rs.getTimestamp("modifieddate"));
+        Data data = setAllData(rs);
         list.add(data);
       }
     }catch(Exception e){
@@ -131,7 +97,7 @@ public class SessionController {
     }
     return list;
   }
-  
+
   public List<Data> getAllFromUser(int userID){
 	    String sql = "SELECT * FROM CS3205.data WHERE uid = ?";
 	    List<Data> list = new ArrayList<>();
@@ -140,26 +106,30 @@ public class SessionController {
 	      ps.setInt(1, userID);
 	      ResultSet rs = ps.executeQuery();
 	      while(rs.next()){
-	        Data data = new Data();
-	        data.setRid(rs.getInt("rid"));
-	        data.setUid(rs.getInt("uid"));
-	        data.setType(rs.getString("type"));
-	        data.setSubtype(rs.getString("subtype"));
-	        data.setContent(rs.getString("content"));
-	        data.setTitle(rs.getString("title"));
-	        data.setCreationdate(rs.getTimestamp("creationdate"));
-	        data.setModifieddate(rs.getTimestamp("modifieddate"));
+          Data data = setAllData(rs);
 	        list.add(data);
 	      }
 	    }catch(Exception e){
 	      e.printStackTrace();
 	    }
 	    return list;
-	  }
+  }
+
+  public Data setAllData(ResultSet rs) throws Exception{
+    Data data = new Data();
+    data.setRid(rs.getInt("rid"));
+    data.setUid(rs.getInt("uid"));
+    data.setType(rs.getString("type"));
+    data.setSubtype(rs.getString("subtype"));
+    data.setContent(rs.getString("content"));
+    data.setTitle(rs.getString("title"));
+    data.setCreationdate(rs.getTimestamp("creationdate"));
+    data.setModifieddate(rs.getTimestamp("modifieddate"));
+    return data;
+  }
 
   public File getActualFile(String fileLocation, int userID, String type){
-    File file = new File(fileDirectory + "/" + userID + "/" + type + "/" + fileLocation);
-    return file;
+    return getActualFile(fileDirectory + "/" + userID + "/" + type + "/" + fileLocation);
   }
 
   public File getActualFile(String fileLocation){
