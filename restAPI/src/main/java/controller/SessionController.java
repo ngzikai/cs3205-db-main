@@ -1,6 +1,7 @@
 package controller;
 
 import entity.*;
+import entity.steps.*;
 import java.io.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,6 +9,21 @@ import java.util.*;
 import org.json.JSONObject;
 import utils.db.*;
 import utils.SystemConfig;
+import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInput;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import utils.Cryptography;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import com.google.gson.Gson;
+import java.lang.reflect.Type;
+import com.google.gson.reflect.TypeToken;
+import utils.team3.CommonUtil;
+import utils.GUID;
 
 public class SessionController {
   private String fileDirectory = SystemConfig.getConfig("storage_directory");
@@ -47,9 +63,9 @@ public class SessionController {
   }
 
   public JSONObject getStepMetaInfo(Data step){
-    String jsonStr = readFile(step.getAbsolutePath());
-    JSONObject jObj = new JSONObject(jsonStr);
-    jObj.remove("sensor");
+    JSONObject jObj = new JSONObject(readFile(step.getAbsolutePath()));
+    jObj.remove("time");
+    jObj.remove("channels");
     return jObj;
   }
 
@@ -133,49 +149,99 @@ public class SessionController {
   }
 
   public File getActualFile(String fileLocation){
-    File file = new File(fileLocation);
-    return file;
+    try{
+      Steps steps = readFile(fileLocation);
+      File temp = File.createTempFile("/tmp/"+GUID.BASE58(),".tmp");
+      FileWriter writer = new FileWriter(temp.getAbsolutePath());
+      Gson gson = new Gson();
+      gson.toJson(steps, writer);
+      writer.close();
+      temp.deleteOnExit();
+      return new File(temp.getAbsolutePath());
+    }catch(Exception e){
+      e.printStackTrace();
+    }
+    return null;
   }
 
-  public String readFile(String fileLocation){
-    String result = "";
-    File file = new File(fileLocation);
-    String currentDirectory = file.getAbsolutePath();
-    try {
-        BufferedReader br = new BufferedReader(new FileReader(fileLocation));
-        StringBuilder sb = new StringBuilder();
-        String line = br.readLine();
-        while (line != null) {
-            sb.append(line);
-            line = br.readLine();
-        }
-        result = sb.toString();
-    } catch(Exception e) {
-        e.printStackTrace();
+  public Steps readFile(String fileLocation){
+    try{
+      byte[] content = decryptFile(fileLocation);
+      if( content != null ){
+        Steps steps = null;
+        ByteArrayInputStream bis = new ByteArrayInputStream(content);
+        ObjectInput in = new ObjectInputStream(bis);
+        steps = (Steps) in.readObject();
+        return steps;
+      }
+
+    }catch(Exception e){
+      e.printStackTrace();
     }
-    return result;
+    return null;
+  }
+
+  public byte[] decryptFile(String fileLocation){
+    try{
+      Path path = Paths.get(fileLocation);
+      //Uses Cryptography to decrypt the content
+      Cryptography crypto = Cryptography.getInstance();
+      byte[] encrypted = Files.readAllBytes(path);
+      byte[] content = crypto.decrypt(encrypted);
+      return content;
+    }catch(Exception e){
+      e.printStackTrace();
+    }
+    return null;
   }
 
   // save uploaded file to new location
   public void writeToFile(InputStream uploadedInputStream, String uploadedFileLocation) {
-
   	try {
       // uploadedFileLocation = baseDir + user + "/" + typeFolder + "/" + uploadedFileLocation;
       File file = new File(uploadedFileLocation);
       file.getParentFile().mkdirs();
-  		OutputStream out = new FileOutputStream(file);
-  		int read = 0;
-  		byte[] bytes = new byte[1024];
 
-  		out = new FileOutputStream(new File(uploadedFileLocation));
-  		while ((read = uploadedInputStream.read(bytes)) != -1) {
-  			out.write(bytes, 0, read);
-  		}
-  		out.flush();
-  		out.close();
+      // Encrypt the file
+      Cryptography crypto = Cryptography.getInstance();
+      byte[] targetArray = new byte[uploadedInputStream.available()];
+      uploadedInputStream.read(targetArray);
+			byte[] encrypted = crypto.encrypt(targetArray);
+
+      // Write encrypted file to location
+      FileOutputStream outputStream =  new FileOutputStream(file);
+      outputStream.write(encrypted);
+			outputStream.close();
+  		// OutputStream out = new FileOutputStream(file);
+  		// int read = 0;
+  		// byte[] bytes = new byte[1024];
+      //
+  		// out = new FileOutputStream(new File(uploadedFileLocation));
+  		// while ((read = uploadedInputStream.read(bytes)) != -1) {
+  		// 	out.write(bytes, 0, read);
+  		// }
+  		// out.flush();
+  		// out.close();
   	} catch (IOException e) {
 
   		e.printStackTrace();
   	}
+  }
+  public void writeStepsToFile(Steps steps, String uploadedFileLocation){
+    try {
+      File file = new File(uploadedFileLocation);
+      file.getParentFile().mkdirs();
+      byte[] bytes = CommonUtil.toByteArray(steps);
+      // Encrypt the file
+      Cryptography crypto = Cryptography.getInstance();
+      byte[] encrypted = crypto.encrypt(bytes);
+
+      // Write encrypted file to location
+      FileOutputStream outputStream =  new FileOutputStream(file);
+      outputStream.write(encrypted);
+      outputStream.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }
