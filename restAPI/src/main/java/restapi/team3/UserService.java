@@ -197,9 +197,8 @@ public class UserService {
     Response response = setAttribute(Base64.getEncoder().encodeToString(computedResult));
     if(response.getStatus() == 201){
       // send back the original value to write to card
-      Encryption e = new Encryption();
-      e.setKey("testing");
-      byte[] cText = e.encrypt(Base64.getEncoder().encodeToString(secret).getBytes());
+      Cryptography crypto = Cryptography.getInstance();
+      byte[] cText = crypto.encrypt(Base64.getEncoder().encodeToString(secret).getBytes());
       response = Response.status(201).entity(Base64.getEncoder().encodeToString(cText)).build();
     }
     return response;
