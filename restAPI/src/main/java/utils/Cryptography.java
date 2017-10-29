@@ -32,24 +32,24 @@ public class Cryptography {
 	public static final int IV_SIZE = 16 ;
 	public static final String AES_METHOD = "AES/CBC/PKCS5Padding" ;
 	public static final String ENCRYPTION = "AES" ;
-	private Key key = null;
+	protected Key key = null;
 	private static Cryptography cryptoInstance = new Cryptography();
 	private static final String CONFIG_FILE_PATH = "/usr/keys/crypto.conf";
-	
-	private Cryptography() {
+
+	public Cryptography() {
 		loadKey();
 	}
-	
+
 	/*
-	 * Use this method to get the instance of the cryptopgrahy class. 
-	 * This controls the instance for this singleton class. 
+	 * Use this method to get the instance of the cryptopgrahy class.
+	 * This controls the instance for this singleton class.
 	 */
 	public static Cryptography getInstance() {
 		return cryptoInstance;
 	}
-	
+
 	/*
-	 * This method will encrypt the byte[] message with the given key and iv. 
+	 * This method will encrypt the byte[] message with the given key and iv.
 	 * Then it will embed the iv into the front of the encrypted message and returned.
 	 */
 	public byte[] encrypt(byte[] message) {
@@ -59,7 +59,7 @@ public class Cryptography {
 		try {
 			cipher = Cipher.getInstance(AES_METHOD);
 		} catch(NoSuchAlgorithmException e) {
-			System.out.println("Exception while encrypting. Algorithm being requested is not available in this environment " + e); 
+			System.out.println("Exception while encrypting. Algorithm being requested is not available in this environment " + e);
 			return null;
 		}
 		catch(NoSuchPaddingException e) {
@@ -80,7 +80,7 @@ public class Cryptography {
 		try {
 			encryptedData = cipher.doFinal(message);
 		} catch (IllegalBlockSizeException e) {
-			System.out.println("Exception while encrypting, due to block size " + e) ; 
+			System.out.println("Exception while encrypting, due to block size " + e) ;
 			return null;
 		}catch(BadPaddingException e) {
 			System.out.println("Exception while encrypting, due to padding scheme " + e) ;
@@ -93,7 +93,7 @@ public class Cryptography {
 
 	/*
 	 * This method will take in an encrypted data and a decryption key. Then it will extract
-	 * the iv from the encrypted data and use the iv and the key to decrypt the data, 
+	 * the iv from the encrypted data and use the iv and the key to decrypt the data,
 	 * returning the plain text.
 	 */
 	public byte[] decrypt(byte[] encryptedData) {
@@ -103,11 +103,11 @@ public class Cryptography {
 		ByteBuffer buffer = ByteBuffer.wrap(encryptedData);
 		buffer = buffer.get(iv).slice();
 		byte[] data = new byte[buffer.remaining()];
-		buffer.get(data);		
+		buffer.get(data);
 		try {
 			cipher = Cipher.getInstance(AES_METHOD);
 		} catch (NoSuchAlgorithmException e) {
-			System.out.println("Exception while decrypting. Algorithm being requested is not available in environment " + e);  
+			System.out.println("Exception while decrypting. Algorithm being requested is not available in environment " + e);
 			return null;
 		} catch(NoSuchPaddingException e) {
 			System.out.println("Exception while decrypting. Padding scheme being requested is not available in environment " + e);
@@ -116,7 +116,7 @@ public class Cryptography {
 		try {
 			cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
 		} catch(InvalidKeyException e) {
-			System.out.println("Exception while encrypting. Key being used is not valid. It could be due to invalid encoding, wrong length or uninitialized " + e); 
+			System.out.println("Exception while encrypting. Key being used is not valid. It could be due to invalid encoding, wrong length or uninitialized " + e);
 			return null;
 		} catch(InvalidAlgorithmParameterException e) {
 			System.out.println("Exception while encrypting. Algorithm Param being used is not valid. " + e) ;
@@ -125,7 +125,7 @@ public class Cryptography {
 		try {
 			plaintext = cipher.doFinal(data) ;
 		} catch(IllegalBlockSizeException e) {
-			System.out.println("Exception while decryption, due to block size " + e) ; 
+			System.out.println("Exception while decryption, due to block size " + e) ;
 			return null;
 		} catch(BadPaddingException e) {
 			System.out.println("Exception while decryption, due to padding scheme " + e) ;
@@ -142,7 +142,7 @@ public class Cryptography {
 		if(key != null) {
 			return false;
 		}
-		
+
 		KeyGenerator keygen;
 		try {
 			keygen = KeyGenerator.getInstance(ENCRYPTION);
@@ -169,9 +169,9 @@ public class Cryptography {
 		secRandom.nextBytes(iv);
 		return new IvParameterSpec(iv);
 	}
-	
+
 	/*
-	 * This method checks the config file if it exists. 
+	 * This method checks the config file if it exists.
 	 * If exists, load config.
 	 * Else, generate a new AES key and create a config file.
 	 */
@@ -193,7 +193,7 @@ public class Cryptography {
 			}
 		}
 	}
-	
+
 	/*
 	 * This method loads the config file and updates the key used.
 	 */
@@ -209,7 +209,7 @@ public class Cryptography {
 		// decode the base64 encoded string
 		byte[] decodedKey = Base64.getDecoder().decode(encodedKey);
 		// rebuild key using SecretKeySpec
-		key = new SecretKeySpec(decodedKey, ENCRYPTION); 
+		key = new SecretKeySpec(decodedKey, ENCRYPTION);
 	}
 
 }
