@@ -324,6 +324,7 @@ public class ConsentController {
 			JSONObject jsonObjectConsent = new JSONObject();
 			jsonObjectConsent.put("consentId", resultSet.getInt("consent_id")); 
 			jsonObjectConsent.put("uid", resultSet.getInt("c.uid"));
+			jsonObjectConsent.put("rid", resultSet.getInt("rid"));
 			jsonObjectConsent.put("owner_firstname", resultSet.getString("firstname"));
 			jsonObjectConsent.put("owner_lastname", resultSet.getString("lastname"));
 			jsonObjectConsent.put("status", (resultSet.getInt("status")==1) ? true : false);
