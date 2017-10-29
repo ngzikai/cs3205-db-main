@@ -8,11 +8,18 @@ import java.io.*;
 import java.nio.file.Files;
 import java.sql.Timestamp;
 import entity.*;
+import entity.steps.*;
 
 import org.json.JSONObject;
+import com.google.gson.Gson;
 
 import utils.SystemConfig;
 import utils.GUID;
+
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
 
 public class SessionService{
@@ -176,19 +183,18 @@ public class SessionService{
       }
     } else if (type.equalsIgnoreCase("step")){
       // Check if it is an JSON object
+      Steps steps = null;
       try{
         BufferedReader br = new BufferedReader(new InputStreamReader(inputstream));
-        String jsonString = "";
-        String line = "";
-        while ((line=br.readLine()) != null){
-          jsonString += line;
-        }
-        inputstream = new ByteArrayInputStream(jsonString.getBytes());
-        JSONObject jsonObject = new JSONObject(jsonString);
+        steps = new Gson().fromJson(br, Steps.class);
+        JSONObject jsonObject = new JSONObject(steps);
       }catch(Exception e){
-        return Response.status(400).entity("Not a JSON file.").build();
+        e.printStackTrace();
+        return Response.status(400).entity("Not a valid Step JSON file.").build();
       }
-
+      if(steps == null){
+        return Response.status(500).entity("Steps object is not created.").build();
+      }
       Data data = new Data();
       data.setUid(userID);
       data.setContent(createdDate + "_" + GUID.BASE58() + ".json");
@@ -199,7 +205,7 @@ public class SessionService{
       data.setSubtype(type);
       int result = sc.insert(data);
       if (result == 1){
-        sc.writeToFile(inputstream, fileDirectory + "/" + data.getUid() + "/" + type +"/" + data.getContent());
+        sc.writeStepsToFile(steps, fileDirectory + "/" + data.getUid() + "/" + type +"/" + data.getContent());
         return Response.status(200).entity("successfully added step: " + data.getContent()).build();
       }
     }
