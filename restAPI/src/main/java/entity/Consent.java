@@ -26,28 +26,32 @@ public class Consent {
 	public int getConsentId() {
 		return consentId;
 	}
+	
 	public void setConsentId(int consentId) {
 		this.consentId = consentId;
 	}
+	
 	public int getUid() {
 		return uid;
 	}
+	
 	public void setUid(int uid) {
 		this.uid = uid;
 	}
+	
 	public int getRid() {
 		return rid;
 	}
+	
 	public void setRid(int rid) {
 		this.rid = rid;
 	}
+	
 	public boolean isStatus() {
 		return status;
 	}
+	
 	public void setStatus(boolean status) {
 		this.status = status;
 	}
-
-	
-
 }

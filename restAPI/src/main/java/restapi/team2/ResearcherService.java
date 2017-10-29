@@ -27,9 +27,9 @@ public class ResearcherService {
 	
 	@POST
 	@Path("/login")
-	public String Login(Researcher login) {
+	public Researcher Login(Researcher login) {
 		//returns hash if available, else false
-		return rc.login(login.getResearcher_username());
+		return rc.login(login);
 	}
 
 	@POST
@@ -60,6 +60,36 @@ public class ResearcherService {
 			return "Success";
 		}else {
 			return "Failed";
+		}
+	}
+	
+	@PUT
+	@Path("/registerOTP")
+	public String registerOTP(Researcher researcher) {
+		if(rc.registerOTP(researcher)) {
+			return "Success";
+		}else {
+			return "Failed";
+		}
+	}
+	
+	@PUT
+	@Path("/passwordChange")
+	public String changePassword(Researcher researcher) {
+		if(rc.changePassword(researcher)) {
+			return "Success";
+		}else {
+			return "Failed";
+		}
+	}
+	
+	@GET
+	@Path("/OTPenabled/{researcher_username}")
+	public String checkOTPEnabled(@PathParam("researcher_username") String researcher_username) {
+		if(rc.checkOTPEnabled(researcher_username)) {
+			return "true";
+		}else {
+			return "false";
 		}
 	}
 }
