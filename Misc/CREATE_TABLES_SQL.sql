@@ -163,6 +163,7 @@ CREATE TABLE csrf(
    csrf_token VARCHAR(255) NOT NULL,
    uid INT NOT NULL,
    expiry int NOT NULL,
+   description VARCHAR(255),
    PRIMARY KEY (csrf_token),
    FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE
 );

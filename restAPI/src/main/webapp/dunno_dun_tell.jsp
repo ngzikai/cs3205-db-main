@@ -44,7 +44,7 @@
 	- /api/team1/otl/delete/{token}<br><br>
     - /api/team1/csrf<br>
 	- /api/team1/csrf/{csrfToken}<br>
-	- /api/team1/csrf/create/{csrfToken}/{uid}/{expiry}<br>
+	- /api/team1/csrf/create/{csrfToken}/{uid}/{expiry}/{description}<br>
 	- /api/team1/csrf/delete/{csrfToken}<br><br>
 	- /api/team1/record/all/{uid}<br>
 	- /api/team1/record/get/{rid}<br>
