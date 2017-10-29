@@ -24,7 +24,7 @@ import utils.team3.*;
 
 import org.json.JSONObject;
 
-
+import java.security.SecureRandom;
 
 public class UserService {
 
@@ -45,7 +45,25 @@ public class UserService {
     // generate challenge token
     byte[] challenge = Challenge.generateChallenge();
     // store challenge token
-    if(Challenge.storeChallenge(challenge, username) >= 1){
+    if(Challenge.storeChallenge(challenge, username, "login") >= 1){
+      try{
+        return Response.status(201)
+                .entity(Base64.getEncoder().encodeToString(challenge)).build();
+      } catch(Exception e){
+        e.printStackTrace();
+        return Response.status(500).entity("Server unable to generate challenge.").build();
+      }
+    }
+    return Response.status(401).entity("Server unable to generate challenge for unknown user.").build();
+  }
+
+  @GET
+  @Path("/nfcchallenge")
+  public Response nfcChallenge(){
+    // generate challenge token
+    byte[] challenge = Challenge.generateChallenge();
+    // store challenge token
+    if(Challenge.storeChallenge(challenge, username, "nfc") >= 1){
       try{
         return Response.status(201)
                 .entity(Base64.getEncoder().encodeToString(challenge)).build();
@@ -59,8 +77,8 @@ public class UserService {
 
   @POST
   @Path("/login")
-  public Response login(@HeaderParam("X-NFC-Token")String nfcToken, @HeaderParam("Authorization")String authorizationHeader, @HeaderParam("debug")boolean debugMode){
-    // check number of login attempts
+  public Response login(@HeaderParam("X-NFC-Response")String nfcToken, @HeaderParam("Authorization")String authorizationHeader, @HeaderParam("debug")boolean debugMode){
+
     if (authorizationHeader == null) {
       return Response.status(Response.Status.BAD_REQUEST)
                      .entity("Missing Authorization Header.").build();
@@ -73,40 +91,48 @@ public class UserService {
     }
     if (nfcToken == null) {
       return Response.status(Response.Status.BAD_REQUEST)
-                     .entity("Missing NFC Token Header.").build();
+                     .entity("Missing NFC Response Header.").build();
+    }
+    // check number of login attempts
+    int lockAttempts = CommonUtil.getLockAttempts(username);
+    long lastAttempt = CommonUtil.getLastAttemptTime(username);
+    long currentTimeMillis = System.currentTimeMillis();
+    long totalWaitingTime = ((long)(Math.pow(2, lockAttempts)*1000)+lastAttempt);
+    long timeDifference = totalWaitingTime - currentTimeMillis;
+    if ( timeDifference > 0){
+      return Response.status(Response.Status.BAD_REQUEST)
+                     .entity("You still have to wait for "+ (timeDifference/1000) +" seconds before you can login again.").build();
+    }
+    if (lockAttempts > 10){
+      return Response.status(Response.Status.BAD_REQUEST)
+                     .entity("Your account has been locked out due to multiple failed login attempts. Please contact the administrator.").build();
     }
     byte[] response = Base64.getDecoder().decode(authHeader[1].getBytes());
-    byte[] challenge = Challenge.getUserChallenge(username);
+    byte[] challenge = Challenge.getUserChallenge(username, "login");
     byte[] passwordHash = Base64.getDecoder().decode(CommonUtil.getUserPasswordHash(username).getBytes());
     if(debugMode || response.length == 32 && Challenge.validateResponse(response, challenge, passwordHash)){
       // remove challenge
-      if(nfcToken.length() < 88){
-        return Response.status(401).entity("Invalid NFC Token.").build();
-      }
-      // Base64 strings
-      String userNFCHash = nfcToken.substring(0, 44);
-      String userTOTP = nfcToken.substring(44, nfcToken.length());
-      byte[] userNFCHashBytes = Base64.getDecoder().decode(userNFCHash.getBytes());
-      System.out.println("userNFCHashBytes length: "+userNFCHashBytes.length);
-      byte[] userDBNFC = Base64.getDecoder().decode(CommonUtil.getUserNFC(username).getBytes());
-      System.out.println("userDBNFC length: "+userDBNFC.length);
-      // hashes are not the same length
-      if(userDBNFC.length != userNFCHashBytes.length){
-        return Response.status(401).entity("Invalid NFC Token.").build();
-      }
-      byte[] actualNFCToken = CommonUtil.computeXOR(userDBNFC, userNFCHashBytes);
-      System.out.println("actualNFCToken: "+new String(actualNFCToken));
-      System.out.println("actualNFCToken Base64: "+Base64.getEncoder().encodeToString(actualNFCToken));
-      String totp = CommonUtil.generateTOTP(new String(actualNFCToken));
-      System.out.println("totp: "+totp);
-
-      if(totp.equals(userTOTP)){
-        return Response.status(200).entity(CommonUtil.getUserID(username)).build();
-      }
+      Challenge.deleteUserChallenge(username, "login");
+      return validateNFCResponse(nfcToken);
     }
 
     // increase lock attempt
+    lockAttempts++;
+    CommonUtil.setLockAttempt(username, lockAttempts, System.currentTimeMillis());
     return Response.status(401).entity("Invalid credentials").build();
+  }
+
+  @POST
+  @Path("/validatenfc")
+  public Response validateNFCResponse(@HeaderParam("X-NFC-Response")String nfcToken){
+    byte[] challenge = Challenge.getUserChallenge(username, "nfc");
+    byte[] nfcTokenByte = Base64.getDecoder().decode(nfcToken.getBytes());
+    byte[] nfcHash = Base64.getDecoder().decode(CommonUtil.getUserNFC(username).getBytes());
+    if(Challenge.validateNFCResponse(nfcTokenByte, challenge, nfcHash)){
+      Challenge.deleteUserChallenge(username, "nfc");
+      return Response.status(200).entity(CommonUtil.getUserID(username)).build();
+    }
+    return Response.status(401).entity("Invalid NFC Response.").build();
   }
 
   @GET
@@ -156,9 +182,9 @@ public class UserService {
   @Path("/populateNFC")
   public Response setNFC(){
     String nfcID = GUID.BASE58();
-    attribute = "nfcid";
     byte[] secret = new byte[32];
-    new SecureRandom.nextBytes(secret);
+    new SecureRandom().nextBytes(secret);
+    attribute = "nfcid";
     byte[] computedResult = new byte[32];
     try{
       MessageDigest digest = MessageDigest.getInstance("SHA-256");

@@ -99,7 +99,50 @@ public class CommonUtil{
     }catch(Exception e){
         e.printStackTrace();
     }
+    return 0;
+  }
+
+  public static int setLockAttempt(String username, int lockAttempts, long lastAttempt){
+    String sql = "SELECT * FROM CS3205.user WHERE username = ?";
+    try{
+        PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
+        ps.setString(1, username);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+          int userID = rs.getInt("uid");
+          sql = "INSERT INTO CS3205.user_metadata (uid, lockAttempts, lastAttempt) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE lockAttempts=VALUES(lockAttempts), lastAttempt=VALUES(lastAttempt)";
+          ps = MySQLAccess.connectDatabase().prepareStatement(sql);
+          ps.setInt(1, userID);
+          ps.setInt(2, lockAttempts);
+          ps.setLong(3, lastAttempt);
+          return ps.executeUpdate();
+        }
+    }catch(Exception e){
+        e.printStackTrace();
+    }
     return -1;
+  }
+
+  public static long getLastAttemptTime(String username){
+    String sql = "SELECT * FROM CS3205.user WHERE username = ?";
+    try{
+        PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
+        ps.setString(1, username);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+          int userID = rs.getInt("uid");
+          sql = "SELECT * FROM CS3205.user_metadata WHERE uid = ?";
+          ps = MySQLAccess.connectDatabase().prepareStatement(sql);
+          ps.setInt(1, userID);
+          rs = ps.executeQuery();
+          while(rs.next()){
+            return rs.getLong("lastAttempt");
+          }
+        }
+    }catch(Exception e){
+        e.printStackTrace();
+    }
+    return -1l;
   }
 
   public static byte[] computeXOR(byte[] b1, byte[] b2) {
