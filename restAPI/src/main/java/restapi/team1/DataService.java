@@ -82,7 +82,7 @@ public class DataService {
 		data = sc.get(rid);
 
 		if(data == null){
-			return Response.status(400).entity("Invalid request.").build();
+			return createResponse(new JSONObject(data));
 		}
 
 		JSONObject jObj = new JSONObject(data);
