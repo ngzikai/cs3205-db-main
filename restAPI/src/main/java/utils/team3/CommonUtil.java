@@ -37,6 +37,21 @@ public class CommonUtil{
     return "";
   }
 
+  public static String getUserID(String username){
+    String sql = "SELECT * FROM CS3205.user WHERE username = ?";
+      try{
+          PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
+          ps.setString(1, username);
+          ResultSet rs = ps.executeQuery();
+          while(rs.next()){
+              return rs.getString("uid");
+          }
+      }catch(Exception e){
+          e.printStackTrace();
+      }
+    return "";
+  }
+
   public static String getUserSalt(String username){
     String sql = "SELECT * FROM CS3205.user WHERE username = ?";
     try{

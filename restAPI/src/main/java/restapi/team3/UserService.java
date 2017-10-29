@@ -10,6 +10,7 @@ import utils.*;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 // Challenge Response Implementation imports
 import java.util.Base64;
@@ -100,12 +101,12 @@ public class UserService {
       System.out.println("totp: "+totp);
 
       if(totp.equals(userTOTP)){
-        return Response.status(201).entity("true").build();
+        return Response.status(200).entity(CommonUtil.getUserID(username)).build();
       }
     }
 
     // increase lock attempt
-    return Response.status(400).entity("Invalid credentials").build();
+    return Response.status(401).entity("Invalid credentials").build();
   }
 
   @GET
@@ -156,13 +157,12 @@ public class UserService {
   public Response setNFC(){
     String nfcID = GUID.BASE58();
     attribute = "nfcid";
-    byte [] nfcIDBytes = Arrays.copyOf(nfcID.getBytes(), 32);
+    byte[] secret = new byte[32];
+    new SecureRandom.nextBytes(secret);
     byte[] computedResult = new byte[32];
     try{
       MessageDigest digest = MessageDigest.getInstance("SHA-256");
-      byte[] bytes = digest.digest(nfcID.getBytes());
-      // computeXOR of h(token) and token
-      computedResult = CommonUtil.computeXOR(bytes, nfcIDBytes);
+      computedResult = digest.digest(secret);
     }catch(Exception e){
       e.printStackTrace();
       return Response.status(500).entity("Internal Server Error.").build();
@@ -171,7 +171,10 @@ public class UserService {
     Response response = setAttribute(Base64.getEncoder().encodeToString(computedResult));
     if(response.getStatus() == 201){
       // send back the original value to write to card
-      response = Response.status(201).entity(nfcID).build();
+      Encryption e = new Encryption();
+      e.setKey("testing");
+      byte[] cText = e.encrypt(Base64.getEncoder().encodeToString(secret).getBytes());
+      response = Response.status(201).entity(Base64.getEncoder().encodeToString(cText)).build();
     }
     return response;
   }
