@@ -64,8 +64,8 @@ public class ConsentController {
 		return jsonObject;
 	}
 	
-	// This method will take in a patient id and a status, and return the Consent object from the database;
-	public JSONObject getConsentWithUid(int patientid, boolean status) {
+	// This method will take in a therapist id and a status, and return the Consent object from the database;
+	public JSONObject getConsentWithUid(int therapistid, boolean status) {
 		JSONObject jsonObject = new JSONObject();
 		ArrayList<Consent> consentList = null;
 
@@ -73,7 +73,7 @@ public class ConsentController {
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
-			preparedStatement.setInt(1, patientid);
+			preparedStatement.setInt(1, therapistid);
 			preparedStatement.setInt(2, status ? 1 : 0);
 			consentList = resultSetToConsentList(MySQLAccess.readDataBasePS(preparedStatement));
 		} catch (Exception e) {
@@ -96,8 +96,8 @@ public class ConsentController {
 		return jsonObject;
 	}
 	
-	// This method will take in a patient id, and return the consent object from the database;
-	public JSONObject getConsentWithUid(int patientid) {
+	// This method will take in a therapistid id, and return the consent object from the database;
+	public JSONObject getConsentWithUid(int therapistid) {
 		JSONObject jsonObject = new JSONObject();
 		ArrayList<Consent> consentList = null;
 
@@ -105,7 +105,7 @@ public class ConsentController {
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
-			preparedStatement.setInt(1, patientid);
+			preparedStatement.setInt(1, therapistid);
 			consentList = resultSetToConsentList(MySQLAccess.readDataBasePS(preparedStatement));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -157,28 +157,24 @@ public class ConsentController {
 	// This method will take in a patient id and a therapist, and return the Consent object from the database;
 	public JSONObject getConsentWithUidAndTherapistId(int patientid, int therapistId) {
 		JSONObject jsonObject = new JSONObject();
-		ArrayList<Consent> consentList = null;
+		JSONArray consentArray = null;
 
-		String sql = "SELECT * FROM CS3205.consent c INNER JOIN CS3205.data d ON c.rid = d.rid WHERE d.uid = ? AND c.uid = ? ";
+		String sql = "SELECT * FROM CS3205.consent c INNER JOIN CS3205.data d ON c.rid = d.rid INNER JOIN CS3205.user u ON d.uid = u.uid "
+				+ "WHERE d.uid = ? AND c.uid = ? ";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setInt(1, patientid);
 			preparedStatement.setInt(2, therapistId);
-			consentList = resultSetToConsentList(MySQLAccess.readDataBasePS(preparedStatement));
+			consentArray = processUidWithTherapistIdList(MySQLAccess.readDataBasePS(preparedStatement));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
 		
-		if(consentList.size() < 1) {
+		if(consentArray == null) {
 			return null;
-		}
-		JSONArray consentArray = new JSONArray();
-		for(Consent consent : consentList) {
-			JSONObject jsonObjectTreatment = buildConsentObject(consent);
-			consentArray.put(jsonObjectTreatment);
 		}
 		MySQLAccess.close();
 		jsonObject.put("consents", consentArray);
@@ -310,6 +306,29 @@ public class ConsentController {
 			jsonObjectConsent.put("firstname", resultSet.getString("firstname"));
 			jsonObjectConsent.put("lastname", resultSet.getString("lastname"));
 			jsonObjectConsent.put("status", (resultSet.getInt("status")==1) ? true : false);
+			result.put(jsonObjectConsent);
+			empty = false;
+		}
+		MySQLAccess.close();
+		if(empty) {
+			return null;
+		}
+		return result;
+	}
+	
+	private JSONArray processUidWithTherapistIdList(ResultSet resultSet) throws SQLException {
+		// ResultSet is initially before the first data set
+		JSONArray result = new JSONArray();
+		boolean empty = true;
+		while (resultSet.next()) {
+			JSONObject jsonObjectConsent = new JSONObject();
+			jsonObjectConsent.put("consentId", resultSet.getInt("consent_id")); 
+			jsonObjectConsent.put("uid", resultSet.getInt("c.uid"));
+			jsonObjectConsent.put("owner_firstname", resultSet.getString("firstname"));
+			jsonObjectConsent.put("owner_lastname", resultSet.getString("lastname"));
+			jsonObjectConsent.put("status", (resultSet.getInt("status")==1) ? true : false);
+			jsonObjectConsent.put("title", resultSet.getString("title"));
+			jsonObjectConsent.put("modifieddate", resultSet.getTimestamp("modifieddate"));
 			result.put(jsonObjectConsent);
 			empty = false;
 		}
