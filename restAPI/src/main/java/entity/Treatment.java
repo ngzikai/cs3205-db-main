@@ -5,6 +5,8 @@ public class Treatment {
 	private int patientId;
 	private int therapistId;
 	private boolean status;
+	private boolean currentConsent;
+	private boolean futureConsent;
 	
 	public Treatment(int id, int patientId, int therapistId, boolean status) {
 		super();
@@ -13,12 +15,27 @@ public class Treatment {
 		this.therapistId = therapistId;
 		this.status = status;
 	}
-	
-	public Treatment(int patientId, int therapistId, boolean status) {
+ 
+
+	public Treatment(int patientId, int therapistId, boolean status, boolean currentConsent, boolean futureConsent) {
 		super();
 		this.patientId = patientId;
 		this.therapistId = therapistId;
 		this.status = status;
+		this.currentConsent = currentConsent;
+		this.futureConsent = futureConsent;
+	}
+
+
+	public Treatment(int id, int patientId, int therapistId, boolean status, boolean currentConsent,
+			boolean futureConsent) {
+		super();
+		this.id = id;
+		this.patientId = patientId;
+		this.therapistId = therapistId;
+		this.status = status;
+		this.currentConsent = currentConsent;
+		this.futureConsent = futureConsent;
 	}
 
 	public Treatment() {
@@ -55,6 +72,26 @@ public class Treatment {
 	
 	public void setTherapistId(int therapistId) {
 		this.therapistId = therapistId;
+	}
+
+	public boolean isCurrentConsent() {
+		return currentConsent;
+	}
+
+	public void setCurrentConsent(boolean currentConsent) {
+		this.currentConsent = currentConsent;
+	}
+
+	public boolean isFutureConsent() {
+		return futureConsent;
+	}
+
+	public void setFutureConsent(boolean futureConsent) {
+		this.futureConsent = futureConsent;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 	
 	

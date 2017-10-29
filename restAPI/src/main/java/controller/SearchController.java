@@ -8,19 +8,24 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.ws.rs.core.UriInfo;
+
 import entity.Search;
 import entity.SearchResult;
+import restapi.team2.HeartService;
 import utils.db.MySQLAccess;
 
 public class SearchController {
 	
-	public ArrayList<SearchResult> search(Search search){
+	public ArrayList<SearchResult> search(Search search, UriInfo uriInfo){
 		//System.out.println(search.toString());
 		
-		String sql = "SELECT user.dob, user.gender, user.zipcode1, user.zipcode2, user.bloodtype, `condition`.condition_name, data.content FROM user, diagnosis, `condition`, data "
+		String sql = "SELECT user.dob, user.sex, user.zipcode1, user.zipcode2, user.bloodtype, user.ethnicity, "
+				+ "user.nationality, user.drug_allergy, `condition`.condition_name, data.content, user.uid "
+				+ "FROM user, diagnosis, `condition`, data "
 				+ "WHERE user.uid = diagnosis.patient_id AND diagnosis.condition_id = `condition`.condition_id AND user.uid = data.uid AND data.title = 'GMSv5_2-Foot_R'";
 		
-		if(search.getAgeRange() == null && search.getBloodType() == null && search.getCid() == null && search.getGender() == null && search.getZipcode() == null) {
+		if(search.getAgeRange() == null && search.getBloodType() == null && search.getCid() == null && search.getGender() == null && search.getZipcode() == null & search.getDrug_allergy() == null & search.getEthnicity() == null & search.getNationality() == null) {
 			return null;
 		}
 		
@@ -35,10 +40,10 @@ public class SearchController {
 		}
 		
 		if(search.getGender() != null) {
-			sql += " AND (user.gender = '" + search.getGender().get(0) + "'";
+			sql += " AND (user.sex = '" + search.getGender().get(0) + "'";
 			
 			for(int i=1; i < search.getGender().size(); i++) {
-				sql += " OR user.gender = '" + search.getGender().get(i) + "'";
+				sql += " OR user.sex = '" + search.getGender().get(i) + "'";
 			}
 			
 			sql += ")";
@@ -89,6 +94,38 @@ public class SearchController {
 			sql += ")";
 		}
 		
+		if(search.getEthnicity() != null) {
+			sql += " AND (user.ethnicity = '" + search.getEthnicity().get(0) + "'";
+			
+			for (int i = 1; i < search.getEthnicity().size(); i++) {
+				sql += " OR user.ethnicity = '" + search.getEthnicity().get(i) + "'";
+			}
+			
+			sql += ")";
+			
+		}
+		
+		if (search.getNationality() != null){
+			sql += " AND (user.nationality = '" + search.getNationality().get(0) + "'";
+			
+			for (int i = 1; i < search.getNationality().size(); i++) {
+				sql += " OR user.nationality = '" + search.getNationality().get(i) + "'";
+			}
+			
+			sql += ")";
+
+		}
+		
+		if (search.getDrug_allergy() != null) {
+			sql += " AND (user.drug_allergy = '" + search.getDrug_allergy().get(0) + "'";
+			
+			for(int i = 1; i < search.getDrug_allergy().size(); i++) {
+				sql += " OR user.drug_allergy = '" + search.getDrug_allergy().get(i) + "'";
+			}
+			
+			sql += ")";
+		}
+		
 		Connection connect = MySQLAccess.connectDatabase();
 		ArrayList<SearchResult> results = new ArrayList<SearchResult>();
 		
@@ -106,8 +143,19 @@ public class SearchController {
 					result.setZipcode2(rs.getString(4));
 				}
 				result.setBloodtype(rs.getString(5));
-				result.setCondition_name(rs.getString(6));
-				result.setTimeseries_path(rs.getString(7));
+				result.setEthnicity(rs.getString(6));
+				result.setNationality(rs.getString(7));
+				result.setDrug_allergy(rs.getString(8));
+				result.setCondition_name(rs.getString(9));
+				result.setTimeseries_path(rs.getString(10));
+				
+				//HATEOAS STUFF COME BACK LATER
+				String uid = rs.getString(11);
+				
+				String heartUri = uriInfo.getBaseUriBuilder().path(HeartService.class).path(uid).build().toString();
+				//System.out.println(heartUri);
+				
+				result.setHeartrate_path(heartUri);
 				
 				results.add(result);
 			}

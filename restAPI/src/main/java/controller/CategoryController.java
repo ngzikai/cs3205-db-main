@@ -9,6 +9,7 @@ import entity.Category;
 import entity.CategoryRequest;
 import entity.CategoryStatus;
 import entity.Condition;
+import entity.Researcher;
 import entity.ResearcherCategory;
 import utils.db.MySQLAccess;
 
@@ -220,10 +221,13 @@ public class CategoryController {
 			return null;
 		}
 		
+		ResearcherController rc = new ResearcherController();
+		Researcher currResearcher = rc.getResearcher(researcher_id);
+		
 		if(categories.isEmpty()) {
 			return null;
 		} else {
-			researcher =  new ResearcherCategory(researcher_id, categories);
+			researcher =  new ResearcherCategory(currResearcher.getResearcher_id(),currResearcher.getResearcher_username(), currResearcher.getFirstname(), currResearcher.getLastname(), currResearcher.getQualification(), currResearcher.getQualification_name(), categories);
 		}
 		
 		MySQLAccess.close();

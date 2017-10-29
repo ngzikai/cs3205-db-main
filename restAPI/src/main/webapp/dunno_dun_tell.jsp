@@ -31,9 +31,11 @@
     - /api/team1/treatment/{treatment_id}<br>
     - /api/team1/treatment/patient/{patientid}/{status}<br>
     - /api/team1/treatment/therapist/{therapistid}/{status}<br>
-    - /api/team1/treatment/create/{patient}/{therapist}<br>
+    - /api/team1/treatment/create/{patient}/{therapist}/{currentConsent}/{futureConsent}<br>
     - /api/team1/treatment/update/{id}<br>
     - /api/team1/treatment/delete/{id}<br><br>
+    - /api/team1/treatment/update/consentsetting<br>
+    &emsp;- Accepts POST request JSON data <br>
     - /api/team1/otl<br>
 	- /api/team1/otl/{token}<br>
 	- /api/team1/otl/create/{token}/{uid}/{filepath}/{csrf}/{dataType}<br>
@@ -58,6 +60,7 @@
     - /api/team1/consent/user/{uid}/{status}<br>
     - /api/team1/consent/record/{rid}<br>
     - /api/team1/consent/owner/{ownerid}/{therapistid}<br><br>
+
 
     <br>
     <h3>Team 3 API:</h3>

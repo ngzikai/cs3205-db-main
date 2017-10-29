@@ -128,17 +128,20 @@ public class TreatmentController {
 		return jsonObject;
 	}
 
-	public JSONObject createTreatment(int patientId, int therapistId) {
-		Treatment treatment = new Treatment(patientId, therapistId, false);
+	public JSONObject createTreatment(int patientId, int therapistId, boolean currentConsent,
+			boolean futureConsent ) {
+		Treatment treatment = new Treatment(patientId, therapistId, false, currentConsent, futureConsent);
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
-		String sql = "INSERT INTO CS3205.treatment VALUES (default, ?, ?, ?)";
+		String sql = "INSERT INTO CS3205.treatment VALUES (default, ?, ?, ?, ?,?)";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setInt(1, treatment.getPatientId());
 			preparedStatement.setInt(2, treatment.getTherapistId());
 			preparedStatement.setInt(3, treatment.isStatus() ? 1: 0);
+			preparedStatement.setInt(4, treatment.isCurrentConsent() ? 1: 0);
+			preparedStatement.setInt(5, treatment.isFutureConsent() ? 1: 0);
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
 
 		} catch (Exception e) {
@@ -176,6 +179,30 @@ public class TreatmentController {
 		return jsonObject;
 	}
 	
+	public JSONObject updateConsentSetting(Treatment treatment) {
+		
+		//Treatment treatment = new Treatment(Integer.parseInt(uid), treatmentname, password, firstName, lastName, nric, LocalDate.parse(dob), gender, phone1,
+				//phone2, phone3,  address1, address2, address3, zipcode1, zipcode2, zipcode3, qualify, bloodtype, nfcid);
+		JSONObject jsonObject = new JSONObject();
+		int result = 0;
+		String sql = "UPDATE CS3205.treatment SET current_consent = ?, future_consent = ? WHERE treatment_id = ?";
+		try {
+			Connection connect = MySQLAccess.connectDatabase();
+			PreparedStatement preparedStatement = connect.prepareStatement(sql);
+			preparedStatement.setInt(1, treatment.isCurrentConsent() ? 1 : 0);
+			preparedStatement.setInt(2, treatment.isFutureConsent() ? 1 : 0);
+			preparedStatement.setInt(3, treatment.getId());
+			result = MySQLAccess.updateDataBasePS(preparedStatement);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		MySQLAccess.close();
+		System.out.println("Updated treatment: " + treatment.getId());
+		jsonObject.put("result", result);
+		return jsonObject;
+	}
 	
 	public JSONObject deleteTreatment(int id) {
 		int result = 0;
@@ -206,7 +233,9 @@ public class TreatmentController {
 			int patientId = resultSet.getInt("patient_id");
 			int therapistId = resultSet.getInt("therapist_id");
 			boolean status = (resultSet.getInt("status")==1) ? true : false;
-			Treatment treatment = new Treatment(id, patientId, therapistId, status);
+			boolean currentConsent = (resultSet.getInt("current_consent")==1) ? true : false;
+			boolean futureConsent = (resultSet.getInt("future_consent")==1) ? true : false;
+			Treatment treatment = new Treatment(id, patientId, therapistId, status, currentConsent, futureConsent);
 			treatmentList.add(treatment);
 		}
 		MySQLAccess.close();
@@ -214,12 +243,7 @@ public class TreatmentController {
 	}
 	
 	private JSONObject buildTreatmentObject(Treatment treatment) {
-		JSONObject jsonObjectTreatment = new JSONObject();
-		jsonObjectTreatment.put("id", treatment.getId()); 
-		jsonObjectTreatment.put("patientId", treatment.getPatientId());
-		jsonObjectTreatment.put("therapistId", treatment.getTherapistId());
-		jsonObjectTreatment.put("status", treatment.isStatus());
-
+		JSONObject jsonObjectTreatment = new JSONObject(treatment);
 		return jsonObjectTreatment;
 	}
 }
