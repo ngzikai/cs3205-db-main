@@ -169,14 +169,16 @@ CREATE TABLE csrf(
 
 CREATE TABLE user_challenge(
   uid INT NOT NULL,
+  type VARCHAR(5) NOT NULL,
   challengeString VARCHAR(300) NOT NULL,
-  PRIMARY KEY(uid),
+  PRIMARY KEY(uid, type),
   FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE user_metadata(
   uid INT NOT NULL,
   lockAttempts INT NOT NULL DEFAULT 0,
+  lastAttempt BIGINT NOT NULL,
   PRIMARY KEY(uid),
   FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE
 );

@@ -9,4 +9,4 @@ sys.properties
 settings.xml
 
 # MISC folder ignore
-Misc/*
+#Misc/*
