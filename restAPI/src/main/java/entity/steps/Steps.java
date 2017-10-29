@@ -1,8 +1,16 @@
-package entity;
+package entity.steps;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-public class Steps {
+@XmlRootElement(name = "Steps")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Steps implements Serializable {
     public static final String FIELD_UNIT = "unit";
     public static final String FIELD_MULTIPLIER = "multiplier";
     public static final String FIELD_NAME = "name";
@@ -26,9 +34,16 @@ public class Steps {
     private long sessionTime;
     private String x_axis;
     private String y_axis;
-    private Time time;
-    private ArrayList<Channel> channels;
+    private Steps_Time time;
+    private ArrayList<Steps_Channel> channels;
     private String displayUnit;
+
+    public Steps(){
+      this.type = TYPE;
+      this.x_axis = FIELD_TIME;
+      this.y_axis = FIELD_CHANNEL;
+      this.displayUnit = FIELD_DEFAULT_UNIT;
+    }
 
     public Steps(long timestamp, String name) {
         this.type = TYPE;
@@ -46,7 +61,7 @@ public class Steps {
     public void setDisplayUnit(String displayUnit){
       this.displayUnit = displayUnit;
     }
-    
+
     public String getType() {
         return type;
     }
@@ -59,11 +74,11 @@ public class Steps {
         this.sessionTime = timestamp;
     }
 
-    public ArrayList<Channel> getChannels() {
+    public ArrayList<Steps_Channel> getChannels() {
         return channels;
     }
 
-    public void setChannels(ArrayList<Channel> channels) {
+    public void setChannels(ArrayList<Steps_Channel> channels) {
         this.channels = channels;
     }
 
@@ -75,11 +90,11 @@ public class Steps {
         this.name = name;
     }
 
-    public Time getTime() {
+    public Steps_Time getTime() {
         return time;
     }
 
-    public void setTime(Time time) {
+    public void setTime(Steps_Time time) {
         this.time = time;
     }
 
@@ -91,46 +106,4 @@ public class Steps {
         return y_axis;
     }
 
-    public class Time {
-        private String unit = MILLISECONDS;
-        private String multiplier = MULTIPLIER;
-        private ArrayList<Long> values;
-
-        public String getUnit() {
-            return unit;
-        }
-
-        public String getMultiplier() {
-            return multiplier;
-        }
-
-        public ArrayList<Long> getValues() {
-            return values;
-        }
-
-        public void setValues(ArrayList<Long> values) {
-            this.values = values;
-        }
-    }
-
-    public class Channel {
-        private String name;
-        private ArrayList<Long> values;
-
-        public ArrayList<Long> getValues() {
-            return values;
-        }
-
-        public void setValues(ArrayList<Long> values) {
-            this.values = values;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
 }
