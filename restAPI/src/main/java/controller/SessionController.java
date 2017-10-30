@@ -63,7 +63,7 @@ public class SessionController {
   }
 
   public JSONObject getStepMetaInfo(Data step){
-    JSONObject jObj = new JSONObject(readFile(step.getAbsolutePath()));
+    JSONObject jObj = new JSONObject(readStepFile(step.getAbsolutePath()));
     jObj.remove("time");
     jObj.remove("channels");
     return jObj;
@@ -150,12 +150,21 @@ public class SessionController {
 
   public File getActualFile(String fileLocation){
     try{
-      Steps steps = readFile(fileLocation);
+      Steps steps = readStepFile(fileLocation);
       File temp = File.createTempFile("/tmp/"+GUID.BASE58(),".tmp");
-      FileWriter writer = new FileWriter(temp.getAbsolutePath());
-      Gson gson = new Gson();
-      gson.toJson(steps, writer);
-      writer.close();
+      if(steps != null){
+        FileWriter writer = new FileWriter(temp.getAbsolutePath());
+        Gson gson = new Gson();
+        gson.toJson(steps, writer);
+        writer.close();
+      } else {
+        byte[] content = decryptFile(fileLocation);
+        if(content != null){
+          FileOutputStream fos = new FileOutputStream(temp.getAbsolutePath());
+          fos.write(content);
+          fos.close();
+        }
+      }
       temp.deleteOnExit();
       return new File(temp.getAbsolutePath());
     }catch(Exception e){
@@ -164,7 +173,7 @@ public class SessionController {
     return null;
   }
 
-  public Steps readFile(String fileLocation){
+  public Steps readStepFile(String fileLocation){
     try{
       byte[] content = decryptFile(fileLocation);
       if( content != null ){
@@ -174,7 +183,6 @@ public class SessionController {
         steps = (Steps) in.readObject();
         return steps;
       }
-
     }catch(Exception e){
       e.printStackTrace();
     }
