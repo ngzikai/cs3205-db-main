@@ -70,7 +70,29 @@ public class SessionController {
   }
 
   public Data get(int rid){
-      return get(-1, rid);
+	    String sql = "SELECT * FROM CS3205.data WHERE rid = ?";
+	    Data data = null;
+	    try{
+	      PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
+	      ps.setInt(1, rid);
+	      ResultSet rs = ps.executeQuery();
+	      while(rs.next()){
+	        data = new Data();
+	        data.setRid(rs.getInt("rid"));
+	        data.setUid(rs.getInt("uid"));
+	        data.setType(rs.getString("type"));
+	        data.setSubtype(rs.getString("subtype"));
+	        data.setContent(rs.getString("content"));
+	        data.setTitle(rs.getString("title"));
+	        data.setCreationdate(rs.getTimestamp("creationdate"));
+	        data.setModifieddate(rs.getTimestamp("modifieddate"));
+	        break;
+	      }
+	      ps.close();
+	    } catch(Exception e) {
+	      e.printStackTrace();
+	    }
+	    return data;
   }
 
   public Data get(int userID, int rid){
