@@ -104,6 +104,7 @@ public class Cryptography {
 		buffer = buffer.get(iv).slice();
 		byte[] data = new byte[buffer.remaining()];
 		buffer.get(data);
+		encryptedData = null;
 		try {
 			cipher = Cipher.getInstance(AES_METHOD);
 		} catch (NoSuchAlgorithmException e) {
