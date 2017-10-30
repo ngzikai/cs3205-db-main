@@ -208,8 +208,8 @@ public class SessionController {
       Path path = Paths.get(fileLocation);
       //Uses Cryptography to decrypt the content
       Cryptography crypto = Cryptography.getInstance();
-      byte[] content = Files.readAllBytes(path);
-      content = crypto.decrypt(content);
+      byte[] encrypted = Files.readAllBytes(path);
+      byte[] content = crypto.decrypt(encrypted);
       return content;
     }catch(Exception e){
       e.printStackTrace();
