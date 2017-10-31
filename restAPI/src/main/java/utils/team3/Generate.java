@@ -1,5 +1,3 @@
-package utils.team3;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,7 +11,7 @@ import entity.steps.*;
 public class Generate {
     private static final long ZERO_LONG = 0L;
     private static final long ONE_LONG = 1L;
-    private static final int SESSION_UPPER_BOUND = 20000;
+    private static final int SESSION_UPPER_BOUND = 21;
     private static final int SESSION_LOWER_BOUND = 20;
     private static final long DIFF_UPPER_BOUND = 100000;
     private static final long DIFF_LOWER_BOUND = 10;
@@ -23,17 +21,18 @@ public class Generate {
     private static int noOFDataSessions = 10;
     private static String filePath = "/tmp/CS3205/";
 
-  //  public static void main(String[] args) {
-  //      ArrayList<Steps> stepsDataList = createStepsData(noOFDataSessions);
-  //      System.out.println(stepsDataList.size());
-  //      write(stepsDataList);
-   //
-  //      // for (int i = 0; i < stepsDataList.size(); i++) {
-  //      // String json = gson.toJson(stepsDataList.get(i));
-  //      //
-  //      // System.out.println(json);
-  //      // }
-  //  }
+    public static void main(String[] args) {
+        ArrayList<Steps> stepsDataList = createStepsData(noOFDataSessions);
+
+        write(stepsDataList);
+
+        for (int i = 0; i < stepsDataList.size(); i++) {
+            Gson gson = new Gson();
+            String json = gson.toJson(stepsDataList.get(i));
+
+            System.out.println(json);
+        }
+    }
 
     private static ArrayList<Steps> createStepsData(int noOFDataSessions) {
         ArrayList<Steps> stepsDataList = new ArrayList<Steps>();
@@ -49,19 +48,19 @@ public class Generate {
             time.setValues(values.get(POS_0));
             data.setTime(time);
 
-            ArrayList<Steps_Channel> channels = new ArrayList<Steps_Channel>();
+            Steps_Channels channels = new Steps_Channels();
 
-            Steps_Channel noOfSteps = new Steps_Channel();
+            ArrayList<Steps_Channel> channelsData = new ArrayList<Steps_Channel>();
+
             Steps_Channel timeDifference = new Steps_Channel();
 
-            noOfSteps.setName(Steps.FIELD_CHANNELS_TYPES[POS_0]);
-            timeDifference.setName(Steps.FIELD_CHANNELS_TYPES[POS_1]);
+            timeDifference.setName(Steps.FIELD_CHANNELS_TYPES[POS_0]);
 
-            noOfSteps.setValues(values.get(POS_1));
             timeDifference.setValues(values.get(POS_2));
 
-            channels.add(noOfSteps);
-            channels.add(timeDifference);
+            channelsData.add(timeDifference);
+
+            channels.setData(channelsData);
 
             data.setChannels(channels);
 
@@ -145,12 +144,11 @@ public class Generate {
             try {
                 FileWriter writer = new FileWriter(filePath + fileName + data.getTimestamp() + ext);
 
-//                System.out.println(data.getTime().getValues());
-//                System.out.println(data.getChannels().get(POS_1).getValues());
-//                System.out.println();
+                // System.out.println(data.getTime().getValues());
+                // System.out.println(data.getChannels().get(POS_1).getValues());
+                // System.out.println();
 
                 Gson gson = new Gson();
-                System.out.println(data.getDisplayUnit());
                 gson.toJson(data, writer);
 
                 writer.close();

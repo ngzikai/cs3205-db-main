@@ -1,5 +1,3 @@
-package utils.team3;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;

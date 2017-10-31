@@ -1,5 +1,3 @@
-package utils.team3;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -83,18 +81,20 @@ public class JSONUtil {
 
     private static void processMETA(Steps data, String fileFolder, String fileName) throws IOException {
         Steps_Time time = data.getTime();
-        ArrayList<Steps_Channel> channels = data.getChannels();
+        Steps_Channels channels = data.getChannels();
 
         time.setValues(null);
 
-        for (int i = 0; i < channels.size(); i++) {
-            channels.get(i).setValues(null);
+        for (int i = 0; i < channels.getData().size(); i++) {
+            channels.getData().get(i).setValues(null);
         }
 
         data.setTime(time);
         data.setChannels(channels);
 
         Gson gson = new Gson();
+
+        System.out.println(gson.toJson(data));
 
         FileWriter writer = new FileWriter(fileFolder + fileName);
         gson.toJson(data, writer);
@@ -103,7 +103,7 @@ public class JSONUtil {
     }
 
     private static void processCSV(Steps data, String fileFolder, String fileName) throws IOException {
-        ArrayList<Steps_Channel> channels = data.getChannels();
+        ArrayList<Steps_Channel> channels = data.getChannels().getData();
 
         ArrayList<Long> timeValues = data.getTime().getValues();
         ArrayList<ArrayList<Long>> channelsValues = new ArrayList<ArrayList<Long>>();
@@ -136,7 +136,7 @@ public class JSONUtil {
         // specify the correct common output location and common stored location
         // like jsonStoredLocation, outputPath
 
-        String[] files = JSONUtil.jsonToCSVAndMeta(jsonStoredLocation, "steps_1508916925874.json", outputPath);
+        String[] files = JSONUtil.jsonToCSVAndMeta(jsonStoredLocation, "steps_1509392698908.json", outputPath);
         System.out.println(Arrays.toString(files));
     }
 }
