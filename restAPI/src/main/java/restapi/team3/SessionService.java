@@ -11,7 +11,7 @@ import entity.*;
 import entity.steps.*;
 
 import org.json.JSONObject;
-import com.google.gson.Gson;
+import com.google.gson.*;
 
 import utils.SystemConfig;
 import utils.GUID;
@@ -185,9 +185,20 @@ public class SessionService{
       // Check if it is an JSON object
       Steps steps = null;
       try{
-        BufferedReader br = new BufferedReader(new InputStreamReader(inputstream));
-        steps = new Gson().fromJson(br, Steps.class);
-        JSONObject jsonObject = new JSONObject(steps);
+        // BufferedReader br = new BufferedReader(new InputStreamReader(inputstream));
+        // String jsonString = "";
+        // String line = "";
+        // while((line = br.readLine()) !=null){
+        //   jsonString+=line;
+        // }
+        // System.out.println("jsonString: "+jsonString);
+        // steps = new Gson().fromJson(jsonString, Steps.class);
+        // JSONObject jsonObject = new JSONObject(steps);
+        JsonObject json;
+            JsonElement element = new JsonParser().parse(
+            new InputStreamReader(inputstream));
+          json = element.getAsJsonObject();
+        steps = sc.JSONtoSteps(json);
       }catch(Exception e){
         e.printStackTrace();
         return Response.status(400).entity("Not a valid Step JSON file.").build();

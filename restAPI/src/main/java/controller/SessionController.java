@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.*;
 import org.json.JSONObject;
+import com.google.gson.*;
 import utils.db.*;
 import utils.SystemConfig;
 import java.io.ByteArrayOutputStream;
@@ -274,4 +275,51 @@ public class SessionController {
       e.printStackTrace();
     }
   }
+
+  public static final Steps JSONtoSteps(JsonObject jsonObject) {
+        try {
+            Steps data = new Steps(jsonObject.get(Steps.FIELD_RECORD).getAsLong(), jsonObject.get(Steps.FIELD_TITLE).getAsString());
+
+            JsonObject timeObj = jsonObject.getAsJsonObject(Steps.FIELD_TIME);
+            JsonArray jTimeArr = timeObj.getAsJsonArray(Steps.FIELD_VALUE);
+            Steps_Time time = new Steps_Time();
+            ArrayList<Long> timeValues = new ArrayList<Long>();
+
+            for (int i = 0; i < jTimeArr.size(); i++) {
+                timeValues.add(jTimeArr.get(i).getAsLong());
+            }
+            time.setValues(timeValues);
+
+            JsonObject channelsObj = jsonObject.getAsJsonObject(Steps.FIELD_CHANNELS);
+
+            JsonArray channelsArray = channelsObj.getAsJsonArray(Steps.FIELD_DATA);
+            ArrayList<Steps_Channel> channelData = new ArrayList<Steps_Channel>();
+
+            for (int i = 0; i < channelsArray.size(); i++) {
+                Steps_Channel channel = new Steps_Channel();
+                JsonObject channelObject = channelsArray.get(i).getAsJsonObject();
+
+                channel.setName(channelObject.get(Steps.FIELD_NAME).getAsString());
+
+                JsonArray channelArray = channelObject.getAsJsonArray(Steps.FIELD_VALUE);
+                ArrayList<Long> values = new ArrayList<Long>();
+                for (int j = 0; j < channelArray.size(); j++) {
+                    values.add(channelArray.get(j).getAsLong());
+                }
+
+                channel.setValues(values);
+                channelData.add(channel);
+            }
+
+            Steps_Channels channels = new Steps_Channels();
+            channels.setData(channelData);
+            data.setChannels(channels);
+
+            return data;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }
