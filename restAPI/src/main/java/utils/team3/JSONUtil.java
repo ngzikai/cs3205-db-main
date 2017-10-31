@@ -71,7 +71,7 @@ public class JSONUtil {
 
         try {
             processCSV(data, folderPath, fileNames[1]);
-            processMETA(data, folderPath, fileNames[0]);
+            // processMETA(data, folderPath, fileNames[0]);
         } catch (IOException e) {
             e.printStackTrace();
         }
