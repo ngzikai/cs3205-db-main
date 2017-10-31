@@ -235,6 +235,7 @@ public class ResearcherController {
 	}
 	
 	public boolean checkOTPEnabled(String researcher_username) {
+		
 		String sql = "SELECT otpsecret FROM researcher WHERE researcher_username = ?";
 		
 		Connection connect = MySQLAccess.connectDatabase();
@@ -247,8 +248,10 @@ public class ResearcherController {
 			
 			while(rs.next()) {
 				if(rs.getObject(1) == null) {
+					MySQLAccess.close();
 					return false;
 				}else {
+					MySQLAccess.close();
 					return true;
 				}
 			}
@@ -260,7 +263,7 @@ public class ResearcherController {
 		}
 		
 		MySQLAccess.close();
-		return true;
+		return false;
 	}
 	
 }
