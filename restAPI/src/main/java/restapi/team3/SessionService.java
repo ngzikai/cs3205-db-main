@@ -204,9 +204,9 @@ public class SessionService{
         e.printStackTrace();
         return Response.status(400).entity("Not a valid Step JSON file.").build();
       }
-      if(steps == null){
-        return Response.status(500).entity("Steps object is not created.").build();
-      }
+      // if(steps == null){
+      //   return Response.status(500).entity("Steps object is not created.").build();
+      // }
       Data data = new Data();
       data.setUid(userID);
       data.setContent(createdDate + "_" + GUID.BASE58() + ".json");
