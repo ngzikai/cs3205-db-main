@@ -23,7 +23,7 @@ import javax.xml.bind.Unmarshaller;
 import com.google.gson.Gson;
 import java.lang.reflect.Type;
 import com.google.gson.reflect.TypeToken;
-import utils.team3.CommonUtil;
+import utils.team3.*;
 import utils.GUID;
 
 public class SessionController {
@@ -64,7 +64,12 @@ public class SessionController {
   }
 
   public JSONObject getStepMetaInfo(Data step){
-    JSONObject jObj = new JSONObject(JSONUtil.processMETA(readStepFile(step.getAbsolutePath())));
+    JSONObject jObj = null;
+    try{
+     jObj = new JSONObject(JSONUtil.processMETA(readStepFile(step.getAbsolutePath())));  
+    }catch(Exception e){
+
+    }
     return jObj;
   }
 

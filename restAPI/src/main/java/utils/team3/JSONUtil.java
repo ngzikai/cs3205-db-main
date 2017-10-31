@@ -1,3 +1,5 @@
+package utils.team3;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -79,7 +81,7 @@ public class JSONUtil {
         return fileNames;
     }
 
-    private static String processMETA(Steps data) throws IOException {
+    public static String processMETA(Steps data) throws IOException {
         Steps_Time time = data.getTime();
         Steps_Channels channels = data.getChannels();
 
