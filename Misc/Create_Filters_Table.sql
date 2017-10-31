@@ -17,20 +17,20 @@ INSERT INTO filters(
     ,`value`
     ,isset
     ,type
-) 
+)
 VALUES
 (null, "Age Group", "ageRange", 0, 1),
 (null, "Blood Type", "bloodType", 0, 1),
 (null, "Diagnosis Terms", "conditions", 0, 1),
 (null, "Sex", "gender", 0, 1),
-(null, "Zipcode", "zipcode", 0, 1);
+(null, "Location", "zipcode", 0, 1);
 
 
 
 -- Insert search filter category values (type = 3)
 -- AGE GROUP
 SELECT id INTO @parent_id FROM filters WHERE `key` = "Age Group" AND type = 1;
-INSERT INTO filters(parent_id, `key`, `value`, isset, type) 
+INSERT INTO filters(parent_id, `key`, `value`, isset, type)
 VALUES
 (@parent_id, "Below 10", "0-10", 0, 3),
 (@parent_id, "11 - 20", "10-20", 0, 3),
@@ -45,7 +45,7 @@ VALUES
 
 -- BLOOD TYPE
 SELECT id INTO @parent_id FROM filters WHERE `key` = "Blood Type" AND type = 1;
-INSERT INTO filters(parent_id, `key`, `value`, isset, type) 
+INSERT INTO filters(parent_id, `key`, `value`, isset, type)
 VALUES
 (@parent_id, "AB+", "AB+", 0, 3),
 (@parent_id, "AB-", "AB-", 0, 3),
@@ -62,14 +62,14 @@ SELECT id INTO @parent_id FROM filters WHERE `key` = "Diagnosis Terms" AND type 
 
 -- GENDER
 SELECT id INTO @parent_id FROM filters WHERE `key` = "Sex" AND type = 1;
-INSERT INTO filters(parent_id, `key`, `value`, isset, type) 
+INSERT INTO filters(parent_id, `key`, `value`, isset, type)
 VALUES
 (@parent_id, "Male", "M", 0, 3),
 (@parent_id, "Female", "F", 0, 3);
 
 -- ZIPCODE
 SELECT id INTO @parent_id FROM filters WHERE `key` = "Zipcode" AND type = 1;
-INSERT INTO filters(parent_id, `key`, `value`, isset, type) 
+INSERT INTO filters(parent_id, `key`, `value`, isset, type)
 VALUES
 (@parent_id, "Raffles Place, Cecil, Marina, People's Park", "[1,2,3,4,5,6]", 0, 3),
 (@parent_id, "Anson, Tanjong Pagar", "[7,8]", 0, 3),
@@ -109,10 +109,13 @@ INSERT INTO filters(
     ,`value`
     ,isset
     ,type
-) 
+)
 VALUES
-(null, "Blood Type", "bloodtype", 0, 2),
-(null, "Condition(s)", "condition_name", 0, 2),
-(null, "Age Group", "ageRange", 0, 2),
-(null, "Sex", "gender", 0, 2),
-(null, "ZipCode", "zipcode1", 0, 2);
+(null, "Blood Type", "bloodtype", 1, 2),
+(null, "Condition(s)", "condition_name", 1, 2),
+(null, "Age Group", "ageRange", 1, 2),
+(null, "Sex", "gender", 1, 2),
+(null, "Location", "zipcode1", 1, 2),
+(null, "Drug Allergy", "drug_allergy", 1, 2),
+(null, "Ethnicity", "ethnicity", 1, 2),
+(null, "Nationality", "nationality", 1, 2);
