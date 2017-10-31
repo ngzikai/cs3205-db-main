@@ -64,9 +64,7 @@ public class SessionController {
   }
 
   public JSONObject getStepMetaInfo(Data step){
-    JSONObject jObj = new JSONObject(readStepFile(step.getAbsolutePath()));
-    jObj.remove("time");
-    jObj.remove("channels");
+    JSONObject jObj = new JSONObject(JSONUtil.processMETA(readStepFile(step.getAbsolutePath())));
     return jObj;
   }
 

@@ -79,7 +79,7 @@ public class JSONUtil {
         return fileNames;
     }
 
-    private static void processMETA(Steps data, String fileFolder, String fileName) throws IOException {
+    private static String processMETA(Steps data) throws IOException {
         Steps_Time time = data.getTime();
         Steps_Channels channels = data.getChannels();
 
@@ -95,10 +95,10 @@ public class JSONUtil {
         Gson gson = new Gson();
 
         System.out.println(gson.toJson(data));
-
-        FileWriter writer = new FileWriter(fileFolder + fileName);
-        gson.toJson(data, writer);
-        writer.close();
+        return gson.toJson(data);
+        // FileWriter writer = new FileWriter(fileFolder + fileName);
+        // gson.toJson(data, writer);
+        // writer.close();
 
     }
 
