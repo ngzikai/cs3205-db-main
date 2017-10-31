@@ -173,21 +173,13 @@ public class SessionController {
 
   public File getActualFile(String fileLocation){
     try{
-      Steps steps = readStepFile(fileLocation);
-      File temp = File.createTempFile("/tmp/"+GUID.BASE58(),".tmp");
-      if(steps != null){
-        FileWriter writer = new FileWriter(temp.getAbsolutePath());
-        Gson gson = new Gson();
-        gson.toJson(steps, writer);
-        writer.close();
-      } else {
         byte[] content = decryptFile(fileLocation);
+        File temp = File.createTempFile("/tmp/"+GUID.BASE58(),".tmp");
         if(content != null){
           FileOutputStream fos = new FileOutputStream(temp.getAbsolutePath());
           fos.write(content);
           fos.close();
         }
-      }
       temp.deleteOnExit();
       return new File(temp.getAbsolutePath());
     }catch(Exception e){
@@ -199,11 +191,13 @@ public class SessionController {
   public Steps readStepFile(String fileLocation){
     try{
       byte[] content = decryptFile(fileLocation);
+      ByteArrayInputStream bais = new ByteArrayInputStream(content);
+      InputStreamReader isr = new InputStreamReader(bais);
+      BufferedReader reader = null;
       if( content != null ){
-        Steps steps = null;
-        ByteArrayInputStream bis = new ByteArrayInputStream(content);
-        ObjectInput in = new ObjectInputStream(bis);
-        steps = (Steps) in.readObject();
+        reader = new BufferedReader(isr);
+        Gson gson = new GsonBuilder().create();
+        Steps steps = gson.fromJson(reader, Steps.class);
         return steps;
       }
     }catch(Exception e){
@@ -291,7 +285,7 @@ public class SessionController {
             time.setValues(timeValues);
 
             JsonObject channelsObj = jsonObject.getAsJsonObject(Steps.FIELD_CHANNELS);
-
+            System.out.println("channelsObj:"+channelsObj.toString());
             JsonArray channelsArray = channelsObj.getAsJsonArray(Steps.FIELD_DATA);
             ArrayList<Steps_Channel> channelData = new ArrayList<Steps_Channel>();
 

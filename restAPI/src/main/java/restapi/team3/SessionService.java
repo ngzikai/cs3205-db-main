@@ -194,11 +194,12 @@ public class SessionService{
         // System.out.println("jsonString: "+jsonString);
         // steps = new Gson().fromJson(jsonString, Steps.class);
         // JSONObject jsonObject = new JSONObject(steps);
-        JsonObject json;
-            JsonElement element = new JsonParser().parse(
-            new InputStreamReader(inputstream));
-          json = element.getAsJsonObject();
-        steps = sc.JSONtoSteps(json);
+        // JsonObject json;
+        //     JsonElement element = new JsonParser().parse(
+        //     new InputStreamReader(inputstream));
+        //   json = element.getAsJsonObject();
+        //   System.out.println(json.toString());
+        // steps = JSONUtil.jsonToStepsData(json);
       }catch(Exception e){
         e.printStackTrace();
         return Response.status(400).entity("Not a valid Step JSON file.").build();
@@ -216,7 +217,7 @@ public class SessionService{
       data.setSubtype(type);
       int result = sc.insert(data);
       if (result == 1){
-        sc.writeStepsToFile(steps, fileDirectory + "/" + data.getUid() + "/" + type +"/" + data.getContent());
+        sc.writeToFile(inputstream, fileDirectory + "/" + data.getUid() + "/" + type +"/" + data.getContent());
         return Response.status(200).entity("successfully added step: " + data.getContent()).build();
       }
     }
