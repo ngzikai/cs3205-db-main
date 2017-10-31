@@ -216,10 +216,16 @@ public class SessionService{
       data.setTitle(type + " of user: " + userID);
       data.setSubtype(type);
       int result = sc.insert(data);
+try{
+      // byte[] targetArray = new byte[inputstream.available()];
+      // inputstream.readAllBytes(targetArray);
+      // System.out.println("String at sessionservice"+(new String(targetArray)));
       if (result == 1){
         sc.writeToFile(inputstream, fileDirectory + "/" + data.getUid() + "/" + type +"/" + data.getContent());
         return Response.status(200).entity("successfully added step: " + data.getContent()).build();
-      }
+}      }catch(Exception e){
+  e.printStackTrace();
+}
     }
     return Response.status(400).entity("unknown type request").build();
   }

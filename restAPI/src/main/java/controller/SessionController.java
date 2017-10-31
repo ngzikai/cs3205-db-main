@@ -198,6 +198,7 @@ public class SessionController {
         reader = new BufferedReader(isr);
         Gson gson = new GsonBuilder().create();
         Steps steps = gson.fromJson(reader, Steps.class);
+        reader.close();
         return steps;
       }
     }catch(Exception e){
@@ -229,14 +230,20 @@ public class SessionController {
 
       // Encrypt the file
       Cryptography crypto = Cryptography.getInstance();
-      byte[] targetArray = new byte[uploadedInputStream.available()];
-      uploadedInputStream.read(targetArray);
-			byte[] encrypted = crypto.encrypt(targetArray);
+      byte[] targetArray = new byte[8192];
+      int bytesRead;
+      ByteArrayOutputStream output = new ByteArrayOutputStream();
+      while ((bytesRead = uploadedInputStream.read(targetArray)) != -1)
+      {
+          output.write(targetArray, 0, bytesRead);
+      }
+			byte[] encrypted = crypto.encrypt(output.toByteArray());
 
       // Write encrypted file to location
       FileOutputStream outputStream =  new FileOutputStream(file);
       outputStream.write(encrypted);
 			outputStream.close();
+        output.close();
   		// OutputStream out = new FileOutputStream(file);
   		// int read = 0;
   		// byte[] bytes = new byte[1024];

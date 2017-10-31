@@ -7,9 +7,9 @@ public class Steps_Time implements java.io.Serializable{
     private static final String MULTIPLIER = "0.001";
     private static final String SECONDS = "seconds";
 
-    private String displayUnit = SECONDS;
     private String unit = MILLISECONDS;
     private String multiplier = MULTIPLIER;
+    private String displayUnit = SECONDS;
     private ArrayList<Long> values;
 
     public String getUnit() {
