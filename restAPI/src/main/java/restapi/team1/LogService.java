@@ -1,5 +1,10 @@
 package restapi.team1;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.Timestamp;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -31,8 +36,10 @@ public class LogService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces("application/json")
-	public Response createLogPost(Log log) throws JSONException {
-		
+	public Response createLogPost(InputStream inputstream) throws JSONException {
+		JSONObject input = parseJSON(inputstream);
+		Log log = new Log(input.getString("api"), input.getString("classification"), new Timestamp(input.getLong("time"))
+				, input.getInt("uid"), input.getString("description"));
 		JSONObject jsonObject = new JSONObject();
 		jsonObject = lc.createLog(log);
 
@@ -52,4 +59,26 @@ public class LogService {
 				.header("ALLOW", "GET, POST, DELETE, PUT, OPTIONS")
 				.build();
 	}
+	
+	
+	/*
+	 * Parse inputstream and return as JSONObject
+	 */
+	private JSONObject parseJSON(InputStream inputstream) {
+		JSONObject jsonObject = null;
+		try {
+	       BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputstream, "UTF-8"));
+	       StringBuilder responseStrBuilder = new StringBuilder();
+
+	       String inputStr;
+	       while ((inputStr = streamReader.readLine()) != null)
+	           responseStrBuilder.append(inputStr);
+
+	       jsonObject = new JSONObject(responseStrBuilder.toString());
+		}catch(Exception e) {
+			
+		}
+		return jsonObject;
+	}
+
 }

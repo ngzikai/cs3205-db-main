@@ -14,6 +14,14 @@ public class Log {
 	private int uid;
 	private String description;
 	
+	public Log(String api, String classification, Timestamp time, int uid, String description) {
+		super();
+		this.api = api;
+		this.classification = classification;
+		this.time = time;
+		this.uid = uid;
+		this.description = description;
+	}
 	public Log(int logId, String api, String classification, Timestamp time, int uid, String description) {
 		super();
 		this.logId = logId;
