@@ -19,7 +19,7 @@ public class BasicAuthFilter implements ContainerRequestFilter {
 	
 	private static final String TEAM1_PREFIX = "dummy";
 	private static final String TEAM2_PREFIX = "team2";
-	private static final String TEAM3_PREFIX = "team2";
+	private static final String TEAM3_PREFIX = "team3";
 	
 	private static final String TEAM1_USER = "dummy";
 	private static final String TEAM1_PASSWORD = "IamADummy";
@@ -41,7 +41,10 @@ public class BasicAuthFilter implements ContainerRequestFilter {
 			if(requestContext.getUriInfo().getPath().contains(TEAM1_PREFIX)) {
 				Response unauthorized = Response.status(Response.Status.UNAUTHORIZED).entity("Did not fill in Basic Auth").build();
 				requestContext.abortWith(unauthorized);
-			}else {
+			} else if (requestContext.getUriInfo().getPath().contains(TEAM2_PREFIX)) {
+				Response unauthorized = Response.status(Response.Status.UNAUTHORIZED).entity("Did not fill in Basic Auth").build();
+				requestContext.abortWith(unauthorized);
+			} else {
 				return;
 			}
 
@@ -68,16 +71,15 @@ public class BasicAuthFilter implements ContainerRequestFilter {
 					requestContext.abortWith(unauthorized);
 				}
 				
-			} 
+			} else if(requestContext.getUriInfo().getPath().contains(TEAM2_PREFIX)) {
 			
-//			else if(requestContext.getUriInfo().getPath().contains(TEAM2_PREFIX)) {
-//			
-//				if(username.equals(TEAM2_USER) && password.equals(TEAM2_PASSWORD)) {
-//					return;
-//				}else {
-//					Response unauthorized = Response.status(Response.Status.UNAUTHORIZED).entity("NO PERMISSION TO ACCESS TEAM 2").build();
-//					requestContext.abortWith(unauthorized);
-//				}
+				if(username.equals(TEAM2_USER) && password.equals(TEAM2_PASSWORD)) {
+					return;
+				}else {
+					Response unauthorized = Response.status(Response.Status.UNAUTHORIZED).entity("NO PERMISSION TO ACCESS TEAM 2").build();
+					requestContext.abortWith(unauthorized);
+				}
+			}
 //				
 //			} else if (requestContext.getUriInfo().getPath().contains(TEAM3_PREFIX)) {
 //				
