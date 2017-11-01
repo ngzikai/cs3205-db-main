@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.sql.Timestamp;
 import entity.*;
 import entity.steps.*;
+import utils.team3.CommonUtil;
 
 import org.json.JSONObject;
 import com.google.gson.*;
@@ -26,28 +27,23 @@ public class SessionService{
 
   private String fileDirectory = SystemConfig.getConfig("storage_directory");
   private int userID;
+  SessionController sc = null;
   private String type = "";
 
   public SessionService(){
-
+     sc = new SessionController();
   }
 
   public SessionService(String type, int userID){
+    sc = new SessionController();
     this.userID = userID;
     this.type = type;
-  }
-
-  @GET
-  @Produces("application/json")
-  public Response get(){
-    return Response.status(200).entity("it is running").build();
   }
 
   @Path("/get/{uid}/meta")
   @GET
   @Produces("application/octet-stream")
   public Response getMeta(@PathParam("uid") int uid){
-    SessionController sc = getSessionController(type);
     Data data = null;
     data = sc.get(userID, uid);
 
@@ -71,7 +67,6 @@ public class SessionService{
   @GET
   @Produces("application/octet-stream")
   public Response get(@PathParam("uid") int uid){
-    SessionController sc = getSessionController(type);
     File file = null;
     Data data = null;
     data = sc.get(userID, uid);
@@ -98,7 +93,6 @@ public class SessionService{
   @Produces("application/json")
   public Response getAll(){
     // Authentication
-    SessionController sc = getSessionController(type);
     List<Data> dataList = null;
     dataList = sc.getAll(userID, type);
 
@@ -118,7 +112,6 @@ public class SessionService{
   @POST
   @Produces("application/octet-stream")
   public Response insert(@PathParam("timestamp") long createdDate, InputStream inputstream){
-    SessionController sc = getSessionController(type);
     if(type.equalsIgnoreCase("heart")){
       int heartrate = -1;
       try{
@@ -127,14 +120,11 @@ public class SessionService{
       }catch(Exception e){
         return Response.status(400).entity("heartrate is not an integer.").build();
       }
-      Data data = new Data();
-      data.setUid(userID);
-      data.setContent(String.valueOf(heartrate));
-      data.setCreationdate(new Timestamp(createdDate));
-      data.setModifieddate(new Timestamp(System.currentTimeMillis()));
-      data.setType("Heart Rate");
-      data.setTitle("Heartrate of user: " + userID);
-      data.setSubtype(type);
+      Data data = new Data(-1, userID, "Heart Rate", type,
+                           "Heartrate of user: " + userID,
+                           new Timestamp(createdDate),
+                           new Timestamp(System.currentTimeMillis()),
+                           String.valueOf(heartrate));
       int result = sc.insert(data);
       if(result == 1){
         return Response.status(200).entity("successfully added heartrate: " + data.getContent()).build();
@@ -160,22 +150,18 @@ public class SessionService{
           file.delete();
           return Response.status(400).entity("Not a correct file").build();
         }
-        out.close();
         inputstream = new FileInputStream(file);
+        out.close();
         file.delete();
       }catch(Exception e){
         e.printStackTrace();
         return Response.status(400).entity("Invalid file received.").build();
       }
-
-      Data data = new Data();
-      data.setUid(userID);
-      data.setContent(createdDate + "_" + GUID.BASE58() + mediaExt);
-      data.setCreationdate(new Timestamp(createdDate));
-      data.setModifieddate(new Timestamp(System.currentTimeMillis()));
-      data.setType("File");
-      data.setTitle(type + " of user: " + userID);
-      data.setSubtype(type);
+      Data data = new Data(-1, userID, "File", type,
+                           type + " of user: " + userID,
+                           new Timestamp(createdDate),
+                           new Timestamp(System.currentTimeMillis()),
+                           createdDate + "_" + GUID.BASE58() + mediaExt);
       int result = sc.insert(data);
       if (result == 1){
         sc.writeToFile(inputstream, fileDirectory + "/" + data.getUid() + "/" + type +"/" + data.getContent());
@@ -183,61 +169,30 @@ public class SessionService{
       }
     } else if (type.equalsIgnoreCase("step")){
       // Check if it is an JSON object
-      Steps steps = null;
       try{
-        // BufferedReader br = new BufferedReader(new InputStreamReader(inputstream));
-        // String jsonString = "";
-        // String line = "";
-        // while((line = br.readLine()) !=null){
-        //   jsonString+=line;
-        // }
-        // System.out.println("jsonString: "+jsonString);
-        // steps = new Gson().fromJson(jsonString, Steps.class);
-        // JSONObject jsonObject = new JSONObject(steps);
-        // JsonObject json;
-        //     JsonElement element = new JsonParser().parse(
-        //     new InputStreamReader(inputstream));
-        //   json = element.getAsJsonObject();
-        //   System.out.println(json.toString());
-        // steps = JSONUtil.jsonToStepsData(json);
+        byte[] content = CommonUtil.inputStreamToByteArray(inputstream);
+        BufferedReader reader = sc.prepareContentToJSON(content);
+        Gson gson = new GsonBuilder().create();
+        Steps steps = gson.fromJson(reader, Steps.class);
+        reader.close();
+        Data data = new Data(-1, userID, "Time Series", type,
+                             type + " of user: " + userID,
+                             new Timestamp(createdDate),
+                             new Timestamp(System.currentTimeMillis()),
+                             createdDate + "_" + GUID.BASE58() + ".json");
+        int result = sc.insert(data);
+        if (result == 1){
+          InputStream targetStream = new ByteArrayInputStream(content);
+          sc.writeToFile(targetStream, fileDirectory + "/" + data.getUid() + "/" + type +"/" + data.getContent());
+          return Response.status(200).entity("successfully added step: " + data.getContent()).build();
+        } else {
+          // delete the record in the database
+        }
       }catch(Exception e){
         e.printStackTrace();
         return Response.status(400).entity("Not a valid Step JSON file.").build();
       }
-      // if(steps == null){
-      //   return Response.status(500).entity("Steps object is not created.").build();
-      // }
-      Data data = new Data();
-      data.setUid(userID);
-      data.setContent(createdDate + "_" + GUID.BASE58() + ".json");
-      data.setCreationdate(new Timestamp(createdDate));
-      data.setModifieddate(new Timestamp(System.currentTimeMillis()));
-      data.setType("Time Series");
-      data.setTitle(type + " of user: " + userID);
-      data.setSubtype(type);
-      int result = sc.insert(data);
-try{
-      // byte[] targetArray = new byte[inputstream.available()];
-      // inputstream.readAllBytes(targetArray);
-      // System.out.println("String at sessionservice"+(new String(targetArray)));
-      if (result == 1){
-        sc.writeToFile(inputstream, fileDirectory + "/" + data.getUid() + "/" + type +"/" + data.getContent());
-        return Response.status(200).entity("successfully added step: " + data.getContent()).build();
-}      }catch(Exception e){
-  e.printStackTrace();
-}
     }
     return Response.status(400).entity("unknown type request").build();
-  }
-
-  private SessionController getSessionController(String type){
-    if(type.equalsIgnoreCase("image") || type.equalsIgnoreCase("video")){
-      return new SessionController("file");
-    } else if(type.equalsIgnoreCase("heart")){
-      return new SessionController("heartrate");
-    } else if(type.equalsIgnoreCase("step")){
-      return new SessionController("step");
-    }
-    return null;
   }
 }

@@ -1,34 +1,33 @@
 package restapi.team3;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
-import utils.db.*;
-
-import java.sql.*;
-import utils.db.*;
-import utils.*;
-
+// Java imports
+import java.util.Base64;
+import java.util.Arrays;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-// Challenge Response Implementation imports
-import java.util.Base64;
-import java.util.Arrays;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+// Jersey imports
+import javax.ws.rs.Path;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
+import javax.ws.rs.core.Response;
+
+// Utils imports
+import utils.GUID;
+import utils.Cryptography;
+import utils.db.*;
 import utils.team3.*;
 
-import org.json.JSONObject;
-
-import java.security.SecureRandom;
-
+// Data objects and controllers
 import controller.UserDataController;
 import entity.UserChallenge;
 import entity.UserMetaData;
+import org.json.JSONObject;
 
 public class UserService {
 
@@ -37,64 +36,45 @@ public class UserService {
   private UserDataController udc;
 
   public UserService(){
-    udc = new UserDataController();
+    udc = new UserDataController(user);
   }
 
   public UserService(JSONObject user){
     this.user = user;
-    udc = new UserDataController();
+    udc = new UserDataController(user);
   }
 
   @GET
   @Path("/challenge")
   public Response challenge(){
-    return issueChallenge("login");
+    return udc.issueChallenge("login");
   }
 
   @GET
   @Path("/nfcchallenge")
   public Response nfcChallenge(){
-    return issueChallenge("nfc");
-  }
-
-  private Response issueChallenge(String type){
-    // generate challenge token
-    byte[] challenge = Challenge.generateChallenge();
-    // store challenge token
-    if(Challenge.storeChallenge(challenge, user.getString("username"), type) >= 1){
-      try{
-        return Response.status(201)
-               .entity(Base64.getEncoder()
-               .encodeToString(challenge)).build();
-      } catch(Exception e){
-        e.printStackTrace();
-        return Response.status(500).entity("Server unable to generate challenge.").build();
-      }
-    }
-    return Response.status(401).entity("Server unable to generate challenge for unknown user.").build();
+    return udc.issueChallenge("nfc");
   }
 
   @POST
   @Path("/login")
   public Response login(@HeaderParam("X-NFC-Response")String nfcToken, @HeaderParam("X-Password-Response")String authorizationHeader, @HeaderParam("debug")boolean debugMode){
-
-    if (authorizationHeader == null) {
-      return Response.status(Response.Status.BAD_REQUEST)
-                     .entity("Missing Authorization Header.").build();
-    }
     // read challenge token
-    String[] authHeader = authorizationHeader.split(" ");
+    String[] authHeader = (authorizationHeader != null) ? authorizationHeader.split(" ") : new String[1];
     if(authHeader.length < 2){
       return Response.status(Response.Status.BAD_REQUEST)
                      .entity("Invalid Authorization Header.").build();
     }
+
     if (nfcToken == null) {
       return Response.status(Response.Status.BAD_REQUEST)
                      .entity("Missing NFC Response Header.").build();
     }
+
     // check number of login attempts
-    int lockAttempts = CommonUtil.getLockAttempts(user.getString("username"));
-    long lastAttempt = CommonUtil.getLastAttemptTime(user.getString("username"));
+    UserMetaData umd = udc.getMetaData(user.getString("username"));
+    int lockAttempts = umd.getLockAttempts();
+    long lastAttempt = umd.getLastAttempt();
     long currentTimeMillis = System.currentTimeMillis();
     long totalWaitingTime = ((long)(Math.pow(2, lockAttempts)*1000)+lastAttempt);
     long timeDifference = totalWaitingTime - currentTimeMillis;
@@ -110,49 +90,62 @@ public class UserService {
                      .entity("Your account has been locked out due to multiple failed login attempts. Please contact the administrator.").build();
     }
     byte[] response = Base64.getDecoder().decode(authHeader[1].getBytes());
+    System.out.println("Response: "+ authHeader[1]);
     UserChallenge uc = udc.getChallengeData(user.getString("username"), "login");
     if (uc == null){
       return Response.status(401).entity("No challenge found for user.").build();
     }
     byte[] challenge = Base64.getDecoder().decode(uc.getChallengeString().getBytes());
+    System.out.println("Challenge: " + Base64.getEncoder().encodeToString(challenge));
     byte[] passwordHash = Base64.getDecoder().decode(user.getString("password2").getBytes());
-    System.out.println("Response: "+ Base64.getEncoder().encodeToString(response));
-    System.out.println("Challenge: " );
-    System.out.println(" "+ Base64.getEncoder().encodeToString(challenge));
     System.out.println("PasswordHash: "+ Base64.getEncoder().encodeToString(passwordHash));
-    if(debugMode || response.length == 32 && Challenge.validateResponse(response, challenge, passwordHash)){
-      // remove challenge
-      Challenge.deleteUserChallenge(user.getString("username"), "login");
+
+    // remove challenge as it has been used
+    udc.deleteUserChallenge(user.getString("username"), "login");
+
+    if(debugMode || response.length == 32 && udc.validateResponse(response, challenge, passwordHash)){
       return validateNFCResponse(nfcToken);
     }
-
-    // increase lock attempt
+    // User failed to login, increase lock attempt
     lockAttempts++;
-    CommonUtil.setLockAttempt(user.getString("username"), lockAttempts, System.currentTimeMillis());
+    udc.setLockAttempt(user.getString("username"), lockAttempts, System.currentTimeMillis());
     return Response.status(401).entity("Invalid credentials").build();
   }
 
+  /**
+   * Verify the NFC challenge response of the user
+   */
   @POST
   @Path("/validatenfc")
   public Response validateNFCResponse(@HeaderParam("X-NFC-Response")String nfcToken){
+    // Obtain the NFC challenge in the database
     UserChallenge uc = udc.getChallengeData(user.getString("username"), "nfc");
     if (uc == null){
       return Response.status(401).entity("No NFC challenge found for user.").build();
     }
+    // Base64 decode
     byte[] challenge = Base64.getDecoder().decode(uc.getChallengeString().getBytes());
     System.out.println(Base64.getEncoder().encodeToString(challenge));
+    // Base64 decode user's nfc response
     byte[] nfcTokenByte = Base64.getDecoder().decode(nfcToken.getBytes());
     System.out.println("NFCTOKEN: "+nfcToken);
+    // Base64 decode the hash(secret) nfcid of the database
     byte[] nfcHash = Base64.getDecoder().decode(user.getString("nfcid").getBytes());
     System.out.println(user.getString("nfcid"));
 
-    if(Challenge.validateNFCResponse(nfcTokenByte, challenge, nfcHash)){
-      Challenge.deleteUserChallenge(user.getString("username"), "nfc");
+    // remove challenge as it has been used
+    udc.deleteUserChallenge(user.getString("username"), "nfc");
+
+    // Validate the parameters
+    if(udc.validateNFCResponse(nfcTokenByte, challenge, nfcHash)){
       return Response.status(200).entity(user.getInt("uid")).build();
     }
     return Response.status(401).entity("Invalid NFC Response.").build();
   }
 
+  /**
+   * Retrieve the salt for the user
+   */
   @GET
   public Response getSalt(){
     String salt = user.getString("salt2");
@@ -162,11 +155,14 @@ public class UserService {
     return Response.status(200).entity(salt).build();
   }
 
+  /**
+   * Populate the default password and new salt for the user
+   */
   @GET
   @Path("/passwordandsalt")
-  public Response manuallySet(){
+  public Response setPasswordAndSalt(){
     String salt = GUID.BASE58(), password = "";
-    Response response = Response.status(401).entity("Setingg password and salt failed.").build();
+    Response response = Response.status(401).entity("Setting password and salt failed.").build();
     try{
       MessageDigest digest = MessageDigest.getInstance("SHA-256");
       byte[] bytes = digest.digest((password+salt).getBytes());
@@ -184,50 +180,36 @@ public class UserService {
     return response;
   }
 
+  /**
+   * Generate a new NFC secret for the user
+   */
   @GET
   @Path("/populateNFC")
   public Response setNFC(){
-    String nfcID = GUID.BASE58();
+    // Generate new secret
     byte[] secret = new byte[32];
     new SecureRandom().nextBytes(secret);
-    attribute = "nfcid";
+    System.out.println("NFC Secret: " + Base64.getEncoder().encodeToString(secret));
+    // Prepare digest space
     byte[] computedResult = new byte[32];
     try{
+      // Generate Hash of secret
       MessageDigest digest = MessageDigest.getInstance("SHA-256");
       computedResult = digest.digest(secret);
     }catch(Exception e){
       e.printStackTrace();
-      return Response.status(500).entity("Internal Server Error.").build();
+      return Response.status(500).entity("Internal Server Error while computing hash of nfc.").build();
     }
-    System.out.println(Base64.getEncoder().encodeToString(computedResult)+" comptuedResult");
-    Response response = setAttribute(Base64.getEncoder().encodeToString(computedResult));
-    if(response.getStatus() == 201){
+    System.out.println("Base64 encoded digest: " + Base64.getEncoder().encodeToString(computedResult));
+    // Store to database
+    int storeResult = udc.setNFCID(Base64.getEncoder().encodeToString(computedResult));
+    if(storeResult == 1){
       // send back the original value to write to card
       Cryptography crypto = Cryptography.getInstance();
-      byte[] cText = crypto.encrypt(Base64.getEncoder().encodeToString(secret).getBytes());
-      response = Response.status(201).entity(Base64.getEncoder().encodeToString(cText)).build();
+      byte[] cText = crypto.encrypt(secret);
+      return Response.status(201).entity(Base64.getEncoder().encodeToString(cText)).build();
     }
-    return response;
-  }
 
-  @POST
-  public Response setAttribute(String value){
-    // WARNING: DANGEROUS WAY OF SETTING PREPARESTATEMENT
-    // REMOVE IT
-    String sql = "UPDATE CS3205.user SET " + attribute + " = ? WHERE username = ?";
-    try{
-      PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
-      ps.setString(1, value);
-      ps.setString(2, user.getString("username"));
-      int result = ps.executeUpdate();
-      System.out.println("result: "+result);
-      if(result == 1){
-        return Response.status(201).entity(value).build();
-      }
-    }catch(Exception e){
-      e.printStackTrace();
-      return Response.status(500).entity("Server internal error, probably failed SQL.").build();
-    }
-    return Response.status(401).entity("Probably unknown attribute. Check attribute and body").build();
+    return Response.status(500).entity("Server unable to generate NFC secret").build();
   }
 }

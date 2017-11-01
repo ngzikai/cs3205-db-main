@@ -1,16 +1,18 @@
 package restapi.team3;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
-import javax.annotation.security.*;
-import controller.*;
-import java.util.*;
-import java.io.*;
-import java.nio.file.Files;
-import entity.*;
+// Java imports
+import javax.ws.rs.Path;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
+import javax.annotation.security.RolesAllowed;
+import controller.UserController;
 
+// Utils imports
 import utils.SystemConfig;
 import utils.exceptions.WebException;
+
+// Data objects
 import org.json.JSONObject;
 
 @Path("/team3")

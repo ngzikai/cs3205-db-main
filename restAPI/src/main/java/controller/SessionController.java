@@ -1,45 +1,44 @@
 package controller;
 
-import entity.*;
-import entity.steps.*;
-import java.io.*;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.*;
-import org.json.JSONObject;
-import com.google.gson.*;
-import utils.db.*;
+// Utils imports
+import utils.GUID;
 import utils.SystemConfig;
-import java.io.ByteArrayOutputStream;
+import utils.Cryptography;
+import utils.db.*;
+import utils.team3.*;
+
+// Java imports
+import java.io.File;
+import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.io.ByteArrayInputStream;
-import java.io.ObjectInput;
-import java.nio.file.Files;
+import java.util.List;
+import java.util.ArrayList;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import utils.Cryptography;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
+import java.nio.file.Files;
+import java.sql.ResultSet;
+import java.sql.PreparedStatement;
+
+// Data objects
+import org.json.JSONObject;
 import com.google.gson.Gson;
-import java.lang.reflect.Type;
-import com.google.gson.reflect.TypeToken;
-import utils.team3.*;
-import utils.GUID;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.GsonBuilder;
+import entity.Data;
+import entity.steps.*;
+
 
 public class SessionController {
   private String fileDirectory = SystemConfig.getConfig("storage_directory");
-  protected String tableName = "";
 
   public SessionController(){
-
   }
 
-  public SessionController(String tableName){
-    this.tableName = tableName;
-  }
-
-  public SessionController(String tableName, String fileDirectory){
-    this.tableName = tableName;
+  public SessionController(String fileDirectory){
     this.fileDirectory = fileDirectory;
   }
 
@@ -66,7 +65,7 @@ public class SessionController {
   public JSONObject getStepMetaInfo(Data step){
     JSONObject jObj = null;
     try{
-     jObj = new JSONObject(JSONUtil.processMETA(readStepFile(step.getAbsolutePath())));  
+     jObj = new JSONObject(JSONUtil.processMETA(readStepFile(step.getAbsolutePath())));
     }catch(Exception e){
 
     }
@@ -192,22 +191,19 @@ public class SessionController {
   }
 
   public Steps readStepFile(String fileLocation){
+    Steps steps = null;
     try{
       byte[] content = decryptFile(fileLocation);
-      ByteArrayInputStream bais = new ByteArrayInputStream(content);
-      InputStreamReader isr = new InputStreamReader(bais);
-      BufferedReader reader = null;
+      BufferedReader reader = prepareContentToJSON(content);
       if( content != null ){
-        reader = new BufferedReader(isr);
         Gson gson = new GsonBuilder().create();
-        Steps steps = gson.fromJson(reader, Steps.class);
-        reader.close();
-        return steps;
+        steps = gson.fromJson(reader, Steps.class);
       }
+      reader.close();
     }catch(Exception e){
       e.printStackTrace();
     }
-    return null;
+    return steps;
   }
 
   public byte[] decryptFile(String fileLocation){
@@ -224,6 +220,12 @@ public class SessionController {
     return null;
   }
 
+  public BufferedReader prepareContentToJSON(byte[] content){
+    ByteArrayInputStream bais = new ByteArrayInputStream(content);
+    InputStreamReader isr = new InputStreamReader(bais);
+    return new BufferedReader(isr);
+  }
+
   // save uploaded file to new location
   public void writeToFile(InputStream uploadedInputStream, String uploadedFileLocation) {
   	try {
@@ -233,51 +235,16 @@ public class SessionController {
 
       // Encrypt the file
       Cryptography crypto = Cryptography.getInstance();
-      byte[] targetArray = new byte[8192];
-      int bytesRead;
-      ByteArrayOutputStream output = new ByteArrayOutputStream();
-      while ((bytesRead = uploadedInputStream.read(targetArray)) != -1)
-      {
-          output.write(targetArray, 0, bytesRead);
-      }
-			byte[] encrypted = crypto.encrypt(output.toByteArray());
+      byte[] content = CommonUtil.inputStreamToByteArray(uploadedInputStream);
+			byte[] encrypted = crypto.encrypt(content);
 
       // Write encrypted file to location
       FileOutputStream outputStream =  new FileOutputStream(file);
       outputStream.write(encrypted);
 			outputStream.close();
-        output.close();
-  		// OutputStream out = new FileOutputStream(file);
-  		// int read = 0;
-  		// byte[] bytes = new byte[1024];
-      //
-  		// out = new FileOutputStream(new File(uploadedFileLocation));
-  		// while ((read = uploadedInputStream.read(bytes)) != -1) {
-  		// 	out.write(bytes, 0, read);
-  		// }
-  		// out.flush();
-  		// out.close();
-  	} catch (IOException e) {
-
+  	} catch (Exception e) {
   		e.printStackTrace();
   	}
-  }
-  public void writeStepsToFile(Steps steps, String uploadedFileLocation){
-    try {
-      File file = new File(uploadedFileLocation);
-      file.getParentFile().mkdirs();
-      byte[] bytes = CommonUtil.toByteArray(steps);
-      // Encrypt the file
-      Cryptography crypto = Cryptography.getInstance();
-      byte[] encrypted = crypto.encrypt(bytes);
-
-      // Write encrypted file to location
-      FileOutputStream outputStream =  new FileOutputStream(file);
-      outputStream.write(encrypted);
-      outputStream.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
   public static final Steps JSONtoSteps(JsonObject jsonObject) {

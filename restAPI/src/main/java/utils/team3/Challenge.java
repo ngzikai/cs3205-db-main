@@ -1,12 +1,16 @@
 package utils.team3;
 
+// Java imports
 import java.util.Random;
 import java.util.Arrays;
+import java.util.Base64;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.*;
+
+// Database access
 import utils.db.MySQLAccess;
-import java.util.*;
 
 public class Challenge{
 
