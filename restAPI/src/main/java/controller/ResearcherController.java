@@ -267,7 +267,7 @@ public class ResearcherController {
 	}
 	
 	public boolean deleteOTP(String researcher_username) {
-		String sql  = "UPDATE researcher SET otpsecret = null WHERE researcher_username = '?'";
+		String sql  = "UPDATE researcher SET otpsecret = null WHERE researcher_username = ?";
 		
 		Connection connect = MySQLAccess.connectDatabase();
 		
@@ -278,6 +278,7 @@ public class ResearcherController {
 			MySQLAccess.updateDataBasePS(ps);
 			
 		} catch(Exception e) {
+			e.printStackTrace();
 			MySQLAccess.close();
 			return false;
 		}
