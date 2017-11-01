@@ -22,23 +22,23 @@ public class Challenge{
 
   public static boolean validateResponse(byte[] response, byte[] challenge, byte[] passwordHash){
     try{
+      // response = h(h(h(pwd+salt)) XOR c) XOR h(pwd+salt)
       System.out.println("Response: "+Base64.getEncoder().encodeToString(response));
-      // h(h(h(pwd)) + c) + h(pwd) = response
-      //XOR hash of password hash with challenge
-      byte[] expectedResult = computeXOR(generateHash(passwordHash), challenge); // h(h(pwd)) + c
-      System.out.println(" h(h(pwd)) + c: "+Base64.getEncoder().encodeToString(expectedResult));
-      //hash the result
-      expectedResult = generateHash(expectedResult); // h(h(h(pwd)) + c)
-      System.out.println(" h(h(h(pwd)) + c): "+Base64.getEncoder().encodeToString(expectedResult));
-      System.out.println(" h(h(h(pwd)) + c) + h(pwd)"+Base64.getEncoder().encodeToString(computeXOR(expectedResult, passwordHash)));
-      //XOR result with challenge response
-      expectedResult = computeXOR(expectedResult, response); // h(h(h(pwd)) + c) + h(h(h(pwd)) + c) + h(pwd) = h(pwd)
-      System.out.println("h(pwd): "+Base64.getEncoder().encodeToString(expectedResult));
-      //hash the result
-      expectedResult = generateHash(expectedResult); // h(h(pwd))
-      System.out.println("h(h(pwd)): "+Base64.getEncoder().encodeToString(expectedResult));
-      System.out.println("h(h(pwd)) actual: "+Base64.getEncoder().encodeToString(generateHash(passwordHash)));
-      return Arrays.equals(expectedResult, generateHash(passwordHash));
+      System.out.println("Challenge: "+Base64.getEncoder().encodeToString(challenge));
+      // h(h(pwd+salt)) XOR c
+      byte[] expectedResult = computeXOR(passwordHash, challenge);
+      System.out.println("h(h(pwd+salt)) XOR c: "+Base64.getEncoder().encodeToString(expectedResult));
+      // h(h(h(pwd+salt)) XOR c)
+      expectedResult = generateHash(expectedResult);
+      System.out.println(" h(h(pwd+salt)) XOR c: "+Base64.getEncoder().encodeToString(expectedResult));
+      // h(h(h(pwd+salt)) XOR c) XOR  h(h(h(pwd+salt)) XOR c) XOR h(pwd+salt) = h(pwd+salt)
+      expectedResult = computeXOR(expectedResult, response);
+      System.out.println("h(h(h(pwd+salt)) XOR c) XOR  h(h(h(pwd+salt)) XOR c) XOR h(pwd+salt): "+Base64.getEncoder().encodeToString(expectedResult));
+       // h(h(pwd+salt))
+      expectedResult = generateHash(expectedResult);
+      System.out.println("h(h(pwd+salt)): " + Base64.getEncoder().encodeToString(expectedResult));
+      System.out.println("h(h(pwd+salt)) actual: " + Base64.getEncoder().encodeToString(passwordHash));
+      return Arrays.equals(expectedResult, passwordHash);
     } catch(Exception e){
       e.printStackTrace();
     }
@@ -49,9 +49,7 @@ public class Challenge{
     try{
       System.out.println("NFC Response: "+Base64.getEncoder().encodeToString(response));
       System.out.println("NFC challenge: "+Base64.getEncoder().encodeToString(challenge));
-
       // h(h(s)) + c) + h(s) = response
-      //XOR hash of password hash with challenge
       byte[] expectedResult = computeXOR(nfcHash, challenge); // h(s) + c
       System.out.println("h(s) + c: "+Base64.getEncoder().encodeToString(expectedResult));
       //hash the result

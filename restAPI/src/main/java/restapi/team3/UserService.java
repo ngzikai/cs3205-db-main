@@ -165,7 +165,8 @@ public class UserService {
     Response response = Response.status(401).entity("Setting password and salt failed.").build();
     try{
       MessageDigest digest = MessageDigest.getInstance("SHA-256");
-      byte[] bytes = digest.digest((password+salt).getBytes());
+      byte[] bytes = digest.digest((password+salt).getBytes()); // h(pwd + salt)
+      bytes = digest.digest(bytes); // h(h(pwd+salt))
       password = Base64.getEncoder().encodeToString(bytes);
     }catch(Exception e){
       e.printStackTrace();
@@ -175,6 +176,7 @@ public class UserService {
     user.put("password2", password);
     user.put("salt2", salt);
     if(result.getInt("result") == 1){
+      // return back h(h(pwd+salt)) for debugging purposes
       response = Response.status(200).entity(user.getString("password2")).build();
     }
     return response;
