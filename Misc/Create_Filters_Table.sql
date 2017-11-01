@@ -22,8 +22,11 @@ VALUES
 (null, "Age Group", "ageRange", 0, 1),
 (null, "Blood Type", "bloodType", 0, 1),
 (null, "Diagnosis Terms", "conditions", 0, 1),
-(null, "Sex", "gender", 0, 1),
-(null, "Location", "zipcode", 0, 1);
+(null, "Drug Allergy", "drug_allergy", 0, 1),
+(null, "Ethnicity", "ethnicity", 0, 1),
+(null, "Location", "zipcode", 0, 1),
+(null, "Nationality", "nationality", 0, 1),
+(null, "Sex", "gender", 0, 1);
 
 
 
@@ -68,7 +71,7 @@ VALUES
 (@parent_id, "Female", "F", 0, 3);
 
 -- ZIPCODE
-SELECT id INTO @parent_id FROM filters WHERE `key` = "Zipcode" AND type = 1;
+SELECT id INTO @parent_id FROM filters WHERE `key` = "Location" AND type = 1;
 INSERT INTO filters(parent_id, `key`, `value`, isset, type)
 VALUES
 (@parent_id, "Raffles Place, Cecil, Marina, People's Park", "[1,2,3,4,5,6]", 0, 3),
@@ -100,6 +103,20 @@ VALUES
 (@parent_id, "Upper Thomson, Springleaf", "[77,78]", 0, 3),
 (@parent_id, "Seletar", "[79,80]", 0, 3);
 
+-- NATIONALITY
+SELECT id INTO @parent_id FROM filters WHERE `key` = "Nationality" AND type = 1;
+-- Not inserting any values at the moment
+
+-- ETHNICITY
+SELECT id INTO @parent_id FROM filters WHERE `key` = "Ethnicity" AND type = 1;
+-- Not inserting any values at the moment
+
+-- DRUG ALLERGY
+SELECT id INTO @parent_id FROM filters WHERE `key` = "Drug Allergy" AND type = 1;
+INSERT INTO filters(parent_id, `key`, `value`, isset, type)
+VALUES
+(@parent_id, "No Known Drug Allergies", "0", 0, 3),
+(@parent_id, "Has Drug Allergies", "1", 0, 3);
 
 
 -- Insert return result categories (type = 2)
@@ -111,11 +128,13 @@ INSERT INTO filters(
     ,type
 )
 VALUES
+(null, "Age Group", "ageRange", 1, 2),
 (null, "Blood Type", "bloodtype", 1, 2),
 (null, "Condition(s)", "condition_name", 1, 2),
-(null, "Age Group", "ageRange", 1, 2),
-(null, "Sex", "gender", 1, 2),
-(null, "Location", "zipcode1", 1, 2),
 (null, "Drug Allergy", "drug_allergy", 1, 2),
 (null, "Ethnicity", "ethnicity", 1, 2),
-(null, "Nationality", "nationality", 1, 2);
+(null, "Heartrate Data", "heartrate_path", 1, 2),
+(null, "Location", "zipcode1", 1, 2),
+(null, "Nationality", "nationality", 1, 2),
+(null, "Sex", "gender", 1, 2),
+(null, "Time Series Data", "timeseries_path", 1, 2);

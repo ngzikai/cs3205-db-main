@@ -53,6 +53,7 @@ CREATE TABLE data(
    creationdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
    modifieddate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
    content VARCHAR(100) NOT NULL,
+   isAvailable INT,
    PRIMARY KEY(rid),
    FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -184,13 +185,23 @@ CREATE TABLE user_metadata(
   FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE logs(
+CREATE TABLE db_logs(
    log_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    api	ENUM('Team1', 'Team2', 'Team3') NOT NULL,
    type ENUM('Read', 'Write') NOT NULL,
    time TIMESTAMP NOT NULL,
    description VARCHAR(255) NOT NULL,
    result TINYINT(1) NOT NULL
+);
+
+CREATE TABLE transaction_logs(
+   log_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   api	ENUM('Team1', 'Team2', 'Team3') NOT NULL,
+   classification ENUM('Info', 'Error', 'Warning') NOT NULL,
+   time TIMESTAMP NOT NULL,
+   uid INT NOT NULL,
+   description TEXT NOT NULL,
+   FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE
 );
    
 

@@ -2,7 +2,7 @@
     @XmlJavaTypeAdapter(type=LocalDate.class, 
         value=utils.LocalDateAdapter.class),
     @XmlJavaTypeAdapter(type=Timestamp.class, 
-    value=utils.TimeStampAdapter.class),
+    value=utils.TimeStampAdapter.class)
 })
 
 package restapi.team1;
