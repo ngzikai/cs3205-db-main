@@ -1,9 +1,9 @@
 package entity;
 
 public class UserChallenge{
-  private int uid;
-  private String type;
-  private String challengeString;
+	private int uid;
+	private String type;
+	private String challengeString;
 
 	/**
 	* Default empty UserChallenge constructor

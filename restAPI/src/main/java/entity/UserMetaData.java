@@ -1,9 +1,9 @@
 package entity;
 
 public class UserMetaData{
-  private int uid;
-  private int lockAttempts;
-  private long lastAttempt;
+	private int uid;
+	private int lockAttempts;
+	private long lastAttempt;
 
 	/**
 	* Default empty UserMetaData constructor

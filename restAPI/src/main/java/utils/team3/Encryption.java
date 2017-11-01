@@ -5,9 +5,9 @@ import utils.Cryptography;
 
 public class Encryption extends Cryptography{
 
-  private String keyString = "";
-  public void setKey(String key){
-    this.keyString = key;
-    super.key = new SecretKeySpec(keyString.getBytes(), "AES");
-  }
+	private String keyString = "";
+	public void setKey(String key){
+		this.keyString = key;
+		super.key = new SecretKeySpec(keyString.getBytes(), "AES");
+	}
 }

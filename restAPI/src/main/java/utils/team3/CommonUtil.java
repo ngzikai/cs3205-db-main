@@ -1,6 +1,5 @@
 package utils.team3;
 
-
 // Java imports
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
@@ -9,6 +8,12 @@ import java.io.IOException;
 
 public class CommonUtil{
 
+  /**
+   * Convert Object to byte array
+   * @param Object to be converted
+   *
+   * @return byte[] of the object
+   */
   // toByteArray and toObject are taken from: http://tinyurl.com/69h8l7x
   public static byte[] toByteArray(Object obj) throws IOException {
       byte[] bytes = null;
@@ -31,6 +36,12 @@ public class CommonUtil{
       return bytes;
   }
 
+  /**
+   * Convert inputstream to byte array
+   * @param InputStream the stream to convert
+   *
+   * @return byte[] of the inputstream
+   */
   public static byte[] inputStreamToByteArray(InputStream inputstream) throws Exception {
     byte[] buffer = new byte[8192];
     int bytesRead;
