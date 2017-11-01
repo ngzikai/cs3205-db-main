@@ -19,7 +19,7 @@ public class Logger {
 	
 	public static int log(String api, String type, String description, int qResult) {
 		int result = 0;
-		String sql = "INSERT INTO CS3205.logs VALUES (default, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO CS3205.db_logs VALUES (default, ?, ?, ?, ?, ?)";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
