@@ -43,14 +43,22 @@ public class Challenge{
 
   public static boolean validateNFCResponse(byte[] response, byte[] challenge, byte[] nfcHash){
     try{
-      System.out.println("Response: "+Base64.getEncoder().encodeToString(response));
+      System.out.println("NFC Response: "+Base64.getEncoder().encodeToString(response));
+      System.out.println("NFC challenge: "+Base64.getEncoder().encodeToString(challenge));
+
       // h(h(s)) + c) + h(s) = response
       //XOR hash of password hash with challenge
       byte[] expectedResult = computeXOR(nfcHash, challenge); // h(s) + c
+      System.out.println("h(s) + c: "+Base64.getEncoder().encodeToString(expectedResult));
       //hash the result
       expectedResult = generateHash(expectedResult); // h(h(s) + c)
+      System.out.println("h(h(s) + c): "+Base64.getEncoder().encodeToString(expectedResult));
       //XOR result with challenge response
       expectedResult = computeXOR(expectedResult, response); // h(h(s) + c) + h(h(s) + c) + h(s)
+      System.out.println("s: "+Base64.getEncoder().encodeToString(expectedResult));
+      expectedResult = generateHash(expectedResult);
+      System.out.println("nfcHASH: "+Base64.getEncoder().encodeToString(nfcHash));
+      System.out.println("H(h(h(s)XOR c) XOR resp): "+Base64.getEncoder().encodeToString(expectedResult));
       return Arrays.equals(expectedResult, nfcHash);
     } catch(Exception e){
       e.printStackTrace();
