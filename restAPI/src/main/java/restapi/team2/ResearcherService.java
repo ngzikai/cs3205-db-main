@@ -92,4 +92,14 @@ public class ResearcherService {
 			return "false";
 		}
 	}
+	
+	@DELETE
+	@Path("/OTPdelete/{researcher_username}")
+	public String deleteOTP(@PathParam("researcher_username") String researcher_username) {
+		if(rc.deleteOTP(researcher_username)) {
+			return "Success";
+		}else {
+			return "Failed";
+		}
+	}
 }

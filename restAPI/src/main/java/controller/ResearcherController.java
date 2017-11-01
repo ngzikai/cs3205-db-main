@@ -266,4 +266,24 @@ public class ResearcherController {
 		return false;
 	}
 	
+	public boolean deleteOTP(String researcher_username) {
+		String sql  = "UPDATE researcher SET otpsecret = null WHERE researcher_username = '?'";
+		
+		Connection connect = MySQLAccess.connectDatabase();
+		
+		try {
+			PreparedStatement ps = connect.prepareStatement(sql);
+			ps.setString(1, researcher_username);
+			
+			MySQLAccess.updateDataBasePS(ps);
+			
+		} catch(Exception e) {
+			MySQLAccess.close();
+			return false;
+		}
+		
+		MySQLAccess.close();
+		return true;
+	}
+	
 }
