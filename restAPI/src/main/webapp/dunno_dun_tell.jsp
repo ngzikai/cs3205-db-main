@@ -49,6 +49,8 @@
 	- /api/team1/record/all/{uid}<br>
 	- /api/team1/record/get/{rid}<br>
 	- /api/team1/record/{rid}<br>
+	- /api/team1/record<br>
+	&emsp;- Accepts POST request JSON data <br>
 	- /api/team1/record/document/create<br>
 	&emsp;- Accepts POST request JSON data <br>
 	- /api/team1/record/delete/{rid}/{uid}<br><br>
