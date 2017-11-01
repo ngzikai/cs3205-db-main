@@ -133,6 +133,8 @@ VALUES
 (null, "Condition(s)", "condition_name", 1, 2),
 (null, "Drug Allergy", "drug_allergy", 1, 2),
 (null, "Ethnicity", "ethnicity", 1, 2),
+(null, "Heartrate Data", "heartrate_path", 1, 2),
 (null, "Location", "zipcode1", 1, 2),
 (null, "Nationality", "nationality", 1, 2),
-(null, "Sex", "gender", 1, 2);
+(null, "Sex", "gender", 1, 2),
+(null, "Time Series Data", "timeseries_path", 1, 2);
