@@ -209,7 +209,7 @@ public class DataService {
 	@Path("/alldocuments/{uid}")
 	@GET
 	@Produces("application/json")
-	public Response getConsentWithUid(@PathParam("uid") int uid) throws JSONException {
+	public Response getAllDocumentSharableWithUid(@PathParam("uid") int uid) throws JSONException {
 		JSONObject jsonObject = new JSONObject();
 
 		System.out.println("Retrieving all documents sharable to uid: " + uid );
