@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import entity.Consent;
+import entity.Data;
 import utils.Logger;
 import utils.db.MySQLAccess;
 
@@ -269,7 +270,14 @@ public class ConsentController {
 		return jsonObject;
 	}
 	
-	
+	/*
+	 * This method deletes the consent's entry on the database based on the consent id.
+	 * 
+	 * @param id of the consent
+	 * 
+	 * @return JSONObject contained the result of the operation. 1 is success.
+	 * 															 0 is failed.
+	 */
 	public JSONObject deleteConsent(int id) {
 		int result = 0;
 		JSONObject jsonObject = new JSONObject();
@@ -291,6 +299,57 @@ public class ConsentController {
 		MySQLAccess.close();
 		Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(), sql, result);
 		jsonObject.put("result", result);
+		return jsonObject;
+	}
+	
+	/*
+	 * This method will check a user's uid to see if the user has all necessary
+	 * consents required for the data, if it is a document, then it will check for
+	 * all included data. 
+	 * 
+	 * @param uid of user
+	 * 		  rid of the data
+	 * 
+	 * @return JSONObject of the result. True if have all consents needed.
+	 * 									 False if does not have all consents.
+	 */
+	public JSONObject checkUserAccessToData(int uid, int rid) {
+		JSONObject jsonObject = new JSONObject();
+		ResultSet resultSet = null;
+		boolean result = false;
+		SessionController sc = new SessionController();
+		Data data = sc.get(rid);
+		if(data == null){
+			return null;
+		}
+		
+		if(data.getSubtype().equalsIgnoreCase("document")) {
+			DocumentController dc = new DocumentController();
+			jsonObject = dc.checkUserAccessToAllRecordsInDoc(uid, rid);
+			return jsonObject;
+		}
+		
+		String sql = "SELECT * FROM CS3205.consent WHERE uid = ? AND rid = ?";
+		try {
+			Connection connect = MySQLAccess.connectDatabase();
+			PreparedStatement preparedStatement = connect.prepareStatement(sql);
+			preparedStatement.setInt(1, uid);
+			preparedStatement.setInt(1, rid);
+			String statement = preparedStatement.toString();
+			resultSet = MySQLAccess.readDataBasePS(preparedStatement);
+			while (resultSet.next()) {
+				result = true;
+			}
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, result ? 1 : 0);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		MySQLAccess.close();
+		jsonObject.put("result", result);
+		
+		
 		return jsonObject;
 	}
 	

@@ -85,8 +85,7 @@ public class DataService {
 	public Response get(@PathParam("rid") int rid){
 		SessionController sc = new SessionController();
 		File file = null;
-		Data data = null;
-		data = sc.get(rid);
+		Data data = sc.get(rid);
 
 		if(data == null){
 			return createResponse(null);

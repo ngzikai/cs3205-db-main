@@ -132,4 +132,16 @@ public class ConsentService {
 		return createResponse(jsonObject);
 	}
 	
+	@Path("/check/{uid}/{rid}")
+	@GET
+	@Produces("application/json")
+	public Response checkConsentWithUidRid(@PathParam("uid") int uid, @PathParam("rid") int rid) throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+
+		System.out.println("Checking access of uid:" + uid +  " and rid: " + rid );
+		jsonObject = cc.checkUserAccessToData(uid, rid);
+
+		return createResponse(jsonObject);
+	}
+	
 }
