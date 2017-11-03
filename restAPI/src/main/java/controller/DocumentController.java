@@ -50,6 +50,10 @@ public class DocumentController {
 	 * unique file name for the document.
 	 * The document will then be written into the file system, followed by updating
 	 * the database on the filepath of this document. 
+	 * 
+	 * @param document
+	 * @return JSONObject containing 1 if success
+	 * 								 0 if failed
 	 */
 	public JSONObject createDocument(Document document) {
 		JSONObject jsonObject = new JSONObject();

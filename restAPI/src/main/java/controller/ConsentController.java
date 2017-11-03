@@ -415,7 +415,7 @@ public class ConsentController {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setInt(1, uid);
-			preparedStatement.setInt(1, rid);
+			preparedStatement.setInt(2, rid);
 			String statement = preparedStatement.toString();
 			resultSet = MySQLAccess.readDataBasePS(preparedStatement);
 			while (resultSet.next()) {
