@@ -59,6 +59,12 @@ public class DocumentController {
 			if(rid > 0) {
 				document.setRid(rid);
 				document.print();
+				for(int record : document.getRecords()) {
+					int includeRes = createInclusion(rid, record);
+					if(includeRes == 0) {
+						System.out.println("Failed creating inclusion: " + rid + " & " + record  ) ;
+					}
+				}
 				boolean isWriten = writeDocument(document);
 				boolean isUpdated = (updateContent(document) == 1 )? true: false;
 				if(!isWriten || !isUpdated) {
@@ -220,5 +226,25 @@ public class DocumentController {
 			return false;
 		}
 		return true;
+	}
+	
+	private int createInclusion(int reportId, int recordId) {
+		int result = 0;
+		String sql = "INSERT INTO CS3205.inclusion VALUES (default, ?, ?)";
+		try {
+			Connection connect = MySQLAccess.connectDatabase();
+			PreparedStatement preparedStatement = connect.prepareStatement(sql);
+			preparedStatement.setInt(1, reportId);
+			preparedStatement.setInt(2, recordId);
+			String statement = preparedStatement.toString();
+			result = MySQLAccess.updateDataBasePS(preparedStatement);
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(), statement, result);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return 0;
+		}
+		MySQLAccess.close();
+		return 1;
 	}
 }

@@ -115,17 +115,6 @@ public class DataService {
 		}
 		return Response.status(400).entity("Server error, contact the administrator.").build();
 	}
-
-	private SessionController getSessionController(String type){
-		if(type.equalsIgnoreCase("image") || type.equalsIgnoreCase("video")){
-			return new SessionController("file");
-		} else if(type.equalsIgnoreCase("heart")){
-			return new SessionController("heartrate");
-		} else if(type.equalsIgnoreCase("step")){
-			return new SessionController("step");
-		}
-		return null;
-	}
 	
 	private String processFileType(Data data) {
 		if(data.getSubtype()!= null)
