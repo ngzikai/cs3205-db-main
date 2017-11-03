@@ -28,6 +28,11 @@ import utils.Logger;
 import utils.SystemConfig;
 import utils.db.MySQLAccess;
 
+/*
+ * This class handles all operation on the document feature and the related database operations
+ * needed for the documents feature to work. This class controls the operations and uses
+ * the relevant entities required.
+ */
 public class DocumentController {
 	private String type = "File";
 	public static String SUBTYPE = "document";
@@ -82,6 +87,10 @@ public class DocumentController {
 	/*
 	 * Write XMl file of the document from a therapist.
 	 * If directory does not exist, it will be created.
+	 * 
+	 * @param document 
+	 * @return true if success
+	 * 			false if failed
 	 */
 	private boolean writeDocument(Document document) {
 		boolean result = false;
@@ -118,6 +127,16 @@ public class DocumentController {
 		return result;
 	}
 
+	/*
+	 * This method will take a document object and retrieve the rid of the associated document as creation of
+	 * rid is by database. It is using as much similarity as it could to avoid collision with
+	 * other document that is being created at the same time.
+	 * 
+	 * @param document
+	 * 		  random   String value
+	 * 
+	 * @return rid 
+	 */
 	private int getRid(Document document, String random) {
 		int rid = 0;
 		String sql = "SELECT * FROM CS3205.data WHERE uid = ? AND title = ? AND content = ?";
@@ -140,6 +159,15 @@ public class DocumentController {
 		return rid;
 	}
 
+	/*
+	 * This method takes in a document object and update the document entry in the database
+	 * with the correct file path stored by the system in the file system
+	 * 
+	 * @param document
+	 * @return int 	1 if success
+	 * 				0 if failed
+	 * 
+	 */
 	private int updateContent(Document document) {
 		int result = 0;
 		String sql = "UPDATE CS3205.data SET content = ? WHERE rid = ?";
@@ -157,12 +185,26 @@ public class DocumentController {
 		return result;
 	}
 
+	/*
+	 * This method generates a random integer within 1 to 1000000.
+	 * 
+	 * @return the random integer
+	 */
 	private int randomInt() {
 		Random randomGenerator = new Random();
 		return randomGenerator.nextInt(1000000);
 	}
 
-	// This method will take in a patient id and a therapist, and return the Consent object from the database;
+
+	/*
+	 * This method will retrieve the document using the data object as metadata to identify the
+	 * user id and the file path of the document. It uses the decrypt function of the crypto
+	 * and reads in the xml information of Document class, which then converted to JSONObject
+	 * to be returned.
+	 * 
+	 * @param data
+	 * @return JSONObject containing the document
+	 */
 	public JSONObject getDocument(Data data) {
 		JSONObject jsonObject = null;
 		try {
@@ -187,6 +229,16 @@ public class DocumentController {
 		return jsonObject;
 	}
 
+	/*
+	 * This method deletes the document and the relevant entry on the database based on the rid
+	 * and the owner's uid. 
+	 * 
+	 * @param rid of the document
+	 * 		  uid of the owner
+	 * 
+	 * @return JSONObject contained the result of the operation. 1 is success.
+	 * 															 0 is failed.
+	 */
 	public JSONObject deleteDocument(int rid, int uid) {
 		int result = 0;
 		JSONObject jsonObject = new JSONObject();
@@ -212,6 +264,13 @@ public class DocumentController {
 		return jsonObject;
 	}
 
+	/*
+	 * This method deletes the file from the file system if it exists.
+	 * 
+	 * @param path
+	 * @return true if success.
+	 * 		   false if failed.
+	 */
 	private boolean removeDocument(Path path) {
 		System.out.println("Removing " + path.toString());
 		try {
@@ -223,6 +282,16 @@ public class DocumentController {
 		return true;
 	}
 
+	/*
+	 * This method creates the inclusion of the records that are include in
+	 * the document created. 
+	 * 
+	 * @param report's rid 
+	 * 		  record's rid
+	 * @return 1 if success.
+	 * 		   0 if failed.
+	 * 
+	 */
 	private int createInclusion(int reportId, int recordId) {
 		int result = 0;
 		String sql = "INSERT INTO CS3205.inclusion VALUES (default, ?, ?)";
@@ -280,6 +349,14 @@ public class DocumentController {
 		return jsonObject;
 	}
 
+	/*
+	 * This method will take in a result set of a SQL operation and prepares a
+	 * list of Data object with the corresponding fields from the result set
+	 * 
+	 * @param result of SQL query
+	 * @return ArrayList of Data objects
+	 * 
+	 */
 	private ArrayList<Data> resultSetToDataList(ResultSet result) throws SQLException {
 		ArrayList<Data> dataList = new ArrayList<Data>();
 		while(result.next()){
