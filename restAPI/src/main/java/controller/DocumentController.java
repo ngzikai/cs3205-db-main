@@ -242,14 +242,22 @@ public class DocumentController {
 		return 1;
 	}
 
-	// This method will take in a therapistid id, and return the consent object from the database;
+	/*
+	 * This method takes in a therapist id and it will retrieve all the documents that are created from the database first.
+	 * The records in each documents which is stored in the inclusion table will then be used to check if each records have consent
+	 * granted to the therapist id. This is a complex SQL query where it uses NOT EXISTS to filter out the necessary information to
+	 * retrieve a list of documents that this therapistId has full consents for the records included in them.
+	 * 
+	 *@param therapistId int
+	 *@return JSONObject containing the list of records
+	 */
 	public JSONObject getAllDocumentWithFullConsentsFromUid(int therapistid) {
 		JSONObject jsonObject = new JSONObject();
 		ArrayList<Data> consentList = null;
 
 		String sql = "SELECT * FROM CS3205.data d WHERE d.subtype = \"document\" AND NOT EXISTS ("
 				+ "SELECT * FROM CS3205.inclusion i WHERE i.report_id = d.rid AND NOT EXISTS ("
-				+ "SELECT * FROM CS3205.consent c WHERE c.rid = d.rid AND c.uid = ?));";
+				+ "SELECT * FROM CS3205.consent c WHERE c.rid = i.record_id AND c.uid = ?));";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
