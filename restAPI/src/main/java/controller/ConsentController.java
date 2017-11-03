@@ -410,7 +410,7 @@ public class ConsentController {
 		}
 		
 		//Not owner. Check consent.
-		String sql = "SELECT * FROM CS3205.consent WHERE uid = ? AND rid = ? ";
+		String sql = "SELECT * FROM CS3205.consent WHERE uid = ? AND rid = ? AND status = 1";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
