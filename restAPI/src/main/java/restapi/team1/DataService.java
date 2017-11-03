@@ -206,5 +206,17 @@ public class DataService {
 		}
 		return jsonObject;
 	}
+	
+	@Path("/alldocuments/{uid}")
+	@GET
+	@Produces("application/json")
+	public Response getConsentWithUid(@PathParam("uid") int uid) throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+
+		System.out.println("Retrieving all documents sharable to uid: " + uid );
+		jsonObject = dc.getAllDocumentWithFullConsentsFromUid(uid);
+
+		return createResponse(jsonObject);
+	}
 
 }
