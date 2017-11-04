@@ -16,6 +16,12 @@ import utils.db.MySQLAccess;
 
 public class ConsentController {
 
+	/*
+	 * This method will get all consents value from the database and return them.
+	 * 
+	 * @return JSONObject containing the result
+	 * 		  null if empty or error
+	 */
 	public JSONObject getAllConsent() {
 		JSONObject jsonObjectFinal = new JSONObject();
 		ArrayList<Consent> consentList = null;
@@ -42,8 +48,16 @@ public class ConsentController {
 		return jsonObjectFinal;
 	}
 	
-	
-	// This method will take in a Consent id and return the Consent object from the database;
+	/*
+	 * This method will take in a Consent id and 
+	 * return the Consent object from the database.
+	 * 
+	 * @param therapistid
+	 * 		status
+	 * 
+	 * @return JSONObject containing the result
+	 * 		  null if empty or error
+	 */
 	public JSONObject getConsentWithId(int id) {
 		JSONObject jsonObject = new JSONObject();
 		ArrayList<Consent> consentList = null;
@@ -72,7 +86,17 @@ public class ConsentController {
 		return jsonObject;
 	}
 	
-	// This method will take in a therapist id and a status, and return the Consent object from the database;
+
+	/*
+	 * This method will take in a therapist id and a status, and 
+	 * return the Consent object from the database.
+	 * 
+	 * @param therapistid
+	 * 		status
+	 * 
+	 * @return JSONObject containing the result
+	 * 		  null if empty or error
+	 */
 	public JSONObject getConsentWithUid(int therapistid, boolean status) {
 		JSONObject jsonObject = new JSONObject();
 		ArrayList<Consent> consentList = null;
@@ -107,7 +131,14 @@ public class ConsentController {
 		return jsonObject;
 	}
 	
-	// This method will take in a therapistid id, and return the consent object from the database;
+	/*
+	 * This method will take in a therapist id, and return the consent object from the database.
+	 * 
+	 * @param therapistid
+	 * 
+	 * @return JSONObject containing the result
+	 * 		  null if empty or error
+	 */
 	public JSONObject getConsentWithUid(int therapistid) {
 		JSONObject jsonObject = new JSONObject();
 		ArrayList<Consent> consentList = null;
@@ -141,7 +172,14 @@ public class ConsentController {
 		return jsonObject;
 	}
 	
-	// This method will take in a record id, and return the consent object from the database;
+	/*
+	 * This method will take in a record id, and return the consent object from the database.
+	 * 
+	 * @param rid
+	 * 
+	 * @return JSONObject containing the result
+	 * 		  null if empty or error
+	 */
 	public JSONObject getConsentWithRid(int rid) {
 		JSONObject jsonObject = new JSONObject();
 		JSONArray consentArray = null;
@@ -170,7 +208,17 @@ public class ConsentController {
 		return jsonObject;
 	}
 
-	// This method will take in a patient id and a therapist, and return the Consent object from the database;
+	/*
+	 * This method will take in a patient id and a therapist id, and 
+	 * return the Consent object from the database. It will join the consent table
+	 * and data table and user table together to get all the values needed.
+	 * 
+	 * @param patientid
+	 * 	      therapistId
+	 * 
+	 * @return JSONObject containing the result
+	 * 		  null if empty or error
+	 */
 	public JSONObject getConsentWithUidAndTherapistId(int patientid, int therapistId) {
 		JSONObject jsonObject = new JSONObject();
 		JSONArray consentArray = null;
@@ -197,10 +245,19 @@ public class ConsentController {
 		MySQLAccess.close();
 		
 		jsonObject.put("consents", consentArray);
-		//System.out.println("Retrieving details of Consent: " + id);
 		return jsonObject;
 	}
 	
+	/*
+	 * This method will create a consent object for the given uid and rid.
+	 * 
+	 * @param uid
+	 * 		  rid
+	 * 
+	 * @return JSONobject containing 1 if success.
+	 * 								 0 if failed.
+	 * 		   null if empty or error
+	 */
 	public JSONObject createConsent(int uid, int rid) {
 		Consent consent = new Consent(uid, rid, false);
 		JSONObject jsonObject = new JSONObject();
@@ -226,6 +283,17 @@ public class ConsentController {
 		return jsonObject;
 	}
 
+	/*
+	 * This method takes in a consent id and will check if the consent exists.
+	 * If it exists, the consent values will be used and then it will set the consent status 
+	 * to toggle between true and false upon the execution of the code. True set to false. 
+	 * False set to true.
+	 * 
+	 * @param id of consent
+	 * @return JSONObject containing 1 if success
+	 * 								 0 if failed
+	 * 		   null if empty or error
+	 */
 	public JSONObject updateConsent(int id) {	
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
@@ -277,6 +345,7 @@ public class ConsentController {
 	 * 
 	 * @return JSONObject contained the result of the operation. 1 is success.
 	 * 															 0 is failed.
+	 * 		   null if error
 	 */
 	public JSONObject deleteConsent(int id) {
 		int result = 0;
@@ -312,6 +381,7 @@ public class ConsentController {
 	 * 
 	 * @return JSONObject of the result. True if have all consents needed.
 	 * 									 False if does not have all consents.
+	 *         null if empty or error
 	 */
 	public JSONObject checkUserAccessToData(int uid, int rid) {
 		JSONObject jsonObject = new JSONObject();
@@ -323,18 +393,29 @@ public class ConsentController {
 			return null;
 		}
 		
-		if(data.getSubtype().equalsIgnoreCase("document")) {
-			DocumentController dc = new DocumentController();
-			jsonObject = dc.checkUserAccessToAllRecordsInDoc(uid, rid);
+		//Check for owner
+		if(data.getUid() == uid) {
+			//This checks if it is a document
+			if(data.getSubtype() != null) {
+				if(data.getSubtype().equalsIgnoreCase("document")) {
+					DocumentController dc = new DocumentController();
+					jsonObject = dc.checkUserAccessToAllRecordsInDoc(uid, rid);
+					return jsonObject;
+				}
+			}
+			//This is for non documents.
+			result = true;
+			jsonObject.put("result", result);
 			return jsonObject;
 		}
 		
-		String sql = "SELECT * FROM CS3205.consent WHERE uid = ? AND rid = ?";
+		//Not owner. Check consent.
+		String sql = "SELECT * FROM CS3205.consent WHERE uid = ? AND rid = ? AND status = 1";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
 			preparedStatement.setInt(1, uid);
-			preparedStatement.setInt(1, rid);
+			preparedStatement.setInt(2, rid);
 			String statement = preparedStatement.toString();
 			resultSet = MySQLAccess.readDataBasePS(preparedStatement);
 			while (resultSet.next()) {
@@ -353,6 +434,14 @@ public class ConsentController {
 		return jsonObject;
 	}
 	
+	/*
+	 * This method will take in a result set of a SQL operation and prepares a
+	 * list of Consent object with the corresponding fields from the result set
+	 * 
+	 * @param result of SQL query
+	 * @return ArrayList of Consent objects
+	 * 
+	 */
 	private ArrayList<Consent> resultSetToConsentList(ResultSet resultSet) throws SQLException {
 		// ResultSet is initially before the first data set
 		ArrayList<Consent> consentList = new ArrayList<Consent>();
@@ -368,6 +457,13 @@ public class ConsentController {
 		return consentList;
 	}
 	
+	/*
+	 * This method will take in a consent object and build a json object containing it.
+	 * 
+	 * @param result of SQL query
+	 * @return JSONObject of Consent object
+	 * 
+	 */
 	private JSONObject buildConsentObject(Consent consent) {
 		JSONObject jsonObjectConsent = new JSONObject();
 		jsonObjectConsent.put("consentId", consent.getConsentId()); 
@@ -378,7 +474,16 @@ public class ConsentController {
 		return jsonObjectConsent;
 	}
 	
-	
+	/*
+	 * This method will take in a result set of a SQL operation and prepares a
+	 * JSONObject with all required fields from the corresponding fields
+	 * from the result set of the query
+	 * 
+	 * @param result of SQL query
+	 * @return JSONArray of JSONObjects
+	 * 		   null if empty
+	 * 
+	 */
 	private JSONArray processTherapistList(ResultSet resultSet) throws SQLException {
 		// ResultSet is initially before the first data set
 		JSONArray result = new JSONArray();
@@ -400,6 +505,16 @@ public class ConsentController {
 		return result;
 	}
 	
+	/*
+	 * This method will take in a result set of a SQL operation and prepares a
+	 * JSONObject with all required fields from the corresponding fields
+	 * from the result set of the query
+	 * 
+	 * @param result of SQL query
+	 * @return JSONArray of JSONObjects	 
+	 *  	   null if empty
+	 * 
+	 */
 	private JSONArray processUidWithTherapistIdList(ResultSet resultSet) throws SQLException {
 		// ResultSet is initially before the first data set
 		JSONArray result = new JSONArray();

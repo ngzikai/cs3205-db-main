@@ -50,6 +50,10 @@ public class DocumentController {
 	 * unique file name for the document.
 	 * The document will then be written into the file system, followed by updating
 	 * the database on the filepath of this document. 
+	 * 
+	 * @param document
+	 * @return JSONObject containing 1 if success
+	 * 								 0 if failed
 	 */
 	public JSONObject createDocument(Document document) {
 		JSONObject jsonObject = new JSONObject();
@@ -326,7 +330,7 @@ public class DocumentController {
 
 		String sql = "SELECT * FROM CS3205.data d WHERE d.subtype = \"document\" AND NOT EXISTS ("
 				+ "SELECT * FROM CS3205.inclusion i WHERE i.report_id = d.rid AND NOT EXISTS ("
-				+ "SELECT * FROM CS3205.consent c WHERE c.rid = i.record_id AND c.uid = ?));";
+				+ "SELECT * FROM CS3205.consent c WHERE c.rid = i.record_id AND status = 1 AND c.uid = ?));";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
@@ -390,7 +394,7 @@ public class DocumentController {
 		boolean result = false;
 		String sql = "SELECT * FROM CS3205.data d WHERE d.subtype = \"document\" AND d.rid = ? AND NOT EXISTS ("
 				+ "SELECT * FROM CS3205.inclusion i WHERE i.report_id = d.rid AND NOT EXISTS ("
-				+ "SELECT * FROM CS3205.consent c WHERE c.rid = i.record_id AND c.uid = ?));";
+				+ "SELECT * FROM CS3205.consent c WHERE c.rid = i.record_id AND status = 1 AND c.uid = ?));";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
