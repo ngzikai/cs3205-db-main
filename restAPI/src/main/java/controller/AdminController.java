@@ -17,6 +17,12 @@ import java.sql.Connection;
 
 public class AdminController {
 	
+	/*
+	 * This method will get all admins' value from the database and return them.
+	 * 
+	 * @return JSONObject containing the result
+	 * 		  null if empty or error
+	 */
 	public JSONObject getAllAdmin() {
 		JSONObject jsonObjectFinal = new JSONObject();
 		ArrayList<Admin> adminList = null;
@@ -46,7 +52,16 @@ public class AdminController {
 		jsonObjectFinal.put("admins", adminArray);
 		return jsonObjectFinal;
 	}
-	
+
+	/*
+	 * This method will take in a username of an admin and 
+	 * return the Admin object from the database.
+	 * 
+	 * @param username
+	 * 
+	 * @return JSONObject containing the result
+	 * 		  null if empty or error
+	 */
 	public JSONObject getAdmin(String username) {
 		JSONObject jsonObject = new JSONObject();
 		ArrayList<Admin> adminList = null;
@@ -76,6 +91,16 @@ public class AdminController {
 		return jsonObject;
 	}
 	
+	/*
+	 * This method will take in a result set of a SQL operation and prepares a
+	 * JSONObject with all required fields from the corresponding fields
+	 * from the result set of the query
+	 * 
+	 * @param result of SQL query
+	 * @return JSONArray of JSONObjects
+	 * 		   null if empty
+	 * 
+	 */
 	private ArrayList<Admin> resultSetToAdminList(ResultSet resultSet) throws SQLException {
 		// ResultSet is initially before the first data set
 		ArrayList<Admin> adminList = new ArrayList<Admin>();
@@ -92,6 +117,16 @@ public class AdminController {
 		return adminList;
 	}
 	
+	/*
+	 * This method takes in an admin id and a string secret where the secret will be set
+	 * to the entry corresponding admin id in the database.
+	 * 
+	 * @param id of admin
+	 * 		  secret string
+	 * @return JSONObject containing 1 if success
+	 * 								 0 if failed
+	 * 		   null if empty or error
+	 */
 	public JSONObject adminSetSecret(int adminId, String secret) {
 		int result = 0;
 		JSONObject jsonObject = new JSONObject();
@@ -116,6 +151,15 @@ public class AdminController {
 		return jsonObject;
 	}
 	
+	/*
+	 * This method will take in an admin id and return the secret value
+	 * that is associated with the respective admin id.
+	 * 
+	 * @param adminId
+	 * 
+	 * @return JSONObject containing the result
+	 * 		  null if empty or error
+	 */
 	public JSONObject adminGetSecret(int adminId) {
 		JSONObject jsonObject = new JSONObject();
 		String sql = "SELECT secret FROM CS3205.admin where admin_id = ?";
