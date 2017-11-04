@@ -14,7 +14,6 @@ import utils.Logger;
 import utils.db.MySQLAccess;
 
 public class TreatmentController {
-
 	
 	/*
 	 * This method will get all treatments' value from the database and return them.
@@ -312,8 +311,8 @@ public class TreatmentController {
 	 * This method will take in a result set of a SQL operation and prepares a
 	 * list of treatment object with the corresponding fields from the result set
 	 * 
-	 * @param result of SQL query
-	 * @return ArrayList of Treatment objects
+	 * @param 	result of SQL query
+	 * @return 	ArrayList of Treatment objects
 	 * 
 	 */
 	private ArrayList<Treatment> resultSetToTreatmentList(ResultSet resultSet) throws SQLException {
@@ -336,8 +335,8 @@ public class TreatmentController {
 	/*
 	 * This method will take in a treatment object and build a json object containing it.
 	 * 
-	 * @param result of SQL query
-	 * @return JSONObject of Treatment object
+	 * @param 	result of SQL query
+	 * @return 	JSONObject of Treatment object
 	 * 
 	 */
 	private JSONObject buildTreatmentObject(Treatment treatment) {

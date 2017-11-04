@@ -18,8 +18,8 @@ public class CsrfController {
 	/*
 	 * This method will get all csrfs' value from the database and return them.
 	 * 
-	 * @return JSONObject containing the result
-	 * 		  null if empty or error
+	 * @return 	JSONObject containing the result
+	 * 		  	null if empty or error
 	 */
 	public JSONObject getAllCsrf() {
 		JSONObject jsonObjectFinal = new JSONObject();
@@ -50,10 +50,10 @@ public class CsrfController {
 	 * This method will take in a csrfToken and 
 	 * return the csrf object from the database.
 	 * 
-	 * @param csrfToken
+	 * @param 	csrfToken
 	 * 
-	 * @return JSONObject containing the result
-	 * 		  null if empty or error
+	 * @return 	JSONObject containing the result
+	 * 		 	null if empty or error
 	 */
 	public JSONObject getCsrfWithToken(String csrfToken) {
 		JSONObject jsonObject = new JSONObject();
@@ -86,14 +86,14 @@ public class CsrfController {
 	/*
 	 * This method will create a CSRF object with the necessary variables to be stored in the database. 
 	 * 
-	 * @param csrfToken
-	 * 		  uid
-	 * 		  expiry
-	 * 		  description
+	 * @param	csrfToken
+	 * 		  	uid
+	 * 		  	expiry
+	 * 		  	description
 	 * 
-	 * @return JSONobject containing 1 if success.
+	 * @return 	JSONobject containing 1 if success.
 	 * 								 0 if failed.
-	 * 		   null if empty or error
+	 * 			   null if empty or error
 	 */
 	public JSONObject createCsrf(String csrfToken, int uid, int expiry, String description) {
 		Csrf csrf = new Csrf(csrfToken, uid, expiry, description);
@@ -125,11 +125,11 @@ public class CsrfController {
 	 * This method takes in a csrf token and an int of expiry date where the csrf will be set
 	 * to the entry corresponding csrf token in the database.
 	 * 
-	 * @param csrfToken
-	 * 		  expiry
-	 * @return JSONObject containing 1 if success
+	 * @param 	csrfToken
+	 * 		  	expiry
+	 * @return 	JSONObject containing 1 if success
 	 * 								 0 if failed
-	 * 		   null if empty or error
+	 * 		   	null if empty or error
 	 */
 	public JSONObject updateCSRF(String csrfToken, int expiry) {
 
@@ -194,8 +194,8 @@ public class CsrfController {
 	 * This method will take in a result set of a SQL operation and prepares a
 	 * list of Csrf object with the corresponding fields from the result set
 	 * 
-	 * @param result of SQL query
-	 * @return ArrayList of Csrf objects
+	 * @param 	result of SQL query
+	 * @return 	ArrayList of Csrf objects
 	 * 
 	 */
 	private ArrayList<Csrf> resultSetToCsrfList(ResultSet resultSet) throws SQLException {
@@ -216,8 +216,8 @@ public class CsrfController {
 	/*
 	 * This method will take in a csrf object and build a json object containing it.
 	 * 
-	 * @param result of SQL query
-	 * @return JSONObject of Csrf object
+	 * @param 	result of SQL query
+	 * @return 	JSONObject of Csrf object
 	 * 
 	 */
 	private JSONObject buildCsrfObject(Csrf csrf) {

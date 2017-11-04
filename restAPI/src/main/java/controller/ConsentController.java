@@ -19,8 +19,8 @@ public class ConsentController {
 	/*
 	 * This method will get all consents value from the database and return them.
 	 * 
-	 * @return JSONObject containing the result
-	 * 		  null if empty or error
+	 * @return 	JSONObject containing the result
+	 * 		  	null if empty or error
 	 */
 	public JSONObject getAllConsent() {
 		JSONObject jsonObjectFinal = new JSONObject();
@@ -52,11 +52,10 @@ public class ConsentController {
 	 * This method will take in a Consent id and 
 	 * return the Consent object from the database.
 	 * 
-	 * @param therapistid
-	 * 		status
+	 * @param 	id of consent
 	 * 
-	 * @return JSONObject containing the result
-	 * 		  null if empty or error
+	 * @return 	JSONObject containing the result
+	 * 		  	null if empty or error
 	 */
 	public JSONObject getConsentWithId(int id) {
 		JSONObject jsonObject = new JSONObject();
@@ -91,11 +90,11 @@ public class ConsentController {
 	 * This method will take in a therapist id and a status, and 
 	 * return the Consent object from the database.
 	 * 
-	 * @param therapistid
-	 * 		status
+	 * @param 	therapistid
+	 * 			status
 	 * 
-	 * @return JSONObject containing the result
-	 * 		  null if empty or error
+	 * @return 	JSONObject containing the result
+	 * 		  	null if empty or error
 	 */
 	public JSONObject getConsentWithUid(int therapistid, boolean status) {
 		JSONObject jsonObject = new JSONObject();
@@ -134,10 +133,10 @@ public class ConsentController {
 	/*
 	 * This method will take in a therapist id, and return the consent object from the database.
 	 * 
-	 * @param therapistid
+	 * @param 	therapistid
 	 * 
-	 * @return JSONObject containing the result
-	 * 		  null if empty or error
+	 * @return 	JSONObject containing the result
+	 * 		  	null if empty or error
 	 */
 	public JSONObject getConsentWithUid(int therapistid) {
 		JSONObject jsonObject = new JSONObject();
@@ -175,10 +174,10 @@ public class ConsentController {
 	/*
 	 * This method will take in a record id, and return the consent object from the database.
 	 * 
-	 * @param rid
+	 * @param 	rid
 	 * 
-	 * @return JSONObject containing the result
-	 * 		  null if empty or error
+	 * @return 	JSONObject containing the result
+	 * 		  	null if empty or error
 	 */
 	public JSONObject getConsentWithRid(int rid) {
 		JSONObject jsonObject = new JSONObject();
@@ -213,11 +212,11 @@ public class ConsentController {
 	 * return the Consent object from the database. It will join the consent table
 	 * and data table and user table together to get all the values needed.
 	 * 
-	 * @param patientid
-	 * 	      therapistId
+	 * @param 	patientid
+	 * 	      	therapistId
 	 * 
-	 * @return JSONObject containing the result
-	 * 		  null if empty or error
+	 * @return 	JSONObject containing the result
+	 * 		  	null if empty or error
 	 */
 	public JSONObject getConsentWithUidAndTherapistId(int patientid, int therapistId) {
 		JSONObject jsonObject = new JSONObject();
@@ -251,12 +250,12 @@ public class ConsentController {
 	/*
 	 * This method will create a consent object for the given uid and rid.
 	 * 
-	 * @param uid
-	 * 		  rid
+	 * @param 	uid
+	 * 		  	rid
 	 * 
-	 * @return JSONobject containing 1 if success.
+	 * @return 	JSONobject containing 1 if success.
 	 * 								 0 if failed.
-	 * 		   null if empty or error
+	 * 		   	null if empty or error
 	 */
 	public JSONObject createConsent(int uid, int rid) {
 		Consent consent = new Consent(uid, rid, false);
@@ -289,10 +288,10 @@ public class ConsentController {
 	 * to toggle between true and false upon the execution of the code. True set to false. 
 	 * False set to true.
 	 * 
-	 * @param id of consent
-	 * @return JSONObject containing 1 if success
+	 * @param 	id of consent
+	 * @return 	JSONObject containing 1 if success
 	 * 								 0 if failed
-	 * 		   null if empty or error
+	 * 		   	null if empty or error
 	 */
 	public JSONObject updateConsent(int id) {	
 		JSONObject jsonObject = new JSONObject();
@@ -341,11 +340,11 @@ public class ConsentController {
 	/*
 	 * This method deletes the consent's entry on the database based on the consent id.
 	 * 
-	 * @param id of the consent
+	 * @param 	id of the consent
 	 * 
-	 * @return JSONObject contained the result of the operation. 1 is success.
+	 * @return 	JSONObject contained the result of the operation. 1 is success.
 	 * 															 0 is failed.
-	 * 		   null if error
+	 * 		   	null if error
 	 */
 	public JSONObject deleteConsent(int id) {
 		int result = 0;
@@ -376,12 +375,12 @@ public class ConsentController {
 	 * consents required for the data, if it is a document, then it will check for
 	 * all included data. 
 	 * 
-	 * @param uid of user
-	 * 		  rid of the data
+	 * @param 	uid of user
+	 * 		  	rid of the data
 	 * 
-	 * @return JSONObject of the result. True if have all consents needed.
+	 * @return 	JSONObject of the result. True if have all consents needed.
 	 * 									 False if does not have all consents.
-	 *         null if empty or error
+	 *         	null if empty or error
 	 */
 	public JSONObject checkUserAccessToData(int uid, int rid) {
 		JSONObject jsonObject = new JSONObject();
@@ -438,8 +437,8 @@ public class ConsentController {
 	 * This method will take in a result set of a SQL operation and prepares a
 	 * list of Consent object with the corresponding fields from the result set
 	 * 
-	 * @param result of SQL query
-	 * @return ArrayList of Consent objects
+	 * @param 	result of SQL query
+	 * @return 	ArrayList of Consent objects
 	 * 
 	 */
 	private ArrayList<Consent> resultSetToConsentList(ResultSet resultSet) throws SQLException {
@@ -460,8 +459,8 @@ public class ConsentController {
 	/*
 	 * This method will take in a consent object and build a json object containing it.
 	 * 
-	 * @param result of SQL query
-	 * @return JSONObject of Consent object
+	 * @param 	result of SQL query
+	 * @return 	JSONObject of Consent object
 	 * 
 	 */
 	private JSONObject buildConsentObject(Consent consent) {
@@ -479,9 +478,9 @@ public class ConsentController {
 	 * JSONObject with all required fields from the corresponding fields
 	 * from the result set of the query
 	 * 
-	 * @param result of SQL query
-	 * @return JSONArray of JSONObjects
-	 * 		   null if empty
+	 * @param 	result of SQL query
+	 * @return 	JSONArray of JSONObjects
+	 * 		   	null if empty
 	 * 
 	 */
 	private JSONArray processTherapistList(ResultSet resultSet) throws SQLException {
@@ -510,9 +509,9 @@ public class ConsentController {
 	 * JSONObject with all required fields from the corresponding fields
 	 * from the result set of the query
 	 * 
-	 * @param result of SQL query
-	 * @return JSONArray of JSONObjects	 
-	 *  	   null if empty
+	 * @param 	result of SQL query
+	 * @return 	JSONArray of JSONObjects	 
+	 *  	   	null if empty
 	 * 
 	 */
 	private JSONArray processUidWithTherapistIdList(ResultSet resultSet) throws SQLException {
