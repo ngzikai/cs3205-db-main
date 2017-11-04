@@ -15,6 +15,13 @@ import utils.db.MySQLAccess;
 
 public class TreatmentController {
 
+	
+	/*
+	 * This method will get all treatments' value from the database and return them.
+	 * 
+	 * @return JSONObject containing the result
+	 * 		  null if empty or error
+	 */
 	public JSONObject getAllTreatment() {
 		JSONObject jsonObjectFinal = new JSONObject();
 		ArrayList<Treatment> treatmentList = null;
@@ -41,7 +48,14 @@ public class TreatmentController {
 	}
 	
 	
-	// This method will take in a treatment id and return the treatment object from the database;
+	/*
+	 * This method will take in a treatment id and return the treatment object from the database.
+	 * 
+	 * @param id of treatment
+	 * 
+	 * @return JSONObject containing the result
+	 * 		  null if empty or error
+	 */
 	public JSONObject getTreatmentWithId(int id) {
 		JSONObject jsonObject = new JSONObject();
 		ArrayList<Treatment> treatmentList = null;
@@ -69,7 +83,16 @@ public class TreatmentController {
 		return jsonObject;
 	}
 	
-	// This method will take in a patient id and a status, and return the treatment object from the database;
+	/*
+	 * This method will take in a patient id and a status, and return the treatment 
+	 * object from the database.
+	 * 
+	 * @param patientid
+	 * 		  status
+	 * 
+	 * @return JSONObject containing the result
+	 * 		  null if empty or error
+	 */
 	public JSONObject getTreatmentWithPatientId(int patientid, boolean status) {
 		JSONObject jsonObject = new JSONObject();
 		ArrayList<Treatment> treatmentList = null;
@@ -103,7 +126,16 @@ public class TreatmentController {
 		return jsonObject;
 	}
 	
-	// This method will take in a therapist id and a status, and return the treatment object from the database;
+	/*
+	 *This method will take in a therapist id and a status, and return the treatment 
+	 * object from the database.
+	 * 
+	 * @param patientid
+	 * 		  status
+	 * 
+	 * @return JSONObject containing the result
+	 * 		  null if empty or error
+	 */
 	public JSONObject getTreatmentWithTherapistId(int therapistid, boolean status) {
 		JSONObject jsonObject = new JSONObject();
 		ArrayList<Treatment> treatmentList = null;
@@ -138,6 +170,18 @@ public class TreatmentController {
 		return jsonObject;
 	}
 
+	/*
+	 * This method will create a treatment object with the necessary variables to be stored in the database. 
+	 * 
+	 * @param patientId
+	 * 		  therapistId
+	 * 		  currentConsent
+	 * 		  futureConsent
+	 * 
+	 * @return JSONobject containing 1 if success.
+	 * 								 0 if failed.
+	 * 		   null if empty or error
+	 */
 	public JSONObject createTreatment(int patientId, int therapistId, boolean currentConsent,
 			boolean futureConsent ) {
 		Treatment treatment = new Treatment(patientId, therapistId, false, currentConsent, futureConsent);
@@ -166,10 +210,16 @@ public class TreatmentController {
 		return jsonObject;
 	}
 
+	/*
+	 * This method takes in a treatment id where the corresponding treatment object will
+	 * be set to a status value of true in the database.
+	 * 
+	 * @param id of treatment
+	 * @return JSONObject containing 1 if success
+	 * 								 0 if failed
+	 * 		   null if empty or error
+	 */
 	public JSONObject updateTreatment(int id) {
-		
-		//Treatment treatment = new Treatment(Integer.parseInt(uid), treatmentname, password, firstName, lastName, nric, LocalDate.parse(dob), gender, phone1,
-				//phone2, phone3,  address1, address2, address3, zipcode1, zipcode2, zipcode3, qualify, bloodtype, nfcid);
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
 		String sql = "UPDATE CS3205.treatment SET status = ? WHERE treatment_id = ?";
@@ -192,10 +242,17 @@ public class TreatmentController {
 		return jsonObject;
 	}
 	
+	/*
+	 * This method takes in a treatment object where the treatment id will be used
+	 * to set the current consent and future consent of the corresponding treatment value
+	 * in the database.
+	 * 
+	 * @param id of treatment
+	 * @return JSONObject containing 1 if success
+	 * 								 0 if failed
+	 * 		   null if empty or error
+	 */
 	public JSONObject updateConsentSetting(Treatment treatment) {
-		
-		//Treatment treatment = new Treatment(Integer.parseInt(uid), treatmentname, password, firstName, lastName, nric, LocalDate.parse(dob), gender, phone1,
-				//phone2, phone3,  address1, address2, address3, zipcode1, zipcode2, zipcode3, qualify, bloodtype, nfcid);
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
 		String sql = "UPDATE CS3205.treatment SET current_consent = ?, future_consent = ? WHERE treatment_id = ?";
@@ -219,6 +276,15 @@ public class TreatmentController {
 		return jsonObject;
 	}
 	
+	/*
+	 * This method deletes the treatment entry on the database based on the treatment id.
+	 * 
+	 * @param id of treatment
+	 * 
+	 * @return JSONObject contained the result of the operation. 1 is success.
+	 * 															 0 is failed.
+	 * 		   null if error
+	 */
 	public JSONObject deleteTreatment(int id) {
 		int result = 0;
 		JSONObject jsonObject = new JSONObject();
@@ -242,6 +308,14 @@ public class TreatmentController {
 		return jsonObject;
 	}
 	
+	/*
+	 * This method will take in a result set of a SQL operation and prepares a
+	 * list of treatment object with the corresponding fields from the result set
+	 * 
+	 * @param result of SQL query
+	 * @return ArrayList of Treatment objects
+	 * 
+	 */
 	private ArrayList<Treatment> resultSetToTreatmentList(ResultSet resultSet) throws SQLException {
 		// ResultSet is initially before the first data set
 		ArrayList<Treatment> treatmentList = new ArrayList<Treatment>();
@@ -259,6 +333,13 @@ public class TreatmentController {
 		return treatmentList;
 	}
 	
+	/*
+	 * This method will take in a treatment object and build a json object containing it.
+	 * 
+	 * @param result of SQL query
+	 * @return JSONObject of Treatment object
+	 * 
+	 */
 	private JSONObject buildTreatmentObject(Treatment treatment) {
 		JSONObject jsonObjectTreatment = new JSONObject(treatment);
 		return jsonObjectTreatment;
