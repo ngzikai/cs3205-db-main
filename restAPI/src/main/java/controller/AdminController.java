@@ -93,12 +93,10 @@ public class AdminController {
 	
 	/*
 	 * This method will take in a result set of a SQL operation and prepares a
-	 * JSONObject with all required fields from the corresponding fields
-	 * from the result set of the query
+	 * list of Admin object with the corresponding fields from the result set
 	 * 
 	 * @param result of SQL query
-	 * @return JSONArray of JSONObjects
-	 * 		   null if empty
+	 * @return ArrayList of Admin objects
 	 * 
 	 */
 	private ArrayList<Admin> resultSetToAdminList(ResultSet resultSet) throws SQLException {

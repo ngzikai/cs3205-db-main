@@ -15,6 +15,12 @@ import utils.db.MySQLAccess;
 
 public class OTLController {
 
+	/*
+	 * This method will get all One time links' value from the database and return them.
+	 * 
+	 * @return JSONObject containing the result
+	 * 		  null if empty or error
+	 */
 	public JSONObject getAllOTL() {
 		JSONObject jsonObjectFinal = new JSONObject();
 		ArrayList<OneTimeLink> otlList = null;
@@ -41,7 +47,15 @@ public class OTLController {
 	}
 	
 	
-	// This method will take in a treatment name and return the treatment object from the database;
+	/*
+	 * This method will take in a token and 
+	 * return the one time link object from the database.
+	 * 
+	 * @param token
+	 * 
+	 * @return JSONObject containing the result
+	 * 		  null if empty or error
+	 */
 	public JSONObject getOTLWithToken(String token) {
 		JSONObject jsonObject = new JSONObject();
 		ArrayList<OneTimeLink> otlList = null;
@@ -70,12 +84,34 @@ public class OTLController {
 		return jsonObject;
 	}
 
+	/*
+	 * This method will create a One Time Link object with the necessary variables to be stored in the database. 
+	 * 
+	 * @param token
+	 * 		  uid
+	 * 		  filepath
+	 * 		  csrf
+	 * 		  dataType
+	 * 
+	 * @return JSONobject containing 1 if success.
+	 * 								 0 if failed.
+	 * 		   null if empty or error
+	 */
 	public JSONObject createOTL(String token, int uid, String filepath, String csrf, String dataType) {
 		OneTimeLink otl = new OneTimeLink(token, filepath, csrf, uid, dataType);
 		JSONObject jsonObject = createOTL(otl);
 		return jsonObject;
 	}
 	
+	/*
+	 * This method will create a One Time Link object with the necessary variables to be stored in the database. 
+	 * 
+	 * @param onetimelink object
+	 * 
+	 * @return JSONobject containing 1 if success.
+	 * 								 0 if failed.
+	 * 		   null if empty or error
+	 */
 	public JSONObject createOTL(OneTimeLink otl) {
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
@@ -102,10 +138,18 @@ public class OTLController {
 		return jsonObject;
 	}
 
+	/*
+	 * This method takes in a token and a csrf token where the one time link will be set
+	 * to the entry corresponding csrf token in the database.
+	 * 
+	 * @param token
+	 * 		  csrf
+	 * @return JSONObject containing 1 if success
+	 * 								 0 if failed
+	 * 		   null if empty or error
+	 */
 	public JSONObject updateCSRF(String token, String csrf) {
 		
-		//Treatment treatment = new Treatment(Integer.parseInt(uid), treatmentname, password, firstName, lastName, nric, LocalDate.parse(dob), gender, phone1,
-				//phone2, phone3,  address1, address2, address3, zipcode1, zipcode2, zipcode3, qualify, bloodtype, nfcid);
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
 		String sql = "UPDATE CS3205.one_time_link SET csrf = ? WHERE token = ?";
@@ -128,7 +172,15 @@ public class OTLController {
 		return jsonObject;
 	}
 	
-	
+	/*
+	 * This method deletes the one time link entry on the database based on the token.
+	 * 
+	 * @param token
+	 * 
+	 * @return JSONObject contained the result of the operation. 1 is success.
+	 * 															 0 is failed.
+	 * 		   null if error
+	 */
 	public JSONObject deleteOTL(String token) {
 		int result = 0;
 		JSONObject jsonObject = new JSONObject();
@@ -152,6 +204,14 @@ public class OTLController {
 		return jsonObject;
 	}
 	
+	/*
+	 * This method will take in a result set of a SQL operation and prepares a
+	 * list of one time link object with the corresponding fields from the result set
+	 * 
+	 * @param result of SQL query
+	 * @return ArrayList of Otl objects
+	 * 
+	 */
 	private ArrayList<OneTimeLink> resultSetToOtlList(ResultSet resultSet) throws SQLException {
 		// ResultSet is initially before the first data set
 		ArrayList<OneTimeLink> treatmentList = new ArrayList<OneTimeLink>();
@@ -168,6 +228,13 @@ public class OTLController {
 		return treatmentList;
 	}
 	
+	/*
+	 * This method will take in a one time link object and build a json object containing it.
+	 * 
+	 * @param result of SQL query
+	 * @return JSONObject of Otl object
+	 * 
+	 */
 	private JSONObject buildTreatmentObject(OneTimeLink otl) {
 		JSONObject jsonObjectTreatment = new JSONObject();
 		jsonObjectTreatment.put("token", otl.getToken()); 
