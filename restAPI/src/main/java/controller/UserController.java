@@ -136,7 +136,7 @@ public class UserController {
 	public JSONObject getUserPublicInfo(String uid) {
 		JSONObject jsonObject = new JSONObject();
 		User user = null;
-		String sql = "SELECT uid, firstname, lastname, sex, phone1, qualify FROM CS3205.user WHERE uid = ? ";
+		String sql = "SELECT uid, firstname, lastname, sex, phone1, qualify, ethnicity FROM CS3205.user WHERE uid = ? ";
 		System.out.println("Retrieving details of User account: " + uid);
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
@@ -700,7 +700,8 @@ public class UserController {
 			char sex = resultSet.getString("sex").charAt(0);
 			String phone = resultSet.getString("phone1");
 			int qualify = resultSet.getInt("qualify");
-			user = new User(id, firstName, lastName, sex, phone, qualify);
+			String ethnicity = resultSet.getString("ethnicity");
+			user = new User(id, firstName, lastName, sex, phone, qualify, ethnicity);
 		}
 		MySQLAccess.close();
 		return user;
@@ -722,6 +723,7 @@ public class UserController {
 		jsonObjectUser.put("sex", user.getSex()+"");
 		jsonObjectUser.put("phone", user.getPhone()[0]);
 		jsonObjectUser.put("qualify", user.getQualify());
+		jsonObjectUser.put("ethnicity", user.getEthnicity());
 		return jsonObjectUser;
 	}
 
