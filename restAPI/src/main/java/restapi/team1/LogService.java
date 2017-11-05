@@ -38,7 +38,7 @@ public class LogService {
 	@Produces("application/json")
 	public Response createLogPost(InputStream inputstream) throws JSONException {
 		JSONObject input = parseJSON(inputstream);
-		Log log = new Log(input.getString("api"), input.getString("classification"), new Timestamp(input.getInt("time"))
+		Log log = new Log(input.getString("api"), input.getString("classification"), new Timestamp(input.getLong("time"))
 				, input.getInt("uid"), input.getString("description"));
 		JSONObject jsonObject = new JSONObject();
 		jsonObject = lc.createLog(log);

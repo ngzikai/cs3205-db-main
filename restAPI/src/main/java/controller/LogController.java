@@ -24,7 +24,7 @@ public class LogController {
 	public JSONObject getAllLog() {
 		JSONObject jsonObjectFinal = new JSONObject();
 		ArrayList<Log> logList = null;
-		String sql = "SELECT * FROM CS3205.transaction_logs";
+		String sql = "SELECT * FROM CS3205.transaction_logs ORDER BY log_id DESC";
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
 			PreparedStatement preparedStatement = connect.prepareStatement(sql);
