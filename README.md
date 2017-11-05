@@ -1,4 +1,4 @@
-# cs3205-db-main
+# CS3205 Server 4 (Database Server)
 
 # Overview
 Web Server: Apache Tomcat
