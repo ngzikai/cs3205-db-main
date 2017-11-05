@@ -662,7 +662,7 @@ public class UserController {
 		jsonObjectUser.put("ethnicity", user.getEthnicity());
 		jsonObjectUser.put("nationality", user.getNationality());
 		jsonObjectUser.put("drugAllergy", user.isDrugAllergy());
-		user.print();
+		//user.print();
 		return jsonObjectUser;
 	}
 
