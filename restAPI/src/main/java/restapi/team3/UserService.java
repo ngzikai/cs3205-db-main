@@ -83,7 +83,9 @@ public class UserService {
 
 		// check number of login attempts
 		UserMetaData umd = udc.getMetaData(user.getString("username"));
+		boolean firstTime = false;
 		if(umd == null){
+			firstTime = true;
 			umd = new UserMetaData(Integer.parseInt(user.get("uid").toString()), 0, System.currentTimeMillis());
 		}
 		int lockAttempts = umd.getLockAttempts();
@@ -91,7 +93,7 @@ public class UserService {
 		long currentTimeMillis = System.currentTimeMillis();
 		long totalWaitingTime = ((long)(Math.pow(2, lockAttempts)*1000)+lastAttempt);
 		long timeDifference = totalWaitingTime - currentTimeMillis;
-		if ( timeDifference > 0){
+		if ( timeDifference > 0 && !firstTime){
 			return Response.status(Response.Status.BAD_REQUEST)
 										 .entity("LoginTimeout:"+ (timeDifference/1000))
 										 .header("X-Timeout", (timeDifference/1000))
@@ -116,8 +118,8 @@ public class UserService {
 		// remove challenge as it has been used
 		udc.deleteUserChallenge(user.getString("username"), "login");
 
-		if(debugMode || response.length == 32 && udc.validateResponse(response, challenge, passwordHash)){
-			return validateNFCResponse(nfcToken);
+		if(response.length == 32 && udc.validateResponse(response, challenge, passwordHash)){
+			return validateNFCResponse(nfcToken, debugMode);
 		}
 		// User failed to login, increase lock attempt
 		lockAttempts++;
@@ -130,9 +132,12 @@ public class UserService {
 	 */
 	@POST
 	@Path("/validatenfc")
-	public Response validateNFCResponse(@HeaderParam("X-NFC-Response")String nfcToken){
+	public Response validateNFCResponse(@HeaderParam("X-NFC-Response")String nfcToken, boolean debugMode){
 		// Obtain the NFC challenge in the database
 		UserChallenge uc = udc.getChallengeData(user.getString("username"), "nfc");
+		if(debugMode){
+			return Response.status(200).entity(user.getInt("uid")).build();
+		}
 		if (uc == null){
 			return Response.status(401).entity("No NFC challenge found for user.").build();
 		}
@@ -172,6 +177,7 @@ public class UserService {
 				return Response.status(401).entity("No salt for the user.").build();
 			}
 		}
+		System.out.println("salt asdas"+salt);
 		return Response.status(200).entity(salt).build();
 	}
 
