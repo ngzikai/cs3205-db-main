@@ -112,6 +112,7 @@ public class TimeseriesController {
 					}
 				} catch(Exception e) {
 					//HANDLE ERROR RESPONSE
+					e.printStackTrace();
 					throw new WebApplicationException("File Not Found");
 				}
 			}
