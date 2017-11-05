@@ -73,42 +73,27 @@ public class SessionController {
 	}
 
 	public Data get(int rid){
-			String sql = "SELECT * FROM CS3205.data WHERE rid = ?";
-			Data data = null;
-			try{
-				PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
-				ps.setInt(1, rid);
-				ResultSet rs = ps.executeQuery();
-				while(rs.next()){
-					data = new Data();
-					data.setRid(rs.getInt("rid"));
-					data.setUid(rs.getInt("uid"));
-					data.setType(rs.getString("type"));
-					data.setSubtype(rs.getString("subtype"));
-					data.setContent(rs.getString("content"));
-					data.setTitle(rs.getString("title"));
-					data.setCreationdate(rs.getTimestamp("creationdate"));
-					data.setModifieddate(rs.getTimestamp("modifieddate"));
-					break;
-				}
-				ps.close();
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-			return data;
+		return get(-1, rid);
 	}
 
 	public Data get(int userID, int rid){
-		String sql = "SELECT * FROM CS3205.data WHERE `uid` = ? AND `rid` = ?";
+		return get(userID, rid, null);
+	}
+
+	public Data get(int userID, int rid, String type){
+		String insertUid = (userID == -1) ? "`uid`" : "?";
+		String insertType = (type == null) ? "`subtype`" : "?";
+		String sql = "SELECT * FROM CS3205.data WHERE `rid` = ? AND `uid` = "+insertUid+" AND `subtype` = "+insertType;
 		Data data = null;
 		try{
 			PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
-			if(userID == -1){
-				ps.setString(1, "`uid`");
-			} else {
-				ps.setInt(1, userID);
+			ps.setInt(1, rid);
+			if(userID != -1){
+				ps.setInt(2, userID);
 			}
-			ps.setInt(2, rid);
+			if(type != null){
+				ps.setString(3, type);
+			}
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
 				data = setAllData(rs);
@@ -170,6 +155,9 @@ public class SessionController {
 	}
 
 	public File getActualFile(String fileLocation, int userID, String type){
+		if(type.equalsIgnoreCase("step")){
+			type = "time series";
+		}
 		return getActualFile(fileDirectory + "/" + userID + "/" + type + "/" + fileLocation);
 	}
 
