@@ -16,7 +16,7 @@ The storage system involves the database server, MySQL, to store most of the dat
 
 [List of endpoint APIs](restAPI/src/main/webapp/dunno_dun_tell.jsp)
 
-#Security
+# Security
 In order to secure the communication channel between the front serving servers and the database server, we established a two-way SSL authentication protocol using digital certificates signed by server 4. This allows authentication and authorization of the usage of the API provided by server 4, as well as encrypting the communication channel up to ensure confidentiality of information. 
 
 On top of that, basic authentication is also used to verify that only authorized users are to use the specific endpoints. 
