@@ -26,28 +26,26 @@ import net.bramp.ffmpeg.probe.FFmpegFormat;
 import net.bramp.ffmpeg.probe.FFmpegStream;
 import net.bramp.ffmpeg.FFprobe;
 
-
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-
-
 public class SessionService{
 
 	private String fileDirectory = SystemConfig.getConfig("storage_directory");
 	private int userID;
 	SessionController sc = null;
 	private String type = "";
+	private JSONObject user = null;
+	private UserDataController udc;
 
 	public SessionService(){
 		 sc = new SessionController();
+		 udc = new UserDataController(user);
 	}
 
-	public SessionService(String type, int userID){
+	public SessionService(String type, int userID, JSONObject user){
 		sc = new SessionController();
 		this.userID = userID;
 		this.type = type;
+		this.user = user;
+		udc = new UserDataController(user);
 	}
 
 	@Path("/get/{uid}/meta")
@@ -149,7 +147,7 @@ public class SessionService{
 			Gson gson = new Gson();
 			String json = gson.toJson(stepsDataList.get(i));
 			InputStream stream = new ByteArrayInputStream(json.getBytes());
-			Response response = insert(createdDate, stream);
+			Response response = insert("RANDOM FOR NOW", createdDate, stream);
 			System.out.println("result of insert:"+response.getStatus());
 		}
 		return Response.status(200).entity("test").build();
@@ -158,7 +156,32 @@ public class SessionService{
 	@Path("/upload/{timestamp}")
 	@POST
 	@Produces("application/octet-stream")
-	public Response insert(@PathParam("timestamp") long createdDate, InputStream inputstream){
+	public Response insert(@HeaderParam("X-NFC-Response")String nfcToken, @PathParam("timestamp") long createdDate, InputStream inputstream){
+		if(nfcToken == null){
+			return Response.status(401).entity("No NFC Token provided.").build();
+		}
+		// Obtain the NFC challenge in the database
+		UserChallenge uc = udc.getChallengeData(user.getString("username"), "nfc");
+		if (uc == null){
+			return Response.status(401).entity("No NFC challenge found for user.").build();
+		}
+		// Base64 decode
+		byte[] challenge = Base64.getDecoder().decode(uc.getChallengeString().getBytes());
+		System.out.println(Base64.getEncoder().encodeToString(challenge));
+		// Base64 decode user's nfc response
+		byte[] nfcTokenByte = Base64.getDecoder().decode(nfcToken.getBytes());
+		System.out.println("NFCTOKEN: "+nfcToken);
+		// Base64 decode the hash(secret) nfcid of the database
+		byte[] nfcHash = Base64.getDecoder().decode(user.getString("nfcid").getBytes());
+		System.out.println(user.getString("nfcid"));
+
+		// remove challenge as it has been used
+		udc.deleteUserChallenge(user.getString("username"), "nfc");
+
+		if(!udc.validateNFCResponse(nfcTokenByte, challenge, nfcHash)){
+			return Response.status(401).entity("Invalid NFC token.").build();
+		}
+
 		if(type.equalsIgnoreCase("heart")){
 			int heartrate = -1;
 			try{

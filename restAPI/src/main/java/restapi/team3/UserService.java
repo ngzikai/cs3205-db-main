@@ -133,6 +133,9 @@ public class UserService {
 	@POST
 	@Path("/validatenfc")
 	public Response validateNFCResponse(@HeaderParam("X-NFC-Response")String nfcToken, boolean debugMode){
+		if(nfcToken == null){
+			return Response.status(401).entity("No NFC Token provided.").build();
+		}
 		// Obtain the NFC challenge in the database
 		UserChallenge uc = udc.getChallengeData(user.getString("username"), "nfc");
 		if(debugMode){
