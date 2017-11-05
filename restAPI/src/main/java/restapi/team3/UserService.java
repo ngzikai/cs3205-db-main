@@ -10,6 +10,7 @@ import java.security.SecureRandom;
 // Jersey imports
 import javax.ws.rs.Path;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.client.ClientBuilder;
@@ -82,12 +83,17 @@ public class UserService {
 
 		// check number of login attempts
 		UserMetaData umd = udc.getMetaData(user.getString("username"));
+		boolean firstTime = false;
+		if(umd == null){
+			firstTime = true;
+			umd = new UserMetaData(Integer.parseInt(user.get("uid").toString()), 0, System.currentTimeMillis());
+		}
 		int lockAttempts = umd.getLockAttempts();
 		long lastAttempt = umd.getLastAttempt();
 		long currentTimeMillis = System.currentTimeMillis();
 		long totalWaitingTime = ((long)(Math.pow(2, lockAttempts)*1000)+lastAttempt);
 		long timeDifference = totalWaitingTime - currentTimeMillis;
-		if ( timeDifference > 0){
+		if ( timeDifference > 0 && !firstTime){
 			return Response.status(Response.Status.BAD_REQUEST)
 										 .entity("LoginTimeout:"+ (timeDifference/1000))
 										 .header("X-Timeout", (timeDifference/1000))
@@ -112,8 +118,8 @@ public class UserService {
 		// remove challenge as it has been used
 		udc.deleteUserChallenge(user.getString("username"), "login");
 
-		if(debugMode || response.length == 32 && udc.validateResponse(response, challenge, passwordHash)){
-			return validateNFCResponse(nfcToken);
+		if(response.length == 32 && udc.validateResponse(response, challenge, passwordHash)){
+			return validateNFCResponse(nfcToken, debugMode);
 		}
 		// User failed to login, increase lock attempt
 		lockAttempts++;
@@ -126,9 +132,15 @@ public class UserService {
 	 */
 	@POST
 	@Path("/validatenfc")
-	public Response validateNFCResponse(@HeaderParam("X-NFC-Response")String nfcToken){
+	public Response validateNFCResponse(@HeaderParam("X-NFC-Response")String nfcToken, boolean debugMode){
+		if(nfcToken == null){
+			return Response.status(401).entity("No NFC Token provided.").build();
+		}
 		// Obtain the NFC challenge in the database
 		UserChallenge uc = udc.getChallengeData(user.getString("username"), "nfc");
+		if(debugMode){
+			return Response.status(200).entity(user.getInt("uid")).build();
+		}
 		if (uc == null){
 			return Response.status(401).entity("No NFC challenge found for user.").build();
 		}
@@ -147,6 +159,8 @@ public class UserService {
 
 		// Validate the parameters
 		if(udc.validateNFCResponse(nfcTokenByte, challenge, nfcHash)){
+			// Reset attempts
+			udc.setLockAttempt(user.getString("username"), 0, System.currentTimeMillis());
 			return Response.status(200).entity(user.getInt("uid")).build();
 		}
 		return Response.status(401).entity("Invalid NFC Response.").build();
@@ -159,14 +173,23 @@ public class UserService {
 	public Response getSalt(){
 		String salt = user.getString("salt2");
 		if(salt.isEmpty()){
-			return Response.status(401).entity("No salt for the user.").build();
+			// generate new salt for the user
+			salt = GUID.BASE58();
+			int result = udc.setSalt(salt);
+			if( result == 1){
+				user.put("salt2", salt);
+			} else {
+				return Response.status(401).entity("No salt for the user.").build();
+			}
 		}
+		System.out.println("salt asdas"+salt);
 		return Response.status(200).entity(salt).build();
 	}
 
 	/**
 	 * Populate the default password and new salt for the user
 	 */
+	@Deprecated
 	@GET
 	@Path("/passwordandsalt")
 	public Response setPasswordAndSalt(){
@@ -190,6 +213,41 @@ public class UserService {
 		if(result.getInt("result") == 1){
 			// return back h(h(pwd+salt)) for debugging purposes
 			response = Response.status(200).entity(user.getString("password2")).build();
+		}
+		return response;
+	}
+
+	@POST
+	@Path("/setpassword")
+	public Response setPassword2(@QueryParam("password") String password){
+		Response response = Response.status(401).entity("Setting password failed.").build();
+		if(password == null){
+			return response;
+		}
+		byte[] passwordHash = Base64.getDecoder().decode(password.getBytes()); // h(pwd + salt)
+		if (passwordHash.length < 32){
+			return response;
+		}
+		String hashOfHashPass = "";
+		try{
+			MessageDigest digest = MessageDigest.getInstance("SHA-256");
+			byte[] bytes = digest.digest(passwordHash); // h(h(pwd + salt))
+			System.out.println("h(h(pwd + salt)):"+Base64.getEncoder().encodeToString(bytes));
+			hashOfHashPass = Base64.getEncoder().encodeToString(bytes);
+			System.out.println("hashOfHashPass: "+hashOfHashPass);
+		}catch(Exception e){
+			e.printStackTrace();
+			return Response.status(500).entity("Internal Server Error while generating hash.").build();
+		}
+		String salt = getSalt().readEntity(String.class);
+		if(salt.equalsIgnoreCase("No salt for the user.")){
+			return Response.status(500).entity("Internal Server Error while generating salt.").build();
+		}
+		JSONObject result = udc.updateUserPassword2(user.getString("username"), hashOfHashPass, salt);
+		user.put("password2", hashOfHashPass);
+		user.put("salt2", salt);
+		if(result.getInt("result") == 1){
+			response = Response.status(200).entity("Password successfully updated").build();
 		}
 		return response;
 	}

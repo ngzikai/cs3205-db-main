@@ -14,6 +14,7 @@ import entity.UserMetaData;
 // Utils imports
 import utils.db.MySQLAccess;
 import utils.team3.*;
+import utils.Logger;
 
 public class UserDataController extends UserController{
 
@@ -106,12 +107,29 @@ public class UserDataController extends UserController{
 			ps.setString(1, value);
 			ps.setString(2, user.getString("username"));
 			result = ps.executeUpdate();
+			String statement = ps.toString();
+			Logger.log(Logger.API.TEAM3.name(), Logger.TYPE.WRITE.name(),  statement, result);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		return result;
 	}
 
+	public int setSalt(String salt){
+		String sql = "UPDATE CS3205.user SET salt2 = ? WHERE username = ?";
+		int result = 0;
+		try{
+			PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
+			ps.setString(1, salt);
+			ps.setString(2, user.getString("username"));
+			result = ps.executeUpdate();
+			String statement = ps.toString();
+			Logger.log(Logger.API.TEAM3.name(), Logger.TYPE.WRITE.name(),  statement, result);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return result;
+	}
 
 	public Response issueChallenge(String type){
 		// generate challenge token
