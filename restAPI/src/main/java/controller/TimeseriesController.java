@@ -97,27 +97,31 @@ public class TimeseriesController {
 		}
 		
 		Cryptography crypto = Cryptography.getInstance();
+		StreamingOutput fileStream;
 		
-		StreamingOutput fileStream = new StreamingOutput() {
-			@Override
-			public void write(java.io.OutputStream output) throws IOException, WebApplicationException{
-				try {
-					while(!paths.isEmpty()) {
-						java.nio.file.Path path = Paths.get(paths.getFirst());
-						byte[] data = Files.readAllBytes(path);
-						byte[] decrypt = crypto.decrypt(data);
-						output.write(decrypt);
-						output.flush();
-						paths.removeFirst();
+		try {
+			fileStream = new StreamingOutput() {
+				@Override
+				public void write(java.io.OutputStream output) throws IOException, WebApplicationException{
+					try {
+						while(!paths.isEmpty()) {
+							java.nio.file.Path path = Paths.get(paths.getFirst());
+							byte[] data = Files.readAllBytes(path);
+							byte[] decrypt = crypto.decrypt(data);
+							output.write(decrypt);
+							output.flush();
+							paths.removeFirst();
+						}
+					} catch(Exception e) {
+						//HANDLE ERROR RESPONSE
+						e.printStackTrace();
+						throw new WebApplicationException("File Not Found");
 					}
-				} catch(Exception e) {
-					//HANDLE ERROR RESPONSE
-					e.printStackTrace();
-					throw new WebApplicationException("File Not Found");
 				}
-			}
-		};
-		
+			};
+		} catch(Exception e) {
+			return null;
+		}
 		return Response.ok(fileStream, MediaType.APPLICATION_OCTET_STREAM).header("content-disposition", "attachment; filename = " + key +".json").build(); 
 		
 	}
