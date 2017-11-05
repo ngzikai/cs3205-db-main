@@ -83,6 +83,9 @@ public class UserService {
 
 		// check number of login attempts
 		UserMetaData umd = udc.getMetaData(user.getString("username"));
+		if(umd == null){
+			umd = new UserMetaData(Integer.parseInt(user.get("uid").toString()), 0, System.currentTimeMillis());
+		}
 		int lockAttempts = umd.getLockAttempts();
 		long lastAttempt = umd.getLastAttempt();
 		long currentTimeMillis = System.currentTimeMillis();
