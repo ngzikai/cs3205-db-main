@@ -1,6 +1,7 @@
 package utils.team3;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -73,6 +74,7 @@ public class JSONUtil {
 			try {
 				processCSV(data, folderPath, fileNames[1]);
 				// processMETA(data, folderPath, fileNames[0]);
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -117,7 +119,8 @@ public class JSONUtil {
 			for (Steps_Channel channel : channels) {
 				channelsValues.add(channel.getValues());
 			}
-
+			File f = new File(fileFolder+fileName);
+			f.getParentFile().mkdirs();
 			FileWriter writer = new FileWriter(fileFolder + fileName);
 
 			for (int j = 0; j < timeValues.size(); j++) {

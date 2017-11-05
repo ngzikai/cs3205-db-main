@@ -36,7 +36,7 @@ public class Generate {
 			}
 		}
 
-		private static ArrayList<Steps> createStepsData(int noOFDataSessions) {
+		public static ArrayList<Steps> createStepsData(int noOFDataSessions) {
 			ArrayList<Steps> stepsDataList = new ArrayList<Steps>();
 
 			for (int i = 0; i < noOFDataSessions; i++) {

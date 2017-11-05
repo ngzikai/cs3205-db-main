@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.sql.Timestamp;
 import entity.*;
 import entity.steps.*;
-import utils.team3.CommonUtil;
 
 import org.json.JSONObject;
 import com.google.gson.*;
@@ -17,6 +16,9 @@ import com.google.gson.*;
 import utils.SystemConfig;
 import utils.GUID;
 import utils.ImageChecker;
+import utils.team3.CommonUtil;
+import utils.team3.JSONUtil;
+import utils.team3.Generate;
 
 // Video Checking
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
@@ -71,6 +73,28 @@ public class SessionService{
 		return Response.status(500).entity("Server error, contact the administrator.").build();
 	}
 
+	@Path("/get/{uid}/csv")
+	@GET
+	@Produces("application/octet-stream")
+	public Response getCSV(@PathParam("uid") int uid){
+		Data data = null;
+		data = sc.get(userID, uid, type);
+
+		if(data == null){
+			return Response.status(400).entity("Invalid request.").build();
+		}
+
+		if(data.getSubtype().equalsIgnoreCase("step")){
+				Steps s = sc.readStepFile(data.getAbsolutePath());
+				String[] filesLocation = JSONUtil.stepsToCSVAndMeta(s, fileDirectory+"/time series/csv/", data.getContent());
+				System.out.println("fileLocation: "+filesLocation[1]);
+				File file = new File(fileDirectory+"/time series/csv/"+filesLocation[1]);
+				return Response.ok(file, "application/octet-stream").build();
+		}
+
+		return Response.status(400).entity("Invalid request.").build();
+	}
+
 	@Path("/get/{uid}")
 	@GET
 	@Produces("application/octet-stream")
@@ -114,6 +138,21 @@ public class SessionService{
 						.header("Access-Control-Allow-Origin", "*")
 						.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
 						.build();
+	}
+
+	@GET
+	@Path("/generate/{timestamp}")
+	@Produces("application/octet-stream")
+	public Response generateData(@PathParam("timestamp") long createdDate){
+		ArrayList<Steps> stepsDataList = Generate.createStepsData(10);
+		for (int i = 0; i < stepsDataList.size(); i++) {
+			Gson gson = new Gson();
+			String json = gson.toJson(stepsDataList.get(i));
+			InputStream stream = new ByteArrayInputStream(json.getBytes());
+			Response response = insert(createdDate, stream);
+			System.out.println("result of insert:"+response.getStatus());
+		}
+		return Response.status(200).entity("test").build();
 	}
 
 	@Path("/upload/{timestamp}")
