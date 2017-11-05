@@ -205,6 +205,8 @@ public class HeartRateController {
 	
 	public LinkedList<Week> addHeartRate(LinkedList<Week> weeks, int dayOfWeek, HeartRate heartRate) {
 		
+		heartRate.setDate(null);
+		
 		if(dayOfWeek == 2) {
 			weeks.getLast().getDays().getMonday().add(heartRate);
 		}else if(dayOfWeek == 3) {
