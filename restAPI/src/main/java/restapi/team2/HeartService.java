@@ -20,7 +20,13 @@ public class HeartService {
 	
 	@POST
 	public LinkedList<Week> getHeartData(SearchResult user){
-		return hc.getHeartRate(user.getUid());
+		LinkedList<Week> results = hc.getHeartRate(user.getUid());
+		
+		if(results != null) {
+			return results;
+		}else {
+			return new LinkedList<Week>();
+		}
 	}
 	
 
