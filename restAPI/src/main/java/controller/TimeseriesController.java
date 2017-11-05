@@ -77,8 +77,12 @@ public class TimeseriesController {
 		
 		MySQLAccess.close();
 		
+		for(String path : paths) {
+			System.out.println("Debug: " + path);
+		}
 		
 		if(paths.isEmpty()) {
+			System.out.println("Paths is empty!");
 			return null;
 		}else {
 			return generateResponse(paths, key);
