@@ -192,15 +192,16 @@ public class CategoryController {
 	}
 	
 	public ResearcherCategory getResearcherCategories(String researcher_id){
-		String sql = "SELECT researcher_category.category_id, "
-				+ "category.category_name, researcher_category.approval_status "
-				+ "FROM researcher_category, category "
-				+ "WHERE researcher_category.category_id = category.category_id AND researcher_id = ?";
+		String sql = "SELECT researcher_category.category_id, category.category_name, researcher_category.approval_status, researcher.researcher_username\n" + 
+				"FROM researcher_category, category, researcher WHERE researcher_category.category_id = category.category_id "
+				+ "AND researcher.researcher_id = researcher_category.researcher_id "
+				+ "AND researcher_category.researcher_id = ?";
 		
 		Connection connect = MySQLAccess.connectDatabase();
 		
 		ArrayList<CategoryStatus> categories = new ArrayList<CategoryStatus>();
 		ResearcherCategory researcher;
+		String researcher_username = "";
 		
 		try {
 			PreparedStatement ps = connect.prepareStatement(sql);
@@ -212,6 +213,7 @@ public class CategoryController {
 			
 			while (rs.next()) {
 				categories.add(new CategoryStatus(rs.getString(1), rs.getString(2), rs.getString(3)));
+				researcher_username = rs.getString(4);
 			}
 			
 			
@@ -222,7 +224,7 @@ public class CategoryController {
 		}
 		
 		ResearcherController rc = new ResearcherController();
-		Researcher currResearcher = rc.getResearcher(researcher_id);
+		Researcher currResearcher = rc.getResearcher(researcher_username);
 		
 		if(categories.isEmpty()) {
 			return null;
