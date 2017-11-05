@@ -10,6 +10,7 @@ import java.security.SecureRandom;
 // Jersey imports
 import javax.ws.rs.Path;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.client.ClientBuilder;
@@ -159,7 +160,14 @@ public class UserService {
 	public Response getSalt(){
 		String salt = user.getString("salt2");
 		if(salt.isEmpty()){
-			return Response.status(401).entity("No salt for the user.").build();
+			// generate new salt for the user
+			salt = GUID.BASE58();
+			int result = udc.setSalt(salt);
+			if( result == 1){
+				user.put("salt2", salt);
+			} else {
+				return Response.status(401).entity("No salt for the user.").build();
+			}
 		}
 		return Response.status(200).entity(salt).build();
 	}
@@ -167,6 +175,7 @@ public class UserService {
 	/**
 	 * Populate the default password and new salt for the user
 	 */
+	@Deprecated
 	@GET
 	@Path("/passwordandsalt")
 	public Response setPasswordAndSalt(){
@@ -190,6 +199,41 @@ public class UserService {
 		if(result.getInt("result") == 1){
 			// return back h(h(pwd+salt)) for debugging purposes
 			response = Response.status(200).entity(user.getString("password2")).build();
+		}
+		return response;
+	}
+
+	@POST
+	@Path("/setpassword")
+	public Response setPassword2(@QueryParam("password") String password){
+		Response response = Response.status(401).entity("Setting password failed.").build();
+		if(password == null){
+			return response;
+		}
+		byte[] passwordHash = Base64.getDecoder().decode(password.getBytes()); // h(pwd + salt)
+		if (passwordHash.length < 32){
+			return response;
+		}
+		String hashOfHashPass = "";
+		try{
+			MessageDigest digest = MessageDigest.getInstance("SHA-256");
+			byte[] bytes = digest.digest(passwordHash); // h(h(pwd + salt))
+			System.out.println("h(h(pwd + salt)):"+Base64.getEncoder().encodeToString(bytes));
+			hashOfHashPass = Base64.getEncoder().encodeToString(bytes);
+			System.out.println("hashOfHashPass: "+hashOfHashPass);
+		}catch(Exception e){
+			e.printStackTrace();
+			return Response.status(500).entity("Internal Server Error while generating hash.").build();
+		}
+		String salt = getSalt().readEntity(String.class);
+		if(salt.equalsIgnoreCase("No salt for the user.")){
+			return Response.status(500).entity("Internal Server Error while generating salt.").build();
+		}
+		JSONObject result = udc.updateUserPassword2(user.getString("username"), hashOfHashPass, salt);
+		user.put("password2", hashOfHashPass);
+		user.put("salt2", salt);
+		if(result.getInt("result") == 1){
+			response = Response.status(200).entity("Password successfully updated").build();
 		}
 		return response;
 	}
