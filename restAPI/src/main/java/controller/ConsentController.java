@@ -231,7 +231,7 @@ public class ConsentController {
 			preparedStatement.setInt(2, therapistId);
 			String statement = preparedStatement.toString();
 			consentArray = processUidWithTherapistIdList(MySQLAccess.readDataBasePS(preparedStatement));
-			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, consentArray.length() == 0 ? 0 : 1);
+			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, consentArray==null ? 0 : 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
