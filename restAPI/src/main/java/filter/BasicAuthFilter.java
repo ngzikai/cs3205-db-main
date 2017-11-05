@@ -38,9 +38,12 @@ public class BasicAuthFilter implements ContainerRequestFilter {
 		
 		if(auth == null) {
 			//IF NO BASIC AUTH
-
-			Response unauthorized = Response.status(Response.Status.UNAUTHORIZED).entity("Did not fill in Basic Auth").build();
-			requestContext.abortWith(unauthorized);
+			if(requestContext.getUriInfo().getPath().contains(TEAM1_PREFIX)) {
+				return;
+			}else {
+				Response unauthorized = Response.status(Response.Status.UNAUTHORIZED).entity("Did not fill in Basic Auth").build();
+				requestContext.abortWith(unauthorized);
+			}
 
 		}else if(!auth.isEmpty()) {
 			
