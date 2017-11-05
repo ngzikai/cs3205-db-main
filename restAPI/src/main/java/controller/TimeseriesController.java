@@ -104,6 +104,7 @@ public class TimeseriesController {
 				@Override
 				public void write(java.io.OutputStream output) throws IOException, WebApplicationException{
 					try {
+						output.write(Byte.valueOf("["));
 						while(!paths.isEmpty()) {
 							java.nio.file.Path path = Paths.get(paths.getFirst());
 							byte[] data = Files.readAllBytes(path);
@@ -111,7 +112,17 @@ public class TimeseriesController {
 							output.write(decrypt);
 							output.flush();
 							paths.removeFirst();
+							
+							if(paths.isEmpty()) {
+								
+							}else {
+								output.write(Byte.valueOf(","));
+							}
 						}
+						
+						output.write(Byte.valueOf("]"));
+						output.flush();
+						output.close();
 					} catch(Exception e) {
 						//HANDLE ERROR RESPONSE
 						e.printStackTrace();
