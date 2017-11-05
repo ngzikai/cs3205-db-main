@@ -55,7 +55,7 @@ public class TimeseriesController {
 			return null;
 		}
 		
-		sql = "SELECT creationdate, content FROM data WHERE type = 'GMSv5_2-Foot_R' AND isAvailable = 1 AND uid = ? ORDER BY creationdate ASC";
+		sql = "SELECT creationdate, content FROM data WHERE title = 'GMSv5_2-Foot_R' AND isAvailable = 1 AND uid = ? ORDER BY creationdate ASC";
 		
 		LinkedList<String> paths = new LinkedList<String>();
 		
