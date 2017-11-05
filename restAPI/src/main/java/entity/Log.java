@@ -10,6 +10,7 @@ public class Log {
 	private int logId;
 	private String api;
 	private String classification;
+	@XmlJavaTypeAdapter(utils.TimeStampAdapter.class)
 	private Timestamp time;
 	private int uid;
 	private String description;
