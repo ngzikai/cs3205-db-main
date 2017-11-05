@@ -232,8 +232,6 @@ public class SessionService{
 					InputStream targetStream = new ByteArrayInputStream(content);
 					sc.writeToFile(targetStream, fileDirectory + "/" + data.getUid() + "/time series/" + data.getContent());
 					return Response.status(200).entity("successfully added step: " + data.getContent()).build();
-				} else {
-					// delete the record in the database
 				}
 			}catch(Exception e){
 				e.printStackTrace();
