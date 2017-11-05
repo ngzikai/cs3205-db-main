@@ -156,6 +156,8 @@ public class UserService {
 
 		// Validate the parameters
 		if(udc.validateNFCResponse(nfcTokenByte, challenge, nfcHash)){
+			// Reset attempts
+			udc.setLockAttempt(user.getString("username"), 0, System.currentTimeMillis());
 			return Response.status(200).entity(user.getInt("uid")).build();
 		}
 		return Response.status(401).entity("Invalid NFC Response.").build();
