@@ -174,6 +174,7 @@ public class SessionService{
 			try{
 				file = File.createTempFile(GUID.BASE58(), ".check");
 				writeToTempFile(file, inputstream);
+				// Server must have ffprobe installed
 				FFprobe ffprobe = new FFprobe("/usr/bin/ffprobe");
 				FFmpegProbeResult probeResult = ffprobe.probe(file.getAbsolutePath());
 				FFmpegFormat format = probeResult.getFormat();
@@ -229,7 +230,7 @@ public class SessionService{
 				int result = sc.insert(data);
 				if (result == 1){
 					InputStream targetStream = new ByteArrayInputStream(content);
-					sc.writeToFile(targetStream, fileDirectory + "/" + data.getUid() + "/" + type +"/" + data.getContent());
+					sc.writeToFile(targetStream, fileDirectory + "/" + data.getUid() + "/time series/" + data.getContent());
 					return Response.status(200).entity("successfully added step: " + data.getContent()).build();
 				} else {
 					// delete the record in the database
