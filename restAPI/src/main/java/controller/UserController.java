@@ -19,6 +19,12 @@ import utils.db.MySQLAccess;
 
 public class UserController {
 
+	/*
+	 * This method will get all users' value from the database and return them.
+	 * 
+	 * @return JSONObject containing the result
+	 * 		  null if empty or error
+	 */
 	public JSONObject getAllUser() {
 		JSONObject jsonObjectFinal = new JSONObject();
 		ArrayList<User> userList = null;
@@ -45,7 +51,14 @@ public class UserController {
 		return jsonObjectFinal;
 	}
 
-	// This method will take in a user name and return the user object from the database;
+	/*
+	 * This method will take in a user name and return the user object from the database.
+	 * 
+	 * @param username
+	 * 
+	 * @return JSONObject containing the result
+	 * 		  null if empty or error
+	 */
 	public JSONObject getUser(String username) {
 		JSONObject jsonObject = new JSONObject();
 		User user = null;
@@ -75,7 +88,14 @@ public class UserController {
 		return jsonObject;
 	}
 
-	// This method will take in a user name and return the user object from the database;
+	/*
+	 * This method will take in a user uid and return the user object from the database.
+	 * 
+	 * @param uid
+	 * 
+	 * @return JSONObject containing the result
+	 * 		  null if empty or error
+	 */
 	public JSONObject getUserWithUID(String uid) {
 		JSONObject jsonObject = new JSONObject();
 		ArrayList<User> userList = null;
@@ -104,11 +124,19 @@ public class UserController {
 		return jsonObject;
 	}
 
-	// This method will take in a user name and return the user object from the database;
+	/*
+	 * This method will take in a user uid and return only the public information
+	 * about the user object from the database.
+	 * 
+	 * @param uid
+	 * 
+	 * @return JSONObject containing the result
+	 * 		  null if empty or error
+	 */
 	public JSONObject getUserPublicInfo(String uid) {
 		JSONObject jsonObject = new JSONObject();
 		User user = null;
-		String sql = "SELECT uid, firstname, lastname, sex, phone1, qualify FROM CS3205.user WHERE uid = ? ";
+		String sql = "SELECT uid, firstname, lastname, sex, phone1, qualify, ethnicity FROM CS3205.user WHERE uid = ? ";
 		System.out.println("Retrieving details of User account: " + uid);
 		try {
 			Connection connect = MySQLAccess.connectDatabase();
@@ -132,6 +160,34 @@ public class UserController {
 		return jsonObject;
 	}
 
+	/*
+	 * This method will create a user object with the necessary variables to be stored in the database. 
+	 * 
+	 * @param 	username
+	 * 			password
+	 * 			salt
+	 * 			firstName
+	 * 			lastName
+	 * 			nric
+	 * 			dob
+	 * 			sex
+	 * 			phone1
+	 * 			phone2
+	 * 			phone3
+	 * 			address1
+	 * 			address2
+	 * 			address3
+	 * 			zipcode1
+	 * 			zipcode2
+	 * 			zipcode3
+	 * 			qualify
+	 * 			bloodtype
+	 * 			nfcid
+	 * 
+	 * @return JSONobject containing 1 if success.
+	 * 								 0 if failed.
+	 * 		   null if empty or error
+	 */
 	public JSONObject createUser(String username, String password, String salt, String firstName, String lastName,
 			String nric, String dob, char sex, String phone1, String phone2, String phone3, String address1,
 			String address2, String address3, int zipcode1, int zipcode2, int zipcode3, int qualify, String bloodtype,
@@ -142,6 +198,15 @@ public class UserController {
 		return jsonObject;
 	}
 
+	/*
+	 * This method will create a user object with the necessary variables to be stored in the database. 
+	 * 
+	 * @param user object
+	 * 
+	 * @return JSONobject containing 1 if success.
+	 * 								 0 if failed.
+	 * 		   null if empty or error
+	 */
 	public JSONObject createUser(User user) {
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
@@ -188,6 +253,36 @@ public class UserController {
 		return jsonObject;
 	}
 
+	/*
+	 * This method takes in a user id where the corresponding user object will
+	 * be set to the new values provided in the database.
+	 * 
+	 * @param 	uid
+	 * 			username
+	 * 			password
+	 * 			salt
+	 * 			firstName
+	 * 			lastName
+	 * 			nric
+	 * 			dob
+	 * 			sex
+	 * 			phone1
+	 * 			phone2
+	 * 			phone3
+	 * 			address1
+	 * 			address2
+	 * 			address3
+	 * 			zipcode1
+	 * 			zipcode2
+	 * 			zipcode3
+	 * 			qualify
+	 * 			bloodtype
+	 * 			nfcid
+	 * 
+	 * @return JSONobject containing 1 if success.
+	 * 								 0 if failed.
+	 * 		   null if empty or error
+	 */
 	public JSONObject updateUser(String uid, String username, String password, String salt, String firstName, String lastName,
 			String nric, String dob, char sex, String phone1, String phone2, String phone3, String address1,
 			String address2, String address3, int zipcode1, int zipcode2, int zipcode3, int qualify, String bloodtype,
@@ -199,6 +294,16 @@ public class UserController {
 		return jsonObject;
 	}
 
+	/*
+	 * This method takes in a user id where the corresponding user object will
+	 * be set to the new values provided in the database.
+	 * 
+	 * @param 	user object
+	 * 
+	 * @return JSONobject containing 1 if success.
+	 * 								 0 if failed.
+	 * 		   null if empty or error
+	 */
 	public JSONObject updateUser(User user) {
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
@@ -247,6 +352,19 @@ public class UserController {
 		return jsonObject;
 	}
 
+
+	/*
+	 * This method takes in a username where the corresponding user object will
+	 * be set to the new values provided in the database.
+	 * 
+	 * @param 	username
+	 * 			password
+	 * 			salt
+	 * 
+	 * @return 	JSONobject containing 1 if success.
+	 * 								 0 if failed.
+	 * 		   	null if empty or error
+	 */
 	public JSONObject updateUserPassword(String username, String password, String salt) {
 
 		JSONObject jsonObject = new JSONObject();
@@ -272,6 +390,16 @@ public class UserController {
 		return jsonObject;
 	}
 
+	/*
+	 * This method takes in a username where the corresponding user object will
+	 * be set to the new values provided in the database.
+	 * 
+	 * @param 	user
+	 * 
+	 * @return 	JSONobject containing 1 if success.
+	 * 								 0 if failed.
+	 * 		   	null if empty or error
+	 */
 	public JSONObject updateUserPassword(User user) {
 
 		JSONObject jsonObject = new JSONObject();
@@ -297,6 +425,15 @@ public class UserController {
 		return jsonObject;
 	}
 
+	/*
+	 * This method deletes the user entry on the database based on the user uid.
+	 * 
+	 * @param 	uid
+	 * 
+	 * @return 	JSONObject contained the result of the operation. 1 is success.
+	 * 															 0 is failed.
+	 * 		  	null if error
+	 */
 	public JSONObject deleteUser(int uid) {
 		int result = 0;
 		JSONObject jsonObject = new JSONObject();
@@ -320,6 +457,13 @@ public class UserController {
 		return jsonObject;
 	}
 
+	/*
+	 * This method will get all users that are therapist from the database and return them.
+	 * Check by qualify = 1.
+	 * 
+	 * @return JSONObject containing the result
+	 * 		  null if empty or error
+	 */
 	public JSONObject getTherapists() {
 		JSONObject jsonObjectFinal = new JSONObject();
 		ArrayList<User> userList = null;
@@ -345,6 +489,17 @@ public class UserController {
 		return jsonObjectFinal;
 	}
 
+	/*
+	 * This method takes in a uid where the corresponding user object will
+	 * be set to the new secret value in the database.
+	 * 
+	 * @param 	uid
+	 * 			secret
+	 * 
+	 * @return 	JSONobject containing 1 if success.
+	 * 								 0 if failed.
+	 * 		   	null if empty or error
+	 */
 	public JSONObject userSetSecret(int uid, String secret) {
 		int result = 0;
 		JSONObject jsonObject = new JSONObject();
@@ -369,6 +524,14 @@ public class UserController {
 		return jsonObject;
 	}
 
+	/*
+	 * This method will take in a user uid and return the secret value from the database.
+	 * 
+	 * @param	uid
+	 * 
+	 * @return 	JSONObject containing the result
+	 * 		  	null if empty or error
+	 */
 	public JSONObject userGetSecret(int uid) {
 		JSONObject jsonObject = new JSONObject();
 		String sql = "SELECT secret FROM CS3205.user where uid = ?";
@@ -393,6 +556,14 @@ public class UserController {
 		return jsonObject;
 	}
 
+	/*
+	 * This method will take in a result set of a SQL operation and prepares a
+	 * list of user object with the corresponding fields from the result set
+	 * 
+	 * @param 	result of SQL query
+	 * @return 	ArrayList of User objects
+	 * 
+	 */
 	private ArrayList<User> resultSetToUserList(ResultSet resultSet) throws SQLException {
 		// ResultSet is initially before the first data set
 		ArrayList<User> userList = new ArrayList<User>();
@@ -425,6 +596,14 @@ public class UserController {
 		return userList;
 	}
 
+	/*
+	 * This method will take in a result set of a SQL operation and prepares a
+	 * list of user therapist object with the corresponding fields from the result set
+	 * 
+	 * @param 	result of SQL query
+	 * @return 	ArrayList of User objects
+	 * 
+	 */
 	private ArrayList<User> resultSetToTherapistsList(ResultSet resultSet) throws SQLException {
 		// ResultSet is initially before the first data set
 		ArrayList<User> userList = new ArrayList<User>();
@@ -440,6 +619,13 @@ public class UserController {
 		return userList;
 	}
 
+	/*
+	 * This method will take in a user object and build a json object containing it.
+	 * 
+	 * @param 	result of SQL query
+	 * @return 	JSONObject of User object
+	 * 
+	 */
 	private JSONObject buildUserObject(User user) {
 		JSONObject jsonObjectUser = new JSONObject();
 		jsonObjectUser.put("uid", user.getUid());
@@ -480,6 +666,13 @@ public class UserController {
 		return jsonObjectUser;
 	}
 
+	/*
+	 * This method will take in a user therapist object and build a JSON object containing it.
+	 * 
+	 * @param 	result of SQL query
+	 * @return 	JSONObject of User object
+	 * 
+	 */
 	private JSONObject buildTherapistsObject(User user) {
 		JSONObject jsonObjectUser = new JSONObject();
 		jsonObjectUser.put("uid", user.getUid());
@@ -489,6 +682,14 @@ public class UserController {
 		return jsonObjectUser;
 	}
 
+	/*
+	 * This method will take in a result set of a SQL operation and prepares a
+	 * user object with the corresponding fields from the result set
+	 * 
+	 * @param 	result of SQL query
+	 * @return 	User object
+	 * 
+	 */
 	private User resultSetGetPublicInfo(ResultSet resultSet) throws SQLException {
 		// ResultSet is initially before the first data set
 		User user = null;
@@ -499,12 +700,21 @@ public class UserController {
 			char sex = resultSet.getString("sex").charAt(0);
 			String phone = resultSet.getString("phone1");
 			int qualify = resultSet.getInt("qualify");
-			user = new User(id, firstName, lastName, sex, phone, qualify);
+			String ethnicity = resultSet.getString("ethnicity");
+			user = new User(id, firstName, lastName, sex, phone, qualify, ethnicity);
 		}
 		MySQLAccess.close();
 		return user;
 	}
 
+	/*
+	 * This method will take in a user object and build a JSON object containing 
+	 * the public information of the user.
+	 * 
+	 * @param 	result of SQL query
+	 * @return 	JSONObject of User object
+	 * 
+	 */
 	private JSONObject buildPublicInfoObject(User user) {
 		JSONObject jsonObjectUser = new JSONObject();
 		jsonObjectUser.put("uid", user.getUid());
@@ -513,10 +723,18 @@ public class UserController {
 		jsonObjectUser.put("sex", user.getSex()+"");
 		jsonObjectUser.put("phone", user.getPhone()[0]);
 		jsonObjectUser.put("qualify", user.getQualify());
+		jsonObjectUser.put("ethnicity", user.getEthnicity());
 		return jsonObjectUser;
 	}
 
-
+	/*
+	 * This method will take in a result set of a SQL operation and prepares a
+	 * user object with the corresponding fields for login from the result set
+	 * 
+	 * @param 	result of SQL query
+	 * @return 	User object
+	 * 
+	 */
 	private User resultSetToUserLogin(ResultSet resultSet) throws SQLException {
 		// ResultSet is initially before the first data set
 		User user = null;
@@ -532,6 +750,14 @@ public class UserController {
 		return user;
 	}
 
+	/*
+	 * This method will take in a user object and build a JSON object containing 
+	 * the public information of the user.
+	 * 
+	 * @param 	result of SQL query
+	 * @return 	JSONObject of User object
+	 * 
+	 */
 	private JSONObject buildLoginObject(User user) {
 		JSONObject jsonObjectUser = new JSONObject();
 		jsonObjectUser.put("uid", user.getUid());
@@ -543,6 +769,14 @@ public class UserController {
 	}
 
 	//For team 3
+	/*
+	 * This method will take in a user name and return the user object from the database.
+	 * 
+	 * @param username
+	 * 
+	 * @return JSONObject containing the result
+	 * 		  null if empty or error
+	 */
 	public JSONObject getUser2(String username) {
 		JSONObject jsonObject = new JSONObject();
 		String sql = "SELECT uid, password2, salt2, qualify, secret, nfcid FROM CS3205.user WHERE username = ? ";
@@ -572,6 +806,18 @@ public class UserController {
 		return jsonObject;
 	}
 
+	/*
+	 * This method takes in a username where the corresponding user object will
+	 * be set to the new values provided in the database.
+	 * 
+	 * @param 	username
+	 * 			password
+	 * 			salt
+	 * 
+	 * @return 	JSONobject containing 1 if success.
+	 * 								 0 if failed.
+	 * 		   	null if empty or error
+	 */
 	public JSONObject updateUserPassword2(String username, String password, String salt) {
 
 		JSONObject jsonObject = new JSONObject();

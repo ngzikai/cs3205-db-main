@@ -34,7 +34,7 @@ public class Data{
 		this.modifieddate = modifieddate;
 		this.content = content;
 	}
-	
+
 	public Data(int uid, String type, String subtype, String title, Timestamp creationdate, Timestamp modifieddate, String content) {
 		super();
 		this.uid = uid;
@@ -176,7 +176,8 @@ public class Data{
 
   public String getAbsolutePath(){
     if(!type.equalsIgnoreCase("Heart Rate")){
-      return SystemConfig.getConfig("storage_directory") + "/" + uid + "/" + subtype + "/" + content;
+      String folder = subtype.equalsIgnoreCase("step") ? "time series" : subtype;
+      return SystemConfig.getConfig("storage_directory") + "/" + uid + "/" + folder + "/" + content;
     }
     return null;
   }

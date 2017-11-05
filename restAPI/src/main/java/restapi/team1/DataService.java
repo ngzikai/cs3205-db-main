@@ -1,16 +1,23 @@
 package restapi.team1;
+import javax.json.Json;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import controller.*;
 import java.util.*;
 import java.io.*;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.sql.Timestamp;
 import entity.*;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
 import utils.SystemConfig;
 import utils.GUID;
@@ -78,8 +85,7 @@ public class DataService {
 	public Response get(@PathParam("rid") int rid){
 		SessionController sc = new SessionController();
 		File file = null;
-		Data data = null;
-		data = sc.get(rid);
+		Data data = sc.get(rid);
 
 		if(data == null){
 			return createResponse(null);
@@ -107,17 +113,6 @@ public class DataService {
 					.build();
 		}
 		return Response.status(400).entity("Server error, contact the administrator.").build();
-	}
-
-	private SessionController getSessionController(String type){
-		if(type.equalsIgnoreCase("image") || type.equalsIgnoreCase("video")){
-			return new SessionController("file");
-		} else if(type.equalsIgnoreCase("heart")){
-			return new SessionController("heartrate");
-		} else if(type.equalsIgnoreCase("step")){
-			return new SessionController("step");
-		}
-		return null;
 	}
 	
 	private String processFileType(Data data) {
@@ -163,6 +158,62 @@ public class DataService {
 	public Response deleteDocument(@PathParam("rid") int rid, @PathParam("uid") int uid) throws JSONException {
 
 		JSONObject jsonObject = dc.deleteDocument(rid, uid);
+
+		return createResponse(jsonObject);
+	}
+	
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces("application/json")
+	public Response getArrayOfRecords(InputStream inputstream) throws JSONException {
+		JSONObject input = parseJSON(inputstream);
+		SessionController sc = new SessionController();
+		List<Data> dataList = new ArrayList<>();
+		System.out.println(input);
+		JSONArray ridArray = input.getJSONArray("rid");
+		for(int i = 0; i < ridArray.length(); i++) {
+		    int rid = ridArray.getInt(i);
+	        Data data = sc.get(rid);
+	        dataList.add(data);
+		}
+
+		if(dataList.size() < 1){
+			return Response.status(400).entity("Invalid request.").build();
+		}
+
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("records", dataList);
+		return createResponse(jsonObject);
+	}
+	
+	/*
+	 * Parse inputstream and return as JSONObject
+	 */
+	private JSONObject parseJSON(InputStream inputstream) {
+		JSONObject jsonObject = null;
+		try {
+	       BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputstream, "UTF-8"));
+	       StringBuilder responseStrBuilder = new StringBuilder();
+
+	       String inputStr;
+	       while ((inputStr = streamReader.readLine()) != null)
+	           responseStrBuilder.append(inputStr);
+
+	       jsonObject = new JSONObject(responseStrBuilder.toString());
+		}catch(Exception e) {
+			
+		}
+		return jsonObject;
+	}
+	
+	@Path("/alldocuments/{uid}")
+	@GET
+	@Produces("application/json")
+	public Response getAllDocumentSharableWithUid(@PathParam("uid") int uid) throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+
+		System.out.println("Retrieving all documents sharable to uid: " + uid );
+		jsonObject = dc.getAllDocumentWithFullConsentsFromUid(uid);
 
 		return createResponse(jsonObject);
 	}
