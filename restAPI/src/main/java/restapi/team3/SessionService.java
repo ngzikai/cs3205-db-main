@@ -16,6 +16,14 @@ import com.google.gson.*;
 
 import utils.SystemConfig;
 import utils.GUID;
+import utils.ImageChecker;
+
+// Video Checking
+import net.bramp.ffmpeg.probe.FFmpegProbeResult;
+import net.bramp.ffmpeg.probe.FFmpegFormat;
+import net.bramp.ffmpeg.probe.FFmpegStream;
+import net.bramp.ffmpeg.FFprobe;
+
 
 
 import javax.xml.bind.JAXBContext;
@@ -45,7 +53,7 @@ public class SessionService{
 	@Produces("application/octet-stream")
 	public Response getMeta(@PathParam("uid") int uid){
 		Data data = null;
-		data = sc.get(userID, uid);
+		data = sc.get(userID, uid, type);
 
 		if(data == null){
 			return Response.status(400).entity("Invalid request.").build();
@@ -69,7 +77,7 @@ public class SessionService{
 	public Response get(@PathParam("uid") int uid){
 		File file = null;
 		Data data = null;
-		data = sc.get(userID, uid);
+		data = sc.get(userID, uid, type);
 
 		if(data == null){
 			return Response.status(400).entity("Invalid request.").build();
@@ -129,14 +137,13 @@ public class SessionService{
 			if(result == 1){
 				return Response.status(200).entity("successfully added heartrate: " + data.getContent()).build();
 			}
-		} else if (type.equalsIgnoreCase("video") || type.equalsIgnoreCase("image")){
-			String mediaExt = (type.equalsIgnoreCase("video")) ? ".mp4" : ".jpeg";
-			if(mediaExt.equalsIgnoreCase("unknown")){
-				return Response.status(400).entity("unknown type request").build();
-			}
+		} else if (type.equalsIgnoreCase("image")){
+			String mediaExt = "";
+			File file = null;
+			boolean isImage = false;
 			// Check if it is a video/image file
 			try{
-				File file = File.createTempFile("temp", ".check");
+				file = File.createTempFile(GUID.BASE58(), ".check");
 				FileOutputStream out = new FileOutputStream(file);
 				byte[] buffer = new byte[1024];
 				int bytesRead;
@@ -144,17 +151,19 @@ public class SessionService{
 					out.write(buffer, 0, bytesRead);
 				}
 				out.flush();
-				String fileType = Files.probeContentType(file.toPath());
-				if(!fileType.matches("^(video|image).*")){
-					out.close();
-					file.delete();
-					return Response.status(400).entity("Not a correct file").build();
-				}
-				inputstream = new FileInputStream(file);
 				out.close();
-				file.delete();
+				// Check if temp file is an Image or Video
+				isImage = ImageChecker.madeSafe(file);
+				System.out.println("file path now: "+file.getAbsolutePath());
+				mediaExt = ImageChecker.getExt(file);
+				inputstream = new FileInputStream(file);
 			}catch(Exception e){
 				e.printStackTrace();
+			}
+			if(!isImage){
+				if(file != null){
+					file.delete();
+				}
 				return Response.status(400).entity("Invalid file received.").build();
 			}
 			Data data = new Data(-1, userID, "File", type,
@@ -167,6 +176,8 @@ public class SessionService{
 				sc.writeToFile(inputstream, fileDirectory + "/" + data.getUid() + "/" + type +"/" + data.getContent());
 				return Response.status(200).entity("successfully added "+type+": " + data.getContent()).build();
 			}
+		} else if (type.equalsIgnoreCase("video")){
+			
 		} else if (type.equalsIgnoreCase("step")){
 			// Check if it is an JSON object
 			try{
