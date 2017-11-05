@@ -144,18 +144,10 @@ public class SessionService{
 			// Check if it is a video/image file
 			try{
 				file = File.createTempFile(GUID.BASE58(), ".check");
-				FileOutputStream out = new FileOutputStream(file);
-				byte[] buffer = new byte[1024];
-				int bytesRead;
-				while((bytesRead=inputstream.read(buffer))!= -1){
-					out.write(buffer, 0, bytesRead);
-				}
-				out.flush();
-				out.close();
+				writeToTempFile(file, inputstream);
 				// Check if temp file is an Image or Video
 				isImage = ImageChecker.madeSafe(file);
-				System.out.println("file path now: "+file.getAbsolutePath());
-				mediaExt = ImageChecker.getExt(file);
+				mediaExt = "."+ImageChecker.getExt(file);
 				inputstream = new FileInputStream(file);
 			}catch(Exception e){
 				e.printStackTrace();
@@ -177,7 +169,50 @@ public class SessionService{
 				return Response.status(200).entity("successfully added "+type+": " + data.getContent()).build();
 			}
 		} else if (type.equalsIgnoreCase("video")){
-			
+			File file = null;
+			boolean isVideo = false;
+			try{
+				file = File.createTempFile(GUID.BASE58(), ".check");
+				writeToTempFile(file, inputstream);
+				FFprobe ffprobe = new FFprobe("/usr/bin/ffprobe");
+				FFmpegProbeResult probeResult = ffprobe.probe(file.getAbsolutePath());
+				FFmpegFormat format = probeResult.getFormat();
+				// System.out.format("%nFile: '%s' ; Format: '%s' ; Duration: %.3fs",
+				// 	format.filename,
+				// 	format.format_long_name,
+				// 	format.duration
+				// );
+
+				FFmpegStream stream = probeResult.getStreams().get(0);
+				// System.out.format("%nCodec: '%s' ; Width: %dpx ; Height: %dpx",
+				// 	stream.codec_long_name,
+				// 	stream.width,
+				// 	stream.height
+				// );
+				inputstream = new FileInputStream(file);
+				String stringForm = format.format_long_name;
+				if(stringForm.equalsIgnoreCase("QuickTime / MOV")){
+					isVideo = true;
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			if(!isVideo){
+				if(file!=null){
+					file.delete();
+				}
+				return Response.status(400).entity("Invalid file received.").build();
+			}
+			Data data = new Data(-1, userID, "File", type,
+													 type + " of user: " + userID,
+													 new Timestamp(createdDate),
+													 new Timestamp(System.currentTimeMillis()),
+													 createdDate + "_" + GUID.BASE58() + ".mp4");
+			int result = sc.insert(data);
+			if (result == 1){
+				sc.writeToFile(inputstream, fileDirectory + "/" + data.getUid() + "/" + type +"/" + data.getContent());
+				return Response.status(200).entity("successfully added "+type+": " + data.getContent()).build();
+			}
 		} else if (type.equalsIgnoreCase("step")){
 			// Check if it is an JSON object
 			try{
@@ -205,5 +240,16 @@ public class SessionService{
 			}
 		}
 		return Response.status(400).entity("unknown type request").build();
+	}
+
+	private void writeToTempFile(File file, InputStream inputstream) throws Exception{
+		FileOutputStream out = new FileOutputStream(file);
+		byte[] buffer = new byte[1024];
+		int bytesRead;
+		while((bytesRead=inputstream.read(buffer))!= -1){
+			out.write(buffer, 0, bytesRead);
+		}
+		out.flush();
+		out.close();
 	}
 }
