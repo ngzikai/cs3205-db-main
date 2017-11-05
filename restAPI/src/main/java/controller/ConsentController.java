@@ -156,17 +156,9 @@ public class ConsentController {
 			return null;
 		}
 		
-		if(consentList.size() < 1) {
-			return null;
-		}
-		JSONArray consentArray = new JSONArray();
-		for(Consent consent : consentList) {
-			JSONObject jsonObjectTreatment = buildConsentObject(consent);
-			consentArray.put(jsonObjectTreatment);
-		}
 		MySQLAccess.close();
 
-		jsonObject.put("consents", consentArray);
+		jsonObject.put("consents", consentList);
 		//System.out.println("Retrieving details of Consent: " + id);
 		return jsonObject;
 	}
@@ -258,7 +250,23 @@ public class ConsentController {
 	 * 		   	null if empty or error
 	 */
 	public JSONObject createConsent(int uid, int rid) {
-		Consent consent = new Consent(uid, rid, false);
+		JSONObject jsonObject = createConsent(uid, rid, false);
+		return jsonObject;
+	}
+	
+	/*
+	 * This method will create a consent object for the given uid and status.
+	 * 
+	 * @param 	uid
+	 * 		  	rid
+	 * 			status
+	 * 
+	 * @return 	JSONobject containing 1 if success.
+	 * 								 0 if failed.
+	 * 		   	null if empty or error
+	 */
+	public JSONObject createConsent(int uid, int rid, boolean status) {
+		Consent consent = new Consent(uid, rid, status);
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
 		String sql = "INSERT INTO CS3205.consent VALUES (default, ?, ?, ?)";
@@ -534,6 +542,38 @@ public class ConsentController {
 		MySQLAccess.close();
 		if(empty) {
 			return null;
+		}
+		return result;
+	}
+	
+	
+	
+	/*
+	 * This method will create consent objects for the given uid and rid for all therapists
+	 * assigned to this patient's uid. It will use the future consent value on the treatment
+	 * to create a consent status for this new consent of the therapists for this rid.
+	 * 
+	 * @param 	uid
+	 * 		  	rid
+	 * 
+	 * @return 	int 1 if success.
+	 * 				0 if failed.
+	 */
+	public int createConsentByRecordCreation(int uid, int rid) {
+		int result = 1;
+		TreatmentController tc = new TreatmentController();
+		JSONObject treatmentObject = tc.getTreatmentWithPatientId(uid, true);
+		if(treatmentObject == null) {
+			return 0;
+		}
+		JSONArray treatmentArray = treatmentObject.getJSONArray("treatments");
+		System.out.println("Creating all consents based on record creation");
+		for (int i = 0; i < treatmentArray.length(); i++) {
+			JSONObject currentTreatment = treatmentArray.getJSONObject(i);
+			if(currentTreatment.getBoolean("status")) {
+				boolean futureConsent = currentTreatment.getBoolean("futureConsent");
+				JSONObject eachResult = createConsent(currentTreatment.getInt("therapistId"), rid, futureConsent);
+			}
 		}
 		return result;
 	}
