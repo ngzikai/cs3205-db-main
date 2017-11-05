@@ -15,6 +15,12 @@ import utils.db.MySQLAccess;
 
 public class LogController {
 	
+	/*
+	 * This method will get all logs' value from the database and return them.
+	 * 
+	 * @return JSONObject containing the result
+	 * 		  null if empty or error
+	 */
 	public JSONObject getAllLog() {
 		JSONObject jsonObjectFinal = new JSONObject();
 		ArrayList<Log> logList = null;
@@ -35,6 +41,18 @@ public class LogController {
 		return jsonObjectFinal;
 	}
 	
+	/*
+	 * This method will create a transaction Log object with the necessary variables to be stored in the database. 
+	 * 
+	 * @param csrfToken
+	 * 		  uid
+	 * 		  expiry
+	 * 		  description
+	 * 
+	 * @return JSONobject containing 1 if success.
+	 * 								 0 if failed.
+	 * 		   null if empty or error
+	 */
 	public JSONObject createLog(Log log) {
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
@@ -61,6 +79,14 @@ public class LogController {
 		return jsonObject;
 	}
 	
+	/*
+	 * This method will take in a result set of a SQL operation and prepares a
+	 * list of Log object with the corresponding fields from the result set
+	 * 
+	 * @param result of SQL query
+	 * @return ArrayList of Log objects
+	 * 
+	 */
 	private ArrayList<Log> resultSetToLogList(ResultSet resultSet) throws SQLException {
 		// ResultSet is initially before the first data set
 		ArrayList<Log> logList = new ArrayList<Log>();

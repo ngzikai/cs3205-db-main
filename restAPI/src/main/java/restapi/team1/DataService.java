@@ -85,8 +85,7 @@ public class DataService {
 	public Response get(@PathParam("rid") int rid){
 		SessionController sc = new SessionController();
 		File file = null;
-		Data data = null;
-		data = sc.get(rid);
+		Data data = sc.get(rid);
 
 		if(data == null){
 			return createResponse(null);
@@ -114,17 +113,6 @@ public class DataService {
 					.build();
 		}
 		return Response.status(400).entity("Server error, contact the administrator.").build();
-	}
-
-	private SessionController getSessionController(String type){
-		if(type.equalsIgnoreCase("image") || type.equalsIgnoreCase("video")){
-			return new SessionController("file");
-		} else if(type.equalsIgnoreCase("heart")){
-			return new SessionController("heartrate");
-		} else if(type.equalsIgnoreCase("step")){
-			return new SessionController("step");
-		}
-		return null;
 	}
 	
 	private String processFileType(Data data) {
@@ -216,6 +204,18 @@ public class DataService {
 			
 		}
 		return jsonObject;
+	}
+	
+	@Path("/alldocuments/{uid}")
+	@GET
+	@Produces("application/json")
+	public Response getAllDocumentSharableWithUid(@PathParam("uid") int uid) throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+
+		System.out.println("Retrieving all documents sharable to uid: " + uid );
+		jsonObject = dc.getAllDocumentWithFullConsentsFromUid(uid);
+
+		return createResponse(jsonObject);
 	}
 
 }

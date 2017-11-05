@@ -21,8 +21,8 @@ public class BasicAuthFilter implements ContainerRequestFilter {
 	private static final String TEAM2_PREFIX = "team2";
 	private static final String TEAM3_PREFIX = "team3";
 	
-	private static final String TEAM1_USER = "dummy";
-	private static final String TEAM1_PASSWORD = "IamADummy";
+	private static final String TEAM1_USER = "team1";
+	private static final String TEAM1_PASSWORD = "team1LovesCorgi";
 	
 	private static final String TEAM2_USER = "team2";
 	private static final String TEAM2_PASSWORD = "team2LovesBananas";
@@ -67,7 +67,7 @@ public class BasicAuthFilter implements ContainerRequestFilter {
 				if(username.equals(TEAM1_USER) && password.equals(TEAM1_PASSWORD)) {
 					return;
 				}else {
-					Response unauthorized = Response.status(Response.Status.UNAUTHORIZED).entity("NO PERMISSION TO ACCESS DUMMY").build();
+					Response unauthorized = Response.status(Response.Status.UNAUTHORIZED).entity("NO PERMISSION TO ACCESS TEAM 1").build();
 					requestContext.abortWith(unauthorized);
 				}
 				

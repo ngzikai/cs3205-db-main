@@ -153,7 +153,7 @@ CREATE TABLE condition_category(
 CREATE TABLE one_time_link(
    token VARCHAR(255),
    uid INT NOT NULL,
-   filepath VARCHAR(100) NOT NULL,
+   filepath VARCHAR(255) NOT NULL,
    csrf VARCHAR(255),
    datatype VARCHAR(50) NOT NULL,
    PRIMARY KEY (token),
@@ -190,7 +190,7 @@ CREATE TABLE db_logs(
    api	ENUM('Team1', 'Team2', 'Team3') NOT NULL,
    type ENUM('Read', 'Write') NOT NULL,
    time TIMESTAMP NOT NULL,
-   description VARCHAR(255) NOT NULL,
+   description TEXT NOT NULL,
    result TINYINT(1) NOT NULL
 );
 

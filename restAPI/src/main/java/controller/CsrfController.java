@@ -14,6 +14,13 @@ import utils.Logger;
 import utils.db.MySQLAccess;
 
 public class CsrfController {
+	
+	/*
+	 * This method will get all csrfs' value from the database and return them.
+	 * 
+	 * @return 	JSONObject containing the result
+	 * 		  	null if empty or error
+	 */
 	public JSONObject getAllCsrf() {
 		JSONObject jsonObjectFinal = new JSONObject();
 		ArrayList<Csrf> csrfList = null;
@@ -25,7 +32,6 @@ public class CsrfController {
 			csrfList = resultSetToCsrfList(MySQLAccess.readDataBasePS(preparedStatement));
 			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, csrfList.size() == 0 ? 0 : 1);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
@@ -40,7 +46,15 @@ public class CsrfController {
 	}
 
 
-	// This method will take in a treatment name and return the treatment object from the database;
+	/*
+	 * This method will take in a csrfToken and 
+	 * return the csrf object from the database.
+	 * 
+	 * @param 	csrfToken
+	 * 
+	 * @return 	JSONObject containing the result
+	 * 		 	null if empty or error
+	 */
 	public JSONObject getCsrfWithToken(String csrfToken) {
 		JSONObject jsonObject = new JSONObject();
 		ArrayList<Csrf> csrfList = null;
@@ -54,7 +68,6 @@ public class CsrfController {
 			csrfList = resultSetToCsrfList(MySQLAccess.readDataBasePS(preparedStatement));
 			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.READ.name(), statement, 1);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
@@ -70,6 +83,18 @@ public class CsrfController {
 		return jsonObject;
 	}
 
+	/*
+	 * This method will create a CSRF object with the necessary variables to be stored in the database. 
+	 * 
+	 * @param	csrfToken
+	 * 		  	uid
+	 * 		  	expiry
+	 * 		  	description
+	 * 
+	 * @return 	JSONobject containing 1 if success.
+	 * 								 0 if failed.
+	 * 			   null if empty or error
+	 */
 	public JSONObject createCsrf(String csrfToken, int uid, int expiry, String description) {
 		Csrf csrf = new Csrf(csrfToken, uid, expiry, description);
 		JSONObject jsonObject = new JSONObject();
@@ -86,7 +111,6 @@ public class CsrfController {
 			result = MySQLAccess.updateDataBasePS(preparedStatement);
 			Logger.log(Logger.API.TEAM1.name(), Logger.TYPE.WRITE.name(), statement, result);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
@@ -97,11 +121,18 @@ public class CsrfController {
 		return jsonObject;
 	}
 
-
+	/*
+	 * This method takes in a csrf token and an int of expiry date where the csrf will be set
+	 * to the entry corresponding csrf token in the database.
+	 * 
+	 * @param 	csrfToken
+	 * 		  	expiry
+	 * @return 	JSONObject containing 1 if success
+	 * 								 0 if failed
+	 * 		   	null if empty or error
+	 */
 	public JSONObject updateCSRF(String csrfToken, int expiry) {
 
-		//Treatment treatment = new Treatment(Integer.parseInt(uid), treatmentname, password, firstName, lastName, nric, LocalDate.parse(dob), gender, phone1,
-		//phone2, phone3,  address1, address2, address3, zipcode1, zipcode2, zipcode3, qualify, bloodtype, nfcid);
 		JSONObject jsonObject = new JSONObject();
 		int result = 0;
 		String sql = "UPDATE CS3205.csrf SET expiry = ? WHERE csrf_token = ?";
@@ -125,7 +156,15 @@ public class CsrfController {
 		return jsonObject;
 	}
 
-
+	/*
+	 * This method deletes the csrf entry on the database based on the csrf token.
+	 * 
+	 * @param csrfToken
+	 * 
+	 * @return JSONObject contained the result of the operation. 1 is success.
+	 * 															 0 is failed.
+	 * 		   null if error
+	 */
 	public JSONObject deleteCsrf(String csrfToken) {
 		
 		int result = 0;
@@ -151,6 +190,14 @@ public class CsrfController {
 		return jsonObject;
 	}
 
+	/*
+	 * This method will take in a result set of a SQL operation and prepares a
+	 * list of Csrf object with the corresponding fields from the result set
+	 * 
+	 * @param 	result of SQL query
+	 * @return 	ArrayList of Csrf objects
+	 * 
+	 */
 	private ArrayList<Csrf> resultSetToCsrfList(ResultSet resultSet) throws SQLException {
 		// ResultSet is initially before the first data set
 		ArrayList<Csrf> csrfList = new ArrayList<Csrf>();
@@ -166,6 +213,13 @@ public class CsrfController {
 		return csrfList;
 	}
 
+	/*
+	 * This method will take in a csrf object and build a json object containing it.
+	 * 
+	 * @param 	result of SQL query
+	 * @return 	JSONObject of Csrf object
+	 * 
+	 */
 	private JSONObject buildCsrfObject(Csrf csrf) {
 		JSONObject jsonObjectCsrf = new JSONObject();
 		jsonObjectCsrf.put("csrfToken", csrf.getCsrfToken()); 

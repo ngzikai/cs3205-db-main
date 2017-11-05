@@ -43,7 +43,7 @@ public class User {
 		this.secret = secret;
 	}
 
-	public User(int uid, String firstName, String lastName, char sex, String phone, int qualify) {
+	public User(int uid, String firstName, String lastName, char sex, String phone, int qualify, String ethnicity) {
 		super();
 		this.uid = uid;
 		this.firstName = firstName;
@@ -52,6 +52,7 @@ public class User {
 		this.phone = new String[3];
 		this.phone[0] = phone;
 		this.qualify = qualify;
+		this.ethnicity = ethnicity;
 	}
 
 	//Constructor without UID. Most likely used for creating a new user entry.
