@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 import javax.ws.rs.core.UriInfo;
 
@@ -20,10 +21,10 @@ public class SearchController {
 	public ArrayList<SearchResult> search(Search search, UriInfo uriInfo){
 		//System.out.println(search.toString());
 		
-		String sql = "SELECT user.dob, user.sex, user.zipcode1, user.zipcode2, user.bloodtype, user.ethnicity, "
-				+ "user.nationality, user.drug_allergy, `condition`.condition_name, data.content, user.uid "
-				+ "FROM user, diagnosis, `condition`, data "
-				+ "WHERE user.uid = diagnosis.patient_id AND diagnosis.condition_id = `condition`.condition_id AND user.uid = data.uid AND data.title = 'GMSv5_2-Foot_R'";
+		String sql = "SELECT user.uid, user.dob, user.sex, user.zipcode1, user.zipcode2, user.bloodtype, user.ethnicity, "
+				+ "user.nationality, user.drug_allergy, `condition`.condition_name "
+				+ "FROM user, diagnosis, `condition` "
+				+ "WHERE user.uid = diagnosis.patient_id AND diagnosis.condition_id = `condition`.condition_id";
 		
 		if(search.getAgeRange() == null && search.getBloodType() == null && search.getCid() == null && search.getGender() == null && search.getZipcode() == null & search.getDrug_allergy() == null & search.getEthnicity() == null & search.getNationality() == null) {
 			return null;
@@ -136,26 +137,21 @@ public class SearchController {
 			
 			while(rs.next()) {
 				SearchResult result = new SearchResult();
-				result.setDob(new Date(rs.getDate(1).getTime()));
-				result.setGender(rs.getString(2));
-				result.setZipcode1(rs.getString(3));
+				ArrayList<String> hashCodes = generateHashes(rs.getString(1));
+				result.setTimeseries_path(hashCodes.get(0));
+				result.setHeartrate_path(hashCodes.get(1));
+				result.setDob(new Date(rs.getDate(2).getTime()));
+				result.setGender(rs.getString(3));
+				result.setZipcode1(rs.getString(4));
 				if(rs.getString(4) != null) {
-					result.setZipcode2(rs.getString(4));
+					result.setZipcode2(rs.getString(5));
 				}
-				result.setBloodtype(rs.getString(5));
-				result.setEthnicity(rs.getString(6));
-				result.setNationality(rs.getString(7));
-				result.setDrug_allergy(rs.getString(8));
-				result.setCondition_name(rs.getString(9));
-				result.setTimeseries_path(rs.getString(10));
+				result.setBloodtype(rs.getString(6));
+				result.setEthnicity(rs.getString(7));
+				result.setNationality(rs.getString(8));
+				result.setDrug_allergy(rs.getString(9));
+				result.setCondition_name(rs.getString(10));
 				
-				//HATEOAS STUFF COME BACK LATER
-				String uid = rs.getString(11);
-				
-				String heartUri = uriInfo.getBaseUriBuilder().path(HeartService.class).path(uid).build().toString();
-				//System.out.println(heartUri);
-				
-				result.setHeartrate_path(heartUri);
 				
 				results.add(result);
 			}
@@ -195,6 +191,43 @@ public class SearchController {
 		result.add(end);
 		
 		return result;
+	}
+	
+	private ArrayList<String> generateHashes(String uid){
+		String sql = "INSERT INTO secrets (`key`, `value`) VALUES (?, ?)";
+		
+		Connection connect = MySQLAccess.connectDatabase();
+		
+		String random1 = UUID.randomUUID().toString();
+		random1 = random1.replace("-", "");
+		
+		String random2 = UUID.randomUUID().toString();
+		random2 = random2.replace("-", "");
+		
+		try {
+			PreparedStatement ps = connect.prepareStatement(sql);
+			ps.setString(1, random1);
+			ps.setString(2, uid);
+			
+			MySQLAccess.updateDataBasePS(ps);
+			
+			ps.setString(1, random2);
+			ps.setString(2, uid);
+			
+			MySQLAccess.updateDataBasePS(ps);
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			MySQLAccess.close();
+			return null;
+		}
+		
+		ArrayList<String> hashes = new ArrayList<String>();
+		hashes.add(random1);
+		hashes.add(random2);
+		return hashes;
+		
 	}
 
 }
