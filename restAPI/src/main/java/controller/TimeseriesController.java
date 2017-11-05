@@ -122,7 +122,7 @@ public class TimeseriesController {
 		} catch(Exception e) {
 			return null;
 		}
-		return Response.ok(fileStream, MediaType.APPLICATION_OCTET_STREAM).header("content-disposition", "attachment; filename = " + key +".json").build(); 
+		return Response.ok(fileStream, MediaType.APPLICATION_JSON).header("content-disposition", "attachment; filename = " + key +".json").build(); 
 		
 	}
 
