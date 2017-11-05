@@ -93,7 +93,7 @@ public class UserService {
 		long currentTimeMillis = System.currentTimeMillis();
 		long totalWaitingTime = ((long)(Math.pow(2, lockAttempts)*1000)+lastAttempt);
 		long timeDifference = totalWaitingTime - currentTimeMillis;
-		if ( timeDifference > 0 && !firstTime){
+		if ( timeDifference > 0 && firstTime){
 			return Response.status(Response.Status.BAD_REQUEST)
 										 .entity("LoginTimeout:"+ (timeDifference/1000))
 										 .header("X-Timeout", (timeDifference/1000))
