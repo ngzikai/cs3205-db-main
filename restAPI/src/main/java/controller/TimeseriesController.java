@@ -86,6 +86,12 @@ public class TimeseriesController {
 	}
 	
 	public Response generateResponse(LinkedList<String> paths, String key) {
+		System.out.println("In generating response...");
+		
+		for(String path : paths) {
+			System.out.println("Path: " + path);
+		}
+		
 		Cryptography crypto = Cryptography.getInstance();
 		
 		StreamingOutput fileStream = new StreamingOutput() {
@@ -98,6 +104,7 @@ public class TimeseriesController {
 						byte[] decrypt = crypto.decrypt(data);
 						output.write(decrypt);
 						output.flush();
+						paths.removeFirst();
 					}
 				} catch(Exception e) {
 					//HANDLE ERROR RESPONSE
