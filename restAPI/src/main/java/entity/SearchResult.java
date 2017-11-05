@@ -1,8 +1,10 @@
 package entity;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class SearchResult {
+	private String uid;
 	private Date dob;
 	private String gender;
 	private String zipcode1;
@@ -14,10 +16,24 @@ public class SearchResult {
 	private String drug_allergy;
 	private String timeseries_path;
 	private String heartrate_path;
+	private String hash1;
+	private String hash2;
+	private ArrayList<String> hashCodes;
 	
 	public SearchResult() {
 		
 	}
+
+
+	public String getUid() {
+		return uid;
+	}
+
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
 
 	public Date getDob() {
 		return dob;
@@ -105,6 +121,36 @@ public class SearchResult {
 
 	public void setHeartrate_path(String heartrate_path) {
 		this.heartrate_path = heartrate_path;
+	}
+
+
+	public String getHash1() {
+		return hash1;
+	}
+
+
+	public void setHash1(String hash1) {
+		this.hash1 = hash1;
+	}
+
+
+	public String getHash2() {
+		return hash2;
+	}
+
+
+	public void setHash2(String hash2) {
+		this.hash2 = hash2;
+	}
+
+
+	public ArrayList<String> getHashCodes() {
+		return hashCodes;
+	}
+
+
+	public void setHashCodes(ArrayList<String> hashCodes) {
+		this.hashCodes = hashCodes;
 	}
 
 
