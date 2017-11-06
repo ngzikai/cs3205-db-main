@@ -13,20 +13,20 @@ Web Application is deployed on https://cs3205-4-i.comp.nus.edu.sg/api.
 
 ![Server Flow Diagram](https://github.com/ngzikai/cs3205-db-main/blob/master/doc/ServerDiagram.PNG?raw=true "Server Flow Diagram")
 <p align="center">Fig. 1. Server Flow Diagram</p>
- 
-Server 4 db server is using a RESTful API architecture to serve the queries for the database. This RESTful API is the endpoint for any interaction to the database, and is splitted into Team 1, Team 2 and Team 3's endpoints respectively. Each provides a separate endpoint for the various systems' server to be integrated with, while residing on the same storage system. This creates the integration of a one full solution, designed to cater to the different needs of each system. 
+
+Server 4 db server is using a RESTful API architecture to serve the queries for the database. This RESTful API is the endpoint for any interaction to the database, and is splitted into Team 1, Team 2 and Team 3's endpoints respectively. Each provides a separate endpoint for the various systems' server to be integrated with, while residing on the same storage system. This creates the integration of a one full solution, designed to cater to the different needs of each system.
 
 The storage system involves the database server, MySQL, to store most of the data needed, and the file storage system for storing data that comes as a file. This combination of the various type of data handling is well-abstracted by the system developed by Team 1, 2 and 3 to serve as the single storage component for the main architecture of the entire project. All the various different data entities are designed to serve the usage of the 3 systems effectively and efficiently while integrating the different functionalities into the core solution.  
 
 ## Security Features
 ### TLS/SSL
-In order to create a secure communication channel between the front service servers and the database server, we established a two-way SSL authentication protocol using digital certificates signed by server 4. This allows authentication and authorization of the usage of the API provided by server 4, as well as encrypting the communication channel up to ensure confidentiality of information. 
+In order to create a secure communication channel between the front service servers and the database server, we established a two-way SSL authentication protocol using digital certificates signed by server 4. This allows authentication and authorization of the usage of the API provided by server 4, as well as encrypting the communication channel up to ensure confidentiality of information.
 
 ### HTTP BASIC AUTH
-On top of that, basic authentication is also used to verify that only authorized users are to use the specific endpoints.This feature essentially allows for role-based access control of the endpoints across the various teams. While every team's endpoints are deployed on the same server, only authorized users (i.e team members of the various endpoints) are allowed into their APIs. 
+On top of that, basic authentication is also used to verify that only authorized users are to use the specific endpoints.This feature essentially allows for role-based access control of the endpoints across the various teams. While every team's endpoints are deployed on the same server, only authorized users (i.e team members of the various endpoints) are allowed into their APIs.
 
 ### File Encryption
-AES-256 Encryption is also implemented on the files that are stored on the server. As our server may potentially hold a bulk of sensitive information, it is important that the infomation is kept secure even in the unlikely event of a compromise. The encryption algorithm is designed in such a way that the files can only be decrypted through the use of the system in normal, authorized proceedure. 
+AES-256 Encryption is also implemented on the files that are stored on the server. As our server may potentially hold a bulk of sensitive information, it is important that the infomation is kept secure even in the unlikely event of a compromise. The encryption algorithm is designed in such a way that the files can only be decrypted through the use of the system in normal, authorized proceedure.
 
 ## Server Deployment
 ### Setup
@@ -44,7 +44,7 @@ mvn tomcat7:redeploy
 ***
 
 ## List of Available Endpoints
-## Team 1: 
+## Team 1:
 ### User Service
 **1.** /api/team1/user/<br/>
 **2.** /api/team1/user/username/{username}<br/>
@@ -115,7 +115,7 @@ mvn tomcat7:redeploy
 ### Log Service
 **53.** /api/team1/log/<br/>
 **54.** /api/team1/log/create **(Accepts POST request JSON data)**<br/>
- 
+
 ## Team 2:
 ### Category Service
 **GET:** http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/info <br/>
@@ -218,15 +218,38 @@ mvn tomcat7:redeploy
 **Produces:** JSON {timeseries_data} (FROM FILE)<br/>
 
 
-### Team 3:
+## Team 3:
 
-**1.** /api/team3/step/{userID}<br/>
-**2.** /api/team3/heart/{userID}<br/>
-**3.** /api/team3/image/{userID}<br/>
-**4.** /api/team3/video/{userID}<br/>
-*prefix + /get/{objectID}*<br/>
-*prefix + /get/{objectID}/meta*<br/>
-*prefix + /all*<br/>
-*prefix + /upload/{timestamp}*<br/>
+### Uploading Data Endpoints:<br/>
+**1.** /api/team3/step/{userID}
+**2.** /api/team3/heart/{userID}
+**3.** /api/team3/image/{userID}
+**4.** /api/team3/video/{userID}
+<<**POST**>> **1. - 4.** *+ /upload/{timestamp}*
+  - Returns status of the upload
 
+### Retrieving of Data:<br/>
+<<**GET**>> **1. - 4.** *+ /get/{objectID}*
+  - Returns the time series/image/video/heartrate of the objectID
 
+<<**GET**>> **1. - 4.** *+ /get/{objectID}/meta*
+  - Returns the time series/image/video/heartrate meta information of the objectID
+
+<<**GET**>> **1. - 4.** *+ /get/{objectID}/csv*
+  - Returns the time series/image/video/heartrate in csv format of the objectID
+
+<<**GET**>> **1. - 4.** *+ /all*
+  - Returns the all of time series/image/video/heartrate of the user
+
+### User Service:<br/>
+**5.** <<**GET**>> */api/team3/user?username=<name>*
+  - Returns salt of the user
+
+**6.** <<**GET**>> */api/team3/user/nfcchallenge?username=<name>*
+  - Returns nfc challenge of the user
+
+**7.** <<**GET**>> */api/team3/user/challenge?username=<name>*
+  - Returns login challenge of the user
+
+**8.** <<**GET**>> */api/team3/user/populateNFC?username=<name>*
+  - Returns encrypted nfc secret of the user
