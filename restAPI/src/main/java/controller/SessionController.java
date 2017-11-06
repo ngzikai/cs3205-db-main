@@ -89,9 +89,9 @@ public class SessionController {
 	}
 
 	public Data get(int userID, int rid, String type){
-		String insertUid = (userID == -1) ? "`uid`" : "?";
-		String insertType = (type == null) ? "`subtype`" : "?";
-		String sql = "SELECT * FROM CS3205.data WHERE `rid` = ? AND `uid` = "+insertUid+" AND `subtype` = "+insertType;
+		String insertUid = (userID == -1) ? "" : " AND `uid` = ?";
+		String insertType = (type == null) ? "" : " AND `subtype` = ?";
+		String sql = "SELECT * FROM CS3205.data WHERE `rid` = ?" + insertUid + insertType;
 		Data data = null;
 		try{
 			PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
