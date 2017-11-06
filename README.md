@@ -22,14 +22,12 @@ The storage system involves the database server, MySQL, to store most of the dat
 - /api/team1/user/uid/public/{uid}
 - /api/team1/user/therapists
 - /api/team1/user/create/{username}/{password}/{salt}/{fname}/{lname}/{nric}/{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}/{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}
-- /api/team1/user/create/
- - Accepts POST request JSON data 
+- /api/team1/user/create/ (Accepts POST request JSON data) 
 - /api/team1/user/update/{uid}/{user}/{password}/{salt}/{fname}/{lname}/{nric}/{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}/{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}
 - /api/team1/user/update/
  - Accepts POST request JSON data 
 - /api/team1/user/update/{username}/{password}/{salt}
-- /api/team1/user/update/password
- - Accepts POST request JSON data 
+- /api/team1/user/update/password (Accepts POST request JSON data)
 - /api/team1/user/delete/{uid}
 - /api/team1/user/secret/set/{uid}/{secret}
 - /api/team1/user/secret/{uid}
@@ -47,8 +45,7 @@ The storage system involves the database server, MySQL, to store most of the dat
 - /api/team1/treatment/update/{id}
 - /api/team1/treatment/delete/{id}
 
-- /api/team1/treatment/update/consentsetting
- - Accepts POST request JSON data 
+- /api/team1/treatment/update/consentsetting (Accepts POST request JSON data)
 - /api/team1/otl
 - /api/team1/otl/{token}
 - /api/team1/otl/create/{token}/{uid}/{filepath}/{csrf}/{dataType}
@@ -64,8 +61,7 @@ The storage system involves the database server, MySQL, to store most of the dat
 - /api/team1/record/all/{uid}
 - /api/team1/record/get/{rid}
 - /api/team1/record/{rid}
-- /api/team1/record
-# Accepts POST request JSON data 
+- /api/team1/record (Accepts POST request JSON data)
 - /api/team1/record/document/create
  - Accepts POST request JSON data 
 - /api/team1/record/delete/{rid}/{uid}
@@ -83,8 +79,7 @@ The storage system involves the database server, MySQL, to store most of the dat
 - /api/team1/consent/check/{uid}/{rid}
 
 - /api/team1/log/
-- /api/team1/log/create
-# Accepts POST request JSON data 
+- /api/team1/log/create (Accepts POST request JSON data)
  
 ### Team 2:
 GET: http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/info
