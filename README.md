@@ -11,7 +11,7 @@ Web Application is deployed on https://cs3205-4-i.comp.nus.edu.sg/api.
 
 ## Architecture
 
-[[https://github.com/ngzikai/cs3205-db-main/tree/master/doc/ServerDiagram.PNG|alt=octocat]]
+[[https://github.com/ngzikai/cs3205-db-main/blob/master/doc/ServerDiagram.PNG|alt=octocat]]
 
 Server 4 db server is using a RESTful API architecture to serve the queries for the database. This RESTful API is the endpoint for any interaction to the database, and is splitted into Team 1, Team 2 and Team 3's endpoints respectively. Each provides a separate endpoint for the various systems' server to be integrated with, while residing on the same storage system. This creates the integration of a one full solution, designed to cater to the different needs of each system. 
 
