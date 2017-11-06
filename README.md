@@ -16,7 +16,7 @@ The storage system involves the database server, MySQL, to store most of the dat
 
 ## List of Available Endpoints
 ### Team 1: 
-# User Service
+#### User Service
 1. /api/team1/user/
 2. /api/team1/user/username/{username}
 3. /api/team1/user/uid/{uid}
@@ -32,13 +32,13 @@ The storage system involves the database server, MySQL, to store most of the dat
 13. /api/team1/user/secret/set/{uid}/{secret}
 14. /api/team1/user/secret/{uid}
 
-# Admin Service
+#### Admin Service
 15. /api/team1/admin/
 16. /api/team1/admin/{username}
 17. /api/team1/admin/secret/set/{adminid}/{secret}
 18. /api/team1/admin/secret/{adminid}
 
-# Treatment Service
+#### Treatment Service
 19. /api/team1/treatment
 20. /api/team1/treatment/{treatment_id}
 21. /api/team1/treatment/patient/{patientid}/{status}
@@ -48,20 +48,20 @@ The storage system involves the database server, MySQL, to store most of the dat
 25. /api/team1/treatment/delete/{id}
 26. /api/team1/treatment/update/consentsetting **(Accepts POST request JSON data)**
 
-# OTL Service
+#### OTL Service
 27. /api/team1/otl
 28. /api/team1/otl/{token}
 29. /api/team1/otl/create/{token}/{uid}/{filepath}/{csrf}/{dataType} **(Accepts POST request JSON data)**
 30. /api/team1/otl/update/{token}/{csrf}
 31. /api/team1/otl/delete/{token}
 
-# CSRF Service
+#### CSRF Service
 32. /api/team1/csrf
 33. /api/team1/csrf/{csrfToken}
 34. /api/team1/csrf/create/{csrfToken}/{uid}/{expiry}/{description}
 35. /api/team1/csrf/delete/{csrfToken}
 
-# Record Service
+#### Record Service
 36. /api/team1/record/all/{uid}
 37. /api/team1/record/get/{rid}
 38. /api/team1/record/{rid}
@@ -70,7 +70,7 @@ The storage system involves the database server, MySQL, to store most of the dat
 41. /api/team1/record/delete/{rid}/{uid}
 42. /api/team1/record/alldocuments/{uid}
 
-# Consent Service
+#### Consent Service
 43. /api/team1/consent
 44. /api/team1/consent/{consent_id}
 45. /api/team1/consent/create/{uid}/{rid}
@@ -82,13 +82,13 @@ The storage system involves the database server, MySQL, to store most of the dat
 51. /api/team1/consent/owner/{ownerid}/{therapistid}
 52. /api/team1/consent/check/{uid}/{rid}
 
-# Log Service
+#### Log Service
 53. /api/team1/log/
 54. /api/team1/log/create **(Accepts POST request JSON data)**
  
 ### Team 2:
 
-# Category Service
+#### Category Service
 *GET:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/info
 **Consumes:** -
 **Produces:** JSON list of all categories {category_id, category_name}
@@ -121,27 +121,27 @@ The storage system involves the database server, MySQL, to store most of the dat
 **Consumes:** -
 **Produces:** JSON [{researcher_id, categories[{category_id, category_name, status}]}]
 
-# Ethnicity Service
+#### Ethnicity Service
 *GET:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/ethnicity
 **Consumes:** -
 **Produces:** JSON list of all ethnicity [{result}]
 
-# Filter Service
+#### Filter Service
 *GET:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/filters
 **Consumes:** -
 **Produces:** JSON list of all filters [{id, parent_id, key, value, isset, type, children[{id, parent_id, key, value, isset, type, children}]}]
 
-# Heartrate Service
+#### Heartrate Service
 *POST:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/heart
 **Consumes:** JSON {uid}
 **Produces:** JSON [week{sunday[{heartrate}], monday[{heartrate}], tuesday[{heartrate}], wednesday[{heartrate}], thursday[{heartrate}], friday[{heartrate}], saturday[{heartrate}]}]
 
-# Nationality Service
+#### Nationality Service
 *POST:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/nationality
 **Consumes**: -
 **Produces:** JSON list of all nationality [{result}]
 
-# Researcher Service
+#### Researcher Service
 *POST:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/researcher/login
 **Consumes:** JSON {researcher_username}
 **Produces:** Password Hash
@@ -178,12 +178,12 @@ The storage system involves the database server, MySQL, to store most of the dat
 **Consumes:** -
 **Produces:** "Success" or "Failed" depending on deletion success
 
-# Search Service
+#### Search Service
 *POST:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/search
 **Consumes:** {ageRange[age], gender[gender], bloodType[bloodType], zipcode[zipcode], cid[condition_id], ethnicity[ethnicity], nationality[nationality], drug_allergy[drug_allergy]}
 **Produces:** {dob, gender, zipcode1, zipcode2, bloodtype, condition_name, ethnicity, nationality, drug_allergy, timeseries_path, heartrate_path}
 
-# Timeseries Service
+#### Timeseries Service
 *POST:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/timeseries
 **Consumes:** JSON {uid}
 **Produces:** JSON {timeseries_data} (FROM FILE)
