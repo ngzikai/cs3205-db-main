@@ -90,7 +90,7 @@ The storage system involves the database server, MySQL, to store most of the dat
 
 #### Category Service
 *GET:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/info
-**Consumes:** -
+**Consumes:** - 
 **Produces:** JSON list of all categories {category_id, category_name}
 
 *GET:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/list
