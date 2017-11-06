@@ -16,174 +16,189 @@ The storage system involves the database server, MySQL, to store most of the dat
 
 ## List of Available Endpoints
 ### Team 1: 
-- /api/team1/user/
-- /api/team1/user/username/{username}
-- /api/team1/user/uid/{uid}
-- /api/team1/user/uid/public/{uid}
-- /api/team1/user/therapists
-- /api/team1/user/create/{username}/{password}/{salt}/{fname}/{lname}/{nric}/{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}/{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}
-- /api/team1/user/create/ (Accepts POST request JSON data) 
-- /api/team1/user/update/{uid}/{user}/{password}/{salt}/{fname}/{lname}/{nric}/{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}/{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}
-- /api/team1/user/update/
- - Accepts POST request JSON data 
-- /api/team1/user/update/{username}/{password}/{salt}
-- /api/team1/user/update/password (Accepts POST request JSON data)
-- /api/team1/user/delete/{uid}
-- /api/team1/user/secret/set/{uid}/{secret}
-- /api/team1/user/secret/{uid}
+# User Service
+1. /api/team1/user/
+2. /api/team1/user/username/{username}
+3. /api/team1/user/uid/{uid}
+4. /api/team1/user/uid/public/{uid}
+5. /api/team1/user/therapists
+6.  /api/team1/user/create/{username}/{password}/{salt}/{fname}/{lname}/{nric}/{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}/{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}
+7. /api/team1/user/create/ **(Accepts POST request JSON data)**
+8. /api/team1/user/update/{uid}/{user}/{password}/{salt}/{fname}/{lname}/{nric}/{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}/{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}
+9. /api/team1/user/update/ **(Accepts POST request JSON data)**
+10. /api/team1/user/update/{username}/{password}/{salt}
+11. /api/team1/user/update/password **(Accepts POST request JSON data)**
+12. /api/team1/user/delete/{uid}
+13. /api/team1/user/secret/set/{uid}/{secret}
+14. /api/team1/user/secret/{uid}
 
-- /api/team1/admin/
-- /api/team1/admin/{username}
-- /api/team1/admin/secret/set/{adminid}/{secret}
-- /api/team1/admin/secret/{adminid}
+# Admin Service
+15. /api/team1/admin/
+16. /api/team1/admin/{username}
+17. /api/team1/admin/secret/set/{adminid}/{secret}
+18. /api/team1/admin/secret/{adminid}
 
-- /api/team1/treatment
-- /api/team1/treatment/{treatment_id}
-- /api/team1/treatment/patient/{patientid}/{status}
-- /api/team1/treatment/therapist/{therapistid}/{status}
-- /api/team1/treatment/create/{patient}/{therapist}/{currentConsent}/{futureConsent}
-- /api/team1/treatment/update/{id}
-- /api/team1/treatment/delete/{id}
+# Treatment Service
+19. /api/team1/treatment
+20. /api/team1/treatment/{treatment_id}
+21. /api/team1/treatment/patient/{patientid}/{status}
+22. /api/team1/treatment/therapist/{therapistid}/{status}
+23. /api/team1/treatment/create/{patient}/{therapist}/{currentConsent}/{futureConsent}
+24. /api/team1/treatment/update/{id}
+25. /api/team1/treatment/delete/{id}
+26. /api/team1/treatment/update/consentsetting **(Accepts POST request JSON data)**
 
-- /api/team1/treatment/update/consentsetting (Accepts POST request JSON data)
-- /api/team1/otl
-- /api/team1/otl/{token}
-- /api/team1/otl/create/{token}/{uid}/{filepath}/{csrf}/{dataType}
- - Accepts POST request JSON data 
-- /api/team1/otl/update/{token}/{csrf}
-- /api/team1/otl/delete/{token}
+# OTL Service
+27. /api/team1/otl
+28. /api/team1/otl/{token}
+29. /api/team1/otl/create/{token}/{uid}/{filepath}/{csrf}/{dataType} **(Accepts POST request JSON data)**
+30. /api/team1/otl/update/{token}/{csrf}
+31. /api/team1/otl/delete/{token}
 
-- /api/team1/csrf
-- /api/team1/csrf/{csrfToken}
-- /api/team1/csrf/create/{csrfToken}/{uid}/{expiry}/{description}
-- /api/team1/csrf/delete/{csrfToken}
+# CSRF Service
+32. /api/team1/csrf
+33. /api/team1/csrf/{csrfToken}
+34. /api/team1/csrf/create/{csrfToken}/{uid}/{expiry}/{description}
+35. /api/team1/csrf/delete/{csrfToken}
 
-- /api/team1/record/all/{uid}
-- /api/team1/record/get/{rid}
-- /api/team1/record/{rid}
-- /api/team1/record (Accepts POST request JSON data)
-- /api/team1/record/document/create
- - Accepts POST request JSON data 
-- /api/team1/record/delete/{rid}/{uid}
-- /api/team1/record/alldocuments/{uid}
+# Record Service
+36. /api/team1/record/all/{uid}
+37. /api/team1/record/get/{rid}
+38. /api/team1/record/{rid}
+39. /api/team1/record **(Accepts POST request JSON data)**
+40. /api/team1/record/document/create **(Accepts POST request JSON data)**
+41. /api/team1/record/delete/{rid}/{uid}
+42. /api/team1/record/alldocuments/{uid}
 
-- /api/team1/consent
-- /api/team1/consent/{consent_id}
-- /api/team1/consent/create/{uid}/{rid}
-- /api/team1/consent/update/{consent_id}
-- /api/team1/consent/delete/{consent_id}
-- /api/team1/consent/user/{uid}
-- /api/team1/consent/user/{uid}/{status}
-- /api/team1/consent/record/{rid}
-- /api/team1/consent/owner/{ownerid}/{therapistid}
-- /api/team1/consent/check/{uid}/{rid}
+# Consent Service
+43. /api/team1/consent
+44. /api/team1/consent/{consent_id}
+45. /api/team1/consent/create/{uid}/{rid}
+46. /api/team1/consent/update/{consent_id}
+47. /api/team1/consent/delete/{consent_id}
+48. /api/team1/consent/user/{uid}
+49. /api/team1/consent/user/{uid}/{status}
+50. /api/team1/consent/record/{rid}
+51. /api/team1/consent/owner/{ownerid}/{therapistid}
+52. /api/team1/consent/check/{uid}/{rid}
 
-- /api/team1/log/
-- /api/team1/log/create (Accepts POST request JSON data)
+# Log Service
+53. /api/team1/log/
+54. /api/team1/log/create **(Accepts POST request JSON data)**
  
 ### Team 2:
-GET: http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/info
-Consumes: -
-Produces: JSON list of all categories {category_id, category_name}
 
-GET: http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/list
-Consumes: -
-Produces: JSON list of all categories {category_id, category_name, conditions[condition_id, condition_name]}
+# Category Service
+*GET:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/info
+**Consumes:** -
+**Produces:** JSON list of all categories {category_id, category_name}
 
-GET: http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/{category_id}
-Consumes: -
-Produces: JSON list of all conditions in category {condition_id, condition_name}
+*GET:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/list
+**Consumes:** -
+**Produces:** JSON list of all categories {category_id, category_name, conditions[condition_id, condition_name]}
 
-POST: http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/request
-Consumes: JSON {researcher_id, category_id}
-Produces: "Success" or "Failed" depending on request success
+*GET:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/{category_id}
+**Consumes:** -
+**Produces:** JSON list of all conditions in category {condition_id, condition_name}
 
-POST: http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/approve
-Consumes: JSON {researcher_id, category_id}
-Produces: "Success" or "Failed" depending on status change success
+*POST:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/request
+**Consumes:** JSON {researcher_id, category_id}
+**Produces:** "Success" or "Failed" depending on request success
 
-POST: http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/decline
-Consumes: JSON {researcher_id, category_id}
-Produces: "Success" or "Failed" depending on status change success
+*POST:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/approve
+**Consumes:** JSON {researcher_id, category_id}
+**Produces:** "Success" or "Failed" depending on status change success
 
-GET: http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/list/{researcher_id}
-Consumes: -
-Produces: JSON {researcher_id, categories[{category_id, category_name, status}]}
+*POST:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/decline
+**Consumes:** JSON {researcher_id, category_id}
+**Produces:** "Success" or "Failed" depending on status change success
 
-GET: http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/list/all
-Consumes: -
-Produces: JSON [{researcher_id, categories[{category_id, category_name, status}]}]
+*GET:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/list/{researcher_id}
+**Consumes:** -
+**Produces:** JSON {researcher_id, categories[{category_id, category_name, status}]}
 
-GET: http://cs3205-4-i.comp.nus.edu.sg/api/team2/ethnicity
-Consumes: -
-Produces: JSON list of all ethnicity [{result}]
+*GET:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/list/all
+**Consumes:** -
+**Produces:** JSON [{researcher_id, categories[{category_id, category_name, status}]}]
 
-GET: http://cs3205-4-i.comp.nus.edu.sg/api/team2/filters
-Consumes: -
-Produces: JSON list of all filters [{id, parent_id, key, value, isset, type, children[{id, parent_id, key, value, isset, type, children}]}]
+# Ethnicity Service
+*GET:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/ethnicity
+**Consumes:** -
+**Produces:** JSON list of all ethnicity [{result}]
 
-POST: http://cs3205-4-i.comp.nus.edu.sg/api/team2/heart
-Consumes: JSON {uid}
-Produces: JSON [week{sunday[{heartrate}], monday[{heartrate}], tuesday[{heartrate}], wednesday[{heartrate}], thursday[{heartrate}], friday[{heartrate}], saturday[{heartrate}]}]
+# Filter Service
+*GET:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/filters
+**Consumes:** -
+**Produces:** JSON list of all filters [{id, parent_id, key, value, isset, type, children[{id, parent_id, key, value, isset, type, children}]}]
 
-POST: http://cs3205-4-i.comp.nus.edu.sg/api/team2/nationality
-Consumes: -
-Produces: JSON list of all nationality [{result}]
+# Heartrate Service
+*POST:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/heart
+**Consumes:** JSON {uid}
+**Produces:** JSON [week{sunday[{heartrate}], monday[{heartrate}], tuesday[{heartrate}], wednesday[{heartrate}], thursday[{heartrate}], friday[{heartrate}], saturday[{heartrate}]}]
 
-POST: http://cs3205-4-i.comp.nus.edu.sg/api/team2/researcher/login
-Consumes: JSON {researcher_username}
-Produces: Password Hash
+# Nationality Service
+*POST:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/nationality
+**Consumes**: -
+**Produces:** JSON list of all nationality [{result}]
 
-POST: http://cs3205-4-i.comp.nus.edu.sg/api/team2/researcher/register
-Consumes: JSON {firstname, lastname, researcher_username, password}
-Produces: "Success" or "Failed" depending on registration success
+# Researcher Service
+*POST:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/researcher/login
+**Consumes:** JSON {researcher_username}
+**Produces:** Password Hash
 
-GET: http://cs3205-4-i.comp.nus.edu.sg/api/team2/researcher/{researcher_username}
-Consumes: -
-Produces: JSON Object of researcher {researcher_id, researcher_username, password, firstname, lastname, nric, dob, gender, phone1, phone2, address1, address2, zipcode1, zipcode2, qualification, qualification_name, isAdmin, otpsecret, research_category{category}}
+*POST:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/researcher/register
+**Consumes:** JSON {firstname, lastname, researcher_username, password}
+**Produces:** "Success" or "Failed" depending on registration success
 
-PUT: http://cs3205-4-i.comp.nus.edu.sg/api/team2/researcher/edit
-Consumes: JSON {researcher_username, password, firstname, lastname, nric, dob, gender, address1, address2, phone1, phone2, zipcode1, zipcode2, qualification, qualification_name}
-Produces: "Success" or "Failed" depending on update success
+*GET:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/researcher/{researcher_username}
+**Consumes:** -
+**Produces:** JSON Object of researcher {researcher_id, researcher_username, password, firstname, lastname, nric, dob, gender, phone1, phone2, address1, address2, zipcode1, zipcode2, qualification, qualification_name, isAdmin, otpsecret, research_category{category}}
 
-DELETE: http://cs3205-4-i.comp.nus.edu.sg/api/team2/researcher/{researcher_id}
-Consumes: -
-Produces: "Success" or "Failed" depending on deletion success
+*PUT:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/researcher/edit
+**Consumes:** JSON {researcher_username, password, firstname, lastname, nric, dob, gender, address1, address2, phone1, phone2, zipcode1, zipcode2, qualification, qualification_name}
+**Produces:** "Success" or "Failed" depending on update success
 
-PUT: http://cs3205-4-i.comp.nus.edu.sg/api/team2/researcher/registerOTP
-Consumes: {researcher_username, otpsecret}
-Produces: "Success" or "Failed" depending on registration success
+*DELETE:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/researcher/{researcher_id}
+**Consumes:** -
+**Produces:** "Success" or "Failed" depending on deletion success
 
-PUT: http://cs3205-4-i.comp.nus.edu.sg/api/team2/researcher/passwordChange
-Consumes: {researcher_username, password}
-Produces: "Success" or "Failed" depending on edit success
+*PUT:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/researcher/registerOTP
+**Consumes:** {researcher_username, otpsecret}
+**Produces:** "Success" or "Failed" depending on registration success
 
-GET: http://cs3205-4-i.comp.nus.edu.sg/api/team2/researcher/OTPenabled/{researcher_username}
-Consumes: -
-Produces: "true" or "false" depending on query
+*PUT:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/researcher/passwordChange
+**Consumes:** {researcher_username, password}
+**Produces:** "Success" or "Failed" depending on edit success
 
-DELETE: http://cs3205-4-i.comp.nus.edu.sg/api/team2/researcher/OTPdelete/{researcher_username}
-Consumes: -
-Produces: "Success" or "Failed" depending on deletion success
+*GET:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/researcher/OTPenabled/{researcher_username}
+**Consumes:** -
+**Produces:** "true" or "false" depending on query
 
-POST: http://cs3205-4-i.comp.nus.edu.sg/api/team2/search
-Consumes: {ageRange[age], gender[gender], bloodType[bloodType], zipcode[zipcode], cid[condition_id], ethnicity[ethnicity], nationality[nationality], drug_allergy[drug_allergy]}
-Produces: {dob, gender, zipcode1, zipcode2, bloodtype, condition_name, ethnicity, nationality, drug_allergy, timeseries_path, heartrate_path}
+*DELETE:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/researcher/OTPdelete/{researcher_username}
+**Consumes:** -
+**Produces:** "Success" or "Failed" depending on deletion success
 
-OST: http://cs3205-4-i.comp.nus.edu.sg/api/team2/heart
-Consumes: JSON {uid}
-Produces: JSON {timeseries_data} (FROM FILE)
+# Search Service
+*POST:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/search
+**Consumes:** {ageRange[age], gender[gender], bloodType[bloodType], zipcode[zipcode], cid[condition_id], ethnicity[ethnicity], nationality[nationality], drug_allergy[drug_allergy]}
+**Produces:** {dob, gender, zipcode1, zipcode2, bloodtype, condition_name, ethnicity, nationality, drug_allergy, timeseries_path, heartrate_path}
+
+# Timeseries Service
+*POST:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/timeseries
+**Consumes:** JSON {uid}
+**Produces:** JSON {timeseries_data} (FROM FILE)
 
 
 ### Team 3:
-- /api/team3/step/{userID}
-- /api/team3/heart/{userID}
-- /api/team3/image/{userID}
-- /api/team3/video/{userID}
-- prefix + /get/{objectID}
-- prefix + /get/{objectID}/meta
-- prefix + /all
-- prefix + /upload/{timestamp}
+
+1. /api/team3/step/{userID}
+2. /api/team3/heart/{userID}
+3. /api/team3/image/{userID}
+4. /api/team3/video/{userID}
+*prefix + /get/{objectID}*
+*prefix + /get/{objectID}/meta*
+*prefix + /all*
+*prefix + /upload/{timestamp}*
 
 
 ## Security
@@ -197,7 +212,7 @@ On top of that, basic authentication is also used to verify that only authorized
 AES-256 Encryption is also implemented on the files that are stored on the server. As our server may potentially hold a bulk of sensitive information, it is important that the infomation is kept secure even in the unlikely event of a compromise. The encryption algorithm is designed in such a way that the files can only be decrypted through the use of the system in normal, authorized proceedure. 
 
 
-## Tomcat Server
+## Server Deployment
 ### Setup
 Ensure that the username and password in `restAPI/conf/settings.xml` is inside tomcat's `tomcat-users.xml` with the `manager-script` role
 
