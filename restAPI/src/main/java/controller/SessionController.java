@@ -21,6 +21,7 @@ import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 
 // Data objects
 import org.json.JSONObject;
@@ -46,7 +47,7 @@ public class SessionController {
 		String sql = "INSERT INTO CS3205.data (uid, type, subtype, title, creationdate, modifieddate, content) VALUES (?, ?, ?, ?, ?, ?, ?)";
 		int result = -1;
 		try{
-			PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql);
+			PreparedStatement ps = MySQLAccess.connectDatabase().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			ps.setInt(1, object.getUid());
 			ps.setString(2, object.getType());
 			ps.setString(3, object.getSubtype());
@@ -55,6 +56,13 @@ public class SessionController {
 			ps.setTimestamp(6, object.getModifieddate());
 			ps.setString(7, object.getContent());
 			result = ps.executeUpdate();
+			try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                result = generatedKeys.getInt(1);
+            } else {
+                throw new Exception("No ID obtained.");
+            }
+        }
 			ps.close();
 		} catch(Exception e){
 			e.printStackTrace();
