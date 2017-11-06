@@ -181,6 +181,7 @@ public class SessionService{
 		if(!udc.validateNFCResponse(nfcTokenByte, challenge, nfcHash)){
 			return Response.status(401).entity("Invalid NFC token.").build();
 		}
+		ConsentController cc = new ConsentController();
 
 		if(type.equalsIgnoreCase("heart")){
 			int heartrate = -1;
@@ -196,7 +197,9 @@ public class SessionService{
 													 new Timestamp(System.currentTimeMillis()),
 													 String.valueOf(heartrate));
 			int result = sc.insert(data);
-			if(result == 1){
+			if(result >= 1){
+				cc.createConsentByRecordCreation(data.getUid(), result);
+				System.out.println("result:"+result);
 				return Response.status(200).entity("successfully added heartrate: " + data.getContent()).build();
 			}
 		} else if (type.equalsIgnoreCase("image")){
@@ -226,7 +229,8 @@ public class SessionService{
 													 new Timestamp(System.currentTimeMillis()),
 													 createdDate + "_" + GUID.BASE58() + mediaExt);
 			int result = sc.insert(data);
-			if (result == 1){
+			if(result >= 1){
+				cc.createConsentByRecordCreation(data.getUid(), result);
 				sc.writeToFile(inputstream, fileDirectory + "/" + data.getUid() + "/" + type +"/" + data.getContent());
 				return Response.status(200).entity("successfully added "+type+": " + data.getContent()).build();
 			}
@@ -272,7 +276,9 @@ public class SessionService{
 													 new Timestamp(System.currentTimeMillis()),
 													 createdDate + "_" + GUID.BASE58() + ".mp4");
 			int result = sc.insert(data);
-			if (result == 1){
+			if(result >= 1){
+				cc.createConsentByRecordCreation(data.getUid(), result);
+				System.out.println("result:"+result);
 				sc.writeToFile(inputstream, fileDirectory + "/" + data.getUid() + "/" + type +"/" + data.getContent());
 				return Response.status(200).entity("successfully added "+type+": " + data.getContent()).build();
 			}
@@ -290,7 +296,9 @@ public class SessionService{
 														 new Timestamp(System.currentTimeMillis()),
 														 createdDate + "_" + GUID.BASE58() + ".json");
 				int result = sc.insert(data);
-				if (result == 1){
+				if(result >= 1){
+					cc.createConsentByRecordCreation(data.getUid(), result);
+					System.out.println("result:"+result);
 					InputStream targetStream = new ByteArrayInputStream(content);
 					sc.writeToFile(targetStream, fileDirectory + "/" + data.getUid() + "/time series/" + data.getContent());
 					return Response.status(200).entity("successfully added step: " + data.getContent()).build();
