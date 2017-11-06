@@ -17,85 +17,91 @@ The storage system involves the database server, MySQL, to store most of the dat
 ## List of Available Endpoints
 ### Team 1: 
 #### User Service
-1. /api/team1/user/
-2. /api/team1/user/username/{username}
-3. /api/team1/user/uid/{uid}
-4. /api/team1/user/uid/public/{uid}
-5. /api/team1/user/therapists
-6.  /api/team1/user/create/{username}/{password}/{salt}/{fname}/{lname}/{nric}/{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}/{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}
-7. /api/team1/user/create/ **(Accepts POST request JSON data)**
-8. /api/team1/user/update/{uid}/{user}/{password}/{salt}/{fname}/{lname}/{nric}/{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}/{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}
-9. /api/team1/user/update/ **(Accepts POST request JSON data)**
-10. /api/team1/user/update/{username}/{password}/{salt}
-11. /api/team1/user/update/password **(Accepts POST request JSON data)**
-12. /api/team1/user/delete/{uid}
-13. /api/team1/user/secret/set/{uid}/{secret}
-14. /api/team1/user/secret/{uid}
+**1.** /api/team1/user/
+**2.** /api/team1/user/username/{username}
+**3.** /api/team1/user/uid/{uid}
+**4.** /api/team1/user/uid/public/{uid}
+**5.** /api/team1/user/therapists
+**6.**  /api/team1/user/create/{username}/{password}/{salt}/{fname}/{lname}/{nric}/{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}/{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}
+**7.** /api/team1/user/create/ **(Accepts POST request JSON data)**
+**8.** /api/team1/user/update/{uid}/{user}/{password}/{salt}/{fname}/{lname}/{nric}/{dob}/{gender}/{phone1}/{phone2}/{phone3}/{addr1}/{addr2}/{addr3}/{zip1}/{zip2}/{zip3}/{qualify}/{bloodtype}/{nfcid}
+**9.** /api/team1/user/update/ **(Accepts POST request JSON data)**
+**10.** /api/team1/user/update/{username}/{password}/{salt}
+**11.** /api/team1/user/update/password **(Accepts POST request JSON data)**
+**12.** /api/team1/user/delete/{uid}
+**13.** /api/team1/user/secret/set/{uid}/{secret}
+**14.** /api/team1/user/secret/{uid}
 
 #### Admin Service
-15. /api/team1/admin/
-16. /api/team1/admin/{username}
-17. /api/team1/admin/secret/set/{adminid}/{secret}
-18. /api/team1/admin/secret/{adminid}
+**15.** /api/team1/admin/
+**16.** /api/team1/admin/{username}
+**17.** /api/team1/admin/secret/set/{adminid}/{secret}
+**18.** /api/team1/admin/secret/{adminid}
 
 #### Treatment Service
-19. /api/team1/treatment
-20. /api/team1/treatment/{treatment_id}
-21. /api/team1/treatment/patient/{patientid}/{status}
-22. /api/team1/treatment/therapist/{therapistid}/{status}
-23. /api/team1/treatment/create/{patient}/{therapist}/{currentConsent}/{futureConsent}
-24. /api/team1/treatment/update/{id}
-25. /api/team1/treatment/delete/{id}
-26. /api/team1/treatment/update/consentsetting **(Accepts POST request JSON data)**
+**19.** /api/team1/treatment
+**20.** /api/team1/treatment/{treatment_id}
+**21.** /api/team1/treatment/patient/{patientid}/{status}
+**22.** /api/team1/treatment/therapist/{therapistid}/{status}
+**23.** /api/team1/treatment/create/{patient}/{therapist}/{currentConsent}/{futureConsent}
+**24.** /api/team1/treatment/update/{id}
+**25.** /api/team1/treatment/delete/{id}
+**26.** /api/team1/treatment/update/consentsetting **(Accepts POST request JSON data)**
 
 #### OTL Service
-27. /api/team1/otl
-28. /api/team1/otl/{token}
-29. /api/team1/otl/create/{token}/{uid}/{filepath}/{csrf}/{dataType} **(Accepts POST request JSON data)**
-30. /api/team1/otl/update/{token}/{csrf}
-31. /api/team1/otl/delete/{token}
+**27.** /api/team1/otl
+**28.** /api/team1/otl/{token}
+**29.** /api/team1/otl/create/{token}/{uid}/{filepath}/{csrf}/{dataType} **(Accepts POST request JSON data)**
+**30.** /api/team1/otl/update/{token}/{csrf}
+**31.** /api/team1/otl/delete/{token}
 
 #### CSRF Service
-32. /api/team1/csrf
-33. /api/team1/csrf/{csrfToken}
-34. /api/team1/csrf/create/{csrfToken}/{uid}/{expiry}/{description}
-35. /api/team1/csrf/delete/{csrfToken}
+**32.** /api/team1/csrf
+**33.** /api/team1/csrf/{csrfToken}
+**34.** /api/team1/csrf/create/{csrfToken}/{uid}/{expiry}/{description}
+**35.** /api/team1/csrf/delete/{csrfToken}
 
 #### Record Service
-36. /api/team1/record/all/{uid}
-37. /api/team1/record/get/{rid}
-38. /api/team1/record/{rid}
-39. /api/team1/record **(Accepts POST request JSON data)**
-40. /api/team1/record/document/create **(Accepts POST request JSON data)**
-41. /api/team1/record/delete/{rid}/{uid}
-42. /api/team1/record/alldocuments/{uid}
+**36.** /api/team1/record/all/{uid}
+**37.** /api/team1/record/get/{rid}
+**38.** /api/team1/record/{rid}
+**39.** /api/team1/record **(Accepts POST request JSON data)**
+**40.** /api/team1/record/document/create **(Accepts POST request JSON data)**
+**41.** /api/team1/record/delete/{rid}/{uid}
+**42.** /api/team1/record/alldocuments/{uid}
 
 #### Consent Service
-43. /api/team1/consent
-44. /api/team1/consent/{consent_id}
-45. /api/team1/consent/create/{uid}/{rid}
-46. /api/team1/consent/update/{consent_id}
-47. /api/team1/consent/delete/{consent_id}
-48. /api/team1/consent/user/{uid}
-49. /api/team1/consent/user/{uid}/{status}
-50. /api/team1/consent/record/{rid}
-51. /api/team1/consent/owner/{ownerid}/{therapistid}
-52. /api/team1/consent/check/{uid}/{rid}
+**43.** /api/team1/consent
+**44.** /api/team1/consent/{consent_id}
+**45.** /api/team1/consent/create/{uid}/{rid}
+**46.** /api/team1/consent/update/{consent_id}
+**47.** /api/team1/consent/delete/{consent_id}
+**48.** /api/team1/consent/user/{uid}
+**49.** /api/team1/consent/user/{uid}/{status}
+**50.** /api/team1/consent/record/{rid}
+**51.** /api/team1/consent/owner/{ownerid}/{therapistid}
+**52.** /api/team1/consent/check/{uid}/{rid}
 
 #### Log Service
-53. /api/team1/log/
-54. /api/team1/log/create **(Accepts POST request JSON data)**
+**53.** /api/team1/log/
+**54.** /api/team1/log/create **(Accepts POST request JSON data)**
  
 ### Team 2:
 
 #### Category Service
 *GET:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/info
+
 **Consumes:** - 
+
 **Produces:** JSON list of all categories {category_id, category_name}
 
+
 *GET:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/list
+
 **Consumes:** -
+
 **Produces:** JSON list of all categories {category_id, category_name, conditions[condition_id, condition_name]}
+
 
 *GET:* http://cs3205-4-i.comp.nus.edu.sg/api/team2/category/{category_id}
 **Consumes:** -
