@@ -11,8 +11,9 @@ Web Application is deployed on https://cs3205-4-i.comp.nus.edu.sg/api.
 
 ## Architecture
 
-[[https://github.com/ngzikai/cs3205-db-main/tree/master/doc/ServerDiagram.PNG|alt=octocat]]
-
+![Server Flow Diagram](https://github.com/ngzikai/cs3205-db-main/blob/master/doc/ServerDiagram.PNG?raw=true "Server Flow Diagram")
+<p align="center">Fig. 1. Server Flow Diagram</p>
+ 
 Server 4 db server is using a RESTful API architecture to serve the queries for the database. This RESTful API is the endpoint for any interaction to the database, and is splitted into Team 1, Team 2 and Team 3's endpoints respectively. Each provides a separate endpoint for the various systems' server to be integrated with, while residing on the same storage system. This creates the integration of a one full solution, designed to cater to the different needs of each system. 
 
 The storage system involves the database server, MySQL, to store most of the data needed, and the file storage system for storing data that comes as a file. This combination of the various type of data handling is well-abstracted by the system developed by Team 1, 2 and 3 to serve as the single storage component for the main architecture of the entire project. All the various different data entities are designed to serve the usage of the 3 systems effectively and efficiently while integrating the different functionalities into the core solution.  
