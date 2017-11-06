@@ -18,7 +18,9 @@ import utils.Cryptography;
 import utils.db.MySQLAccess;
 
 public class TimeseriesController {
-
+	
+	public static final String PATH_PREFIX = "/home/sadm/tmp/";
+	
 	public Response getTimeseries(String key) {
 		String sql = "SELECT value FROM secrets WHERE `key` = ?";
 
@@ -66,7 +68,7 @@ public class TimeseriesController {
 			ResultSet rs = MySQLAccess.readDataBasePS(ps);
 			
 			while(rs.next()) {
-				paths.addFirst(rs.getString(2));
+				paths.addFirst(PATH_PREFIX + value + "/time series/" + rs.getString(2));
 			}
 			
 		} catch(Exception e) {
@@ -78,7 +80,7 @@ public class TimeseriesController {
 		MySQLAccess.close();
 		
 		for(String path : paths) {
-			System.out.println("Debug: " + path);
+			System.out.println(path);
 		}
 		
 		if(paths.isEmpty()) {
