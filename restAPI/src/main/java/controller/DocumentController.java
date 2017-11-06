@@ -62,8 +62,8 @@ public class DocumentController {
 				document.getCreationdate(), document.getModifieddate(), random);
 		int result = 0;
 		result = sc.insert(data);
-		if(result == 1) {
-			int rid = getRid(document, random);
+		if(result > 0) {
+			int rid = result;
 
 			if(rid > 0) {
 				document.setRid(rid);
