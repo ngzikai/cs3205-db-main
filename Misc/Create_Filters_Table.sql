@@ -36,15 +36,15 @@ SELECT id INTO @parent_id FROM filters WHERE `key` = "Age Group" AND type = 1;
 INSERT INTO filters(parent_id, `key`, `value`, isset, type)
 VALUES
 (@parent_id, "Below 10", "0-10", 0, 3),
-(@parent_id, "11 - 20", "10-20", 0, 3),
-(@parent_id, "21 - 30", "20-30", 0, 3),
-(@parent_id, "31 - 40", "30-40", 0, 3),
-(@parent_id, "41 - 50", "40-50", 0, 3),
-(@parent_id, "51 - 60", "50-60", 0, 3),
-(@parent_id, "61 - 70", "60-70", 0, 3),
-(@parent_id, "71 - 80", "70-80", 0, 3),
-(@parent_id, "81 - 90", "80-90", 0, 3),
-(@parent_id, "Above 90", "90-200", 0, 3);
+(@parent_id, "11 - 20", "11-20", 0, 3),
+(@parent_id, "21 - 30", "21-30", 0, 3),
+(@parent_id, "31 - 40", "31-40", 0, 3),
+(@parent_id, "41 - 50", "41-50", 0, 3),
+(@parent_id, "51 - 60", "51-60", 0, 3),
+(@parent_id, "61 - 70", "61-70", 0, 3),
+(@parent_id, "71 - 80", "71-80", 0, 3),
+(@parent_id, "81 - 90", "81-90", 0, 3),
+(@parent_id, "Above 90", "91-200", 0, 3);
 
 -- BLOOD TYPE
 SELECT id INTO @parent_id FROM filters WHERE `key` = "Blood Type" AND type = 1;
