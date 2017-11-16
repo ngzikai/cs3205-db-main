@@ -175,10 +175,13 @@ public class SearchController {
 		startDate.add(Calendar.YEAR, -startRange);
 		endDate.add(Calendar.YEAR, -endRange);
 		
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		
+		SimpleDateFormat df = new SimpleDateFormat("yyyy");
 		
 		String start = df.format(startDate.getTime());
+		start = start + "-01-01";
 		String end = df.format(endDate.getTime());
+		end = end +"-12-31";
 		
 		System.out.println(startRange);
 		System.out.println(endRange);
@@ -189,6 +192,8 @@ public class SearchController {
 		ArrayList<String> result = new ArrayList<String>();
 		result.add(start);
 		result.add(end);
+		
+		System.out.println("ABCDEF");
 		
 		return result;
 	}
