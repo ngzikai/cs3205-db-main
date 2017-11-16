@@ -153,7 +153,7 @@ CREATE TABLE condition_category(
 CREATE TABLE one_time_link(
    token VARCHAR(255),
    uid INT NOT NULL,
-   filepath VARCHAR(255) NOT NULL,
+   filepath VARCHAR(100) NOT NULL,
    csrf VARCHAR(255),
    datatype VARCHAR(50) NOT NULL,
    PRIMARY KEY (token),
@@ -185,23 +185,18 @@ CREATE TABLE user_metadata(
   FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE db_logs(
+CREATE TABLE logs(
    log_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    api	ENUM('Team1', 'Team2', 'Team3') NOT NULL,
    type ENUM('Read', 'Write') NOT NULL,
    time TIMESTAMP NOT NULL,
-   description TEXT NOT NULL,
+   description VARCHAR(255) NOT NULL,
    result TINYINT(1) NOT NULL
 );
 
-CREATE TABLE transaction_logs(
-   log_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-   api	ENUM('Team1', 'Team2', 'Team3') NOT NULL,
-   classification ENUM('Info', 'Error', 'Warning') NOT NULL,
-   time TIMESTAMP NOT NULL,
-   uid INT NOT NULL,
-   description TEXT NOT NULL,
-   FOREIGN KEY (uid) REFERENCES user(uid) ON UPDATE CASCADE ON DELETE CASCADE
+CREATE TABLE secrets(
+	`key` VARCHAR(255) NOT NULL PRIMARY KEY,
+	`value` VARCHAR(255) NOT NULL
 );
    
 
